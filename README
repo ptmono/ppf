@@ -1,0 +1,71 @@
+
+Purpose
+=======
+
+I need a place to write my consideration, study, story. The site ppf.je.ro
+is the solution up to 2006. The site is based on Zeroboard version 4. It was created
+in 2003. That time I am not interesting the software development and just
+want a page I can post.
+
+Currently I use Emacs to write all of note, article. Muse-mode that is an
+Emacs module is used. The page to be written by muse-mode can publish
+other text formats such as html, latex, pdf, texi. I can more conveniently
+write and maintain my note with Emacs and Emacs modules such as muse-mode,
+planner-mode, outline-mode, fill-mode, abbrev-mode, flyspell-mode, etc.
+Most powerful thing is I can freely modify and combine the modules. It is
+the main problem when I used Microsoft Office.
+
+Main problem of previous site is the spam comments. Zeroboard is famous
+free webboard in Korea. I think that there is spam bot for Zeroboard
+version 3. One day in 2008 I was reading the posts I written. I surprised
+some page has hundreds comment. All the comments are spam. I permit the
+commenting for only registered users. However, I couldn't stop spam. The
+bot automatically join and continuously comments the spam. The author of
+Zeroboard version 4 currently doesn't maintain Zeroboard version 4 any
+more. I have to fix that. 
+
+Another problem is to maintain the articles and the comments with Emacs. I
+want to write the article with muse-mode and to maintain the comments with
+gnus which is an Newsreader of Emacs. It requires some modification and
+third party tools.
+
+Where the best choice is to use/modify Django or WordPress. It provides
+more stable/extensible/useful stuffs. 
+
+
+
+Requirements
+============
+
+ - python: I am using 2.7. Not tested in other version.
+ - jinja2
+
+
+Using
+=====
+
+1. Config config.py. url_root, url_api, server_host, server_user_id, se
+
+
+
+
+2. Correct the permission of your files. Your web server can read/write
+required directories.
+
+3. Upload the file with following command. The file permission also is
+tanslated.
+ - python tools/uploader.py --with-config
+
+
+Using
+=====
+
+
+
+
+
+TODO
+====
+
+ - Determine secure method for api
+

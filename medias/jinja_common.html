@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+  <head>
+    <title>ppf main</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="medias/css_muse.css" />
+    <link rel="stylesheet" type="text/css" href="medias/css_body.css" />
+    <style type='text/css'>
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  </head>
+
+  <body leftmargin="0" topmargin="0">
+    <div class="body">
+      <!-- Menu Start -->
+      <!-- TOP -->
+      <div class="menu_top">
+	<div class="menu_top_one"></div>
+	<div class="menu_top_line_one"></div>
+	<div class="menu_top_two"></div>
+	<div class="menu_top_line_two"></div>
+	<div class="menu_top_three"></div>
+      </div>
+
+      <!-- MIDDLE -->
+      <div class="menu_middle">
+	<div class="menu_middle_one"></div>
+	<div class="menu_middle_line_one"></div>
+	<div class="menu_middle_two">
+	  <!-- Block top menu Start -->
+	  {% block top_menu %}
+	  <div class="menu_cell"><a href="server.py?id=all" id="icon_all"></a></div>
+	  <div class="menu_cell_right"><a href="server.py" id="icon_home"></a></div>
+
+	  {% endblock %}
+	  <!-- End Block top menu -->
+	</div>
+	<div class="menu_middle_line_two"></div>
+	<div class="menu_middle_three"></div>
+      </div>
+
+      <!-- horizontal line -->
+      <div class="menu_h">
+	<div class="menu_h_one"></div>
+	<div class="menu_h_line_one"></div>
+	<div class="menu_h_two"></div>
+	<div class="menu_h_line_two"></div>
+	<div class="menu_h_three"></div>
+      </div>
+
+      <!-- BOTTOM -->
+      <div class="menu_bottom">
+	<div class="menu_bottom_one"></div>
+	<div class="menu_bottom_line_one"></div>
+	<div class="menu_bottom_two"></div>
+	<div class="menu_bottom_line_two"></div>
+	<div class="menu_bottom_three"></div>
+      </div>
+
+      <!-- horizontal line -->
+      <div class="menu_h">
+	<div class="menu_h_one"></div>
+	<div class="menu_h_line_one"></div>
+	<div class="menu_h_two"></div>
+	<div class="menu_h_line_two"></div>
+	<div class="menu_h_three"></div>
+      </div>
+      <!-- End menu -->
+
+      <!-- Content Start -->
+      <div class="content">
+	<table cellpadding="0px" cellspacing="0">
+	  <tr>
+	    <td width="107px"></td>
+	    <td width="1px" bgcolor="#000000"></td>
+	    <td width="680px" valign="center">
+	      <div class="content_main">
+		{% block content %}
+		{{ content }}
+		{% endblock %}
+	      </div> <!-- End body_center_content -->
+	    </td>
+	    <td width="2px" bgcolor="#000000"></td>
+	  </tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="0">
+	    <tr>
+	      <td width="107px"></td>
+	      <td width="1px" bgcolor="#000000"></td>
+	      <td width="652px" valign="center">
+		<div class="content_comment">
+		  {% block etc %}
+		  {% endblock %}
+		</div>
+	      </td>
+	    </tr>
+	  </table>
+
+      </div> <!-- End content -->
+    </div>
+
+    <script src="medias/common.js"></script>
+  </body>
+</html>

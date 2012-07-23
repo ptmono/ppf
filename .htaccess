@@ -1,0 +1,11 @@
+
+AddHandler cgi-script .py
+
+# In httpd anyone can download pyc file without this
+<Files *.pyc>
+deny from all
+</Files>
+
+<Files *.py~>
+deny from all
+</Files>

@@ -1,0 +1,96 @@
+/* BODY {  */
+/*     /\* font-size: 300%; *\/ */
+/* scrollbar-3dlight-color:#000000; */
+/* scrollbar-arrow-color:#000000; */
+/* scrollbar-track-color:#811788; */
+/* scrollbar-darkshadow-color:#811788; */
+/* scrollbar-face-color:#ffffff; */
+/* scrollbar-highlight-color:#811788; */
+/* scrollbar-shadow-color:#000000 */
+/* } */
+
+/* A:link {color:#000000; font-size:9pt; text-decoration:none;} */
+/* A:visited {color:#000000; font-size:9pt; text-decoration:none;} */
+/* A:active {color:#043C86; font-size:9pt; text-decoration:none;} */
+/* A:hover {color:#811788; font-size:9pt; text-decoration:underline;} */
+
+div { border: 0px; margin:0; padding:0 0 0 0; }
+table,td,tr,img { border: 0px; margin:0; padding:0 0 0 0; font-size: 1px;}
+
+
+div.body { width:890px ;margin:0 auto;text-align:left; font-size: 1px; }
+
+/* Menu top */
+div.menu_top_one { float:left; width: 107px; height: 10px; background-color: black; }
+div.menu_top_line_one { float:left; width: 1px; height: 10px; background-color: white; }
+div.menu_top_two { float:left; width: 680; height: 10px; background-color: white; }
+div.menu_top_line_two { float:left; width: 2px; height: 10px; background-color: white; }
+div.menu_top_three { float:left; width: 100px; height: 10px; background-color: white; }
+
+
+/* Menu middle */
+div.menu_middle_one { float:left; width: 107px; height: 25px; background-color: white; }
+div.menu_middle_line_one { float:left; width: 1px; height: 25px; background-color: black; }
+div.menu_middle_two { float:left; width: 680; height: 25px; background-color: white; }
+div.menu_middle_line_two { float:left; width: 2px; height: 25px; background-color: black; }
+div.menu_middle_three { float:left; width: 100px; height: 25px; background-color: white; }
+
+#icon_all { display:block; font-size:13px; margin-left: 10px; width 53px; height: 25px; background:url("img_all1.gif") no-repeat 0 0; }
+#icon_all:hover { background:url("img_all2.gif") no-repeat 0 0; }
+#icon_home { display:block; font-size:13px; margin-right: 10px; width: 53px; height: 25px; background:url("img_main1.gif") no-repeat 0 0;}
+#icon_home:hover { background:url("img_main2.gif") no-repeat 0 0; }
+
+div.menu_cell { float:left; display:block; width: 53px; height: 25px; }
+div.menu_cell_right { float:right; display:block; margin-right: 10px; width: 53px; height: 25px; }
+
+
+/* Menu line. This is horizontal line. */
+div.menu_h_one { float:left; width: 107px; height: 1px; line-height: 1px; font-size: 1px; background-color: white; }
+div.menu_h_line_one { float:left; width: 1px; height: 1px; line-height: 1px; font-size: 1px; background-color: black; }
+div.menu_h_two { float:left; width: 680; height: 1px; line-height: 1px; font-size: 1px; background-color: black; }
+div.menu_h_line_two { float:left; width: 2px; height: 1px; line-height: 1px; font-size: 1px; background-color: black; }
+div.menu_h_three { float:left; width: 100px; height: 1px; line-height: 1px; font-size: 1px; background-color: white; }
+
+/* Menu bottom */
+div.menu_bottom_one { float:left; width: 107px; height: 15px; background-color: white; }
+div.menu_bottom_line_one { float:left; width: 1px; height: 15px; background-color: black; }
+div.menu_bottom_two { float:left; width: 680; height: 15px; background-color: #aaaaaa; }
+div.menu_bottom_line_two { float:left; width: 2px; height: 15px; background-color: black; }
+div.menu_bottom_three { float:left; width: 100px; height: 15px; background-color: white; }
+
+/* Content */
+div.content { float:left;}
+div.content_main { font-size: 13px; line-height: 20px; float:none; width: 639px !important; padding: 20px 20px 5px 20px; }
+div.content_comment { float:none; min-height: 40px; width: 612px !important; padding: 0px 20px 20px 20px; }
+
+/* ******** */
+/* Comments */
+/* ******** */
+table.comment { font-size: 10px; float: left; width: 610px; }
+td.comment_name { font-size: 11px; width: 70px; font-weight: bold; vertical-align: text-top; }
+td.comment_content { font-size: 13px; max-width: 450px; padding: 3px 20px 5px 10px; vertical-align: text-top; }
+td.comment_date { width: 50px; font-size: 8px; vertical-align: text-top; }
+td.comment_vline { width: 4px; height: 100%; background-color: #6f9ce0; }/* #F8F8F8; } */
+td.comment_hline { height: 13px; }
+
+/* Textarea */
+textarea.comment { width: 560px; min-height: 50px; border: 1px solid #cccccc; padding: 5px; font-family: Tahoma, sans-serif; resize: none; }
+textarea.comment { width: 560px; height: 50px; border: 1px solid #cccccc; padding: 5px; font-family: Tahoma, sans-serif; resize: none; }
+input.comment { font-size: 12px; width: 80px; border: 0; border-bottom: 1px solid silver; }
+input.comment_submit { font-size: 12px; width: 65px; border: 1px solid black; }
+
+
+/* All List */
+
+/* div.column { height: 24px; line-height: 24px; } */
+div.column { margin:0 auto;text-align:left; font-size: 1px; }
+td.column_num { width: 70px; font-size:9px; }
+td.column_title { width: 300px; font-size:13px; }
+td.column_tag { width: 100px; font-size:13px; }
+/* For headers */
+td.column_num_h { width: 70px; font-weight: bold; font-size: 15px; }
+td.column_title_h { width: 300px; font-weight: bold; font-size: 15px; }
+td.column_tag_h { width: 100px; font-weight: bold; font-size: 15px; }
+td.column_b_n_t { width: 10px; }
+td.column_b_t_c { width: 20px; }
+

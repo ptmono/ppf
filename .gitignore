@@ -1,0 +1,15 @@
+comment_order_db
+comments
+config.py.ori
+htmls
+Makefile
+muses
+study.py
+test.py
+worknote.muse
+*.pyc
+.svn
+secure-git.sh
+.svnignore
+.ropeproject
+passwd

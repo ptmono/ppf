@@ -1,0 +1,43 @@
+<!-- {% macro input_field(name, value='', type='text') -%} -->
+<!--   <input type="{{ type }}" value="{{ value|e }}" name="{{ name }}"> -->
+<!-- {%- endmacro %} -->
+
+<!-- {% macro textarea(name, value='', rows=10, cols=40) -%} -->
+<!--   <textarea name="{{ name }}" rows="{{ rows }}" cols="{{ cols }}">{{ -->
+<!--     value|e }}</textarea> -->
+<!-- {%- endmacro %} -->
+
+<!-- {% macro form(action='', method='post') -%} -->
+<!--   <form action="{{ action|e }}" method="{{ method }}">{{ caller() }}</form> -->
+<!-- {%- endmacro %} -->
+
+<!-- using -->
+<!-- {% extends "layout.html" %} -->
+<!-- {% from "helpers.html" import input_field, textarea, form %} -->
+<!-- {% block page_title %}Index Page{% endblock %} -->
+<!-- {% block body %} -->
+<!--   {%- for article in articles if article.published %} -->
+<!--   <div class="article"> -->
+<!--     <h2><a href="{{ article.href|e }}">{{ article.title|e }}</a></h2> -->
+<!--     <p class="meta">written by <a href="{{ article.user.href|e -->
+<!--       }}">{{ article.user.username|e }}</a> on {{ article.pub_date|dateformat }}</p> -->
+<!--     <div class="text">{{ article.body }}</div> -->
+<!--   </div> -->
+<!--   {%- endfor %} -->
+<!--   {%- call form() %} -->
+<!--     <dl> -->
+<!--       <dt>Name</dt> -->
+<!--       <dd>{{ input_field('name') }}</dd> -->
+<!--       <dt>E-Mail</dt> -->
+<!--       <dd>{{ input_field('email') }}</dd> -->
+<!--       <dt>URL</dt> -->
+<!--       <dd>{{ input_field('url') }}</dd> -->
+<!--       <dt>Comment</dt> -->
+<!--       <dd>{{ textarea('comment') }}</dd> -->
+<!--       <dt>Captcha</dt> -->
+<!--       <dd>{{ input_field('captcha') }}</dd> -->
+<!--     </dl> -->
+<!--     {{ input_field(type='submit', value='Submit') }} -->
+<!--     {{ input_field('cancel', type='submit', value='Cancel') }} -->
+<!--   {%- endcall %} -->
+<!-- {% endblock %} -->

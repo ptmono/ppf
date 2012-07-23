@@ -1,0 +1,54 @@
+2011-12-15  ptmono  <ptmono@naver.com>
+
+	* poster.py: We can replace newline in comment to <br>.
+
+	* indexer.py: Add some error handling.
+	Some bug fixed.
+	Add unittest for apis.
+
+2011-12-15  ptmono  <ptmono@naver.com>
+
+	* poster.py: We can replace newline in comment to <br>.
+
+	* indexer.py: Add some error handling.
+	Some bug fixed.
+	Add unittest for apis.
+
+2011-12-08  ptmono  <ptmono@naver.com>
+
+	* indexer.py: Some fixed
+
+2011-12-08  ptmono  <ptmono@naver.com>
+
+	* indexer.py: Some fixed
+
+2011-10-05  ptmono  <ptmono@naver.com>
+
+	* poster.py: New file.
+
+2011-09-20  ptmono  <ptmono@naver.com>
+
+	* viewer.py: Save point. I will modify ViewHome class.
+
+2011-09-20  ptmono  <ptmono@naver.com>
+
+	* viewer.py: Save point. I will modify ViewHome class.
+
+2011-09-11  ptmono  <ptmono@naver.com>
+
+	* api.py: Init version.
+
+	* api.py: New file.
+
+2011-08-31  ptmono  <ptmono@naver.com>
+
+	* config.py: New file.
+
+2011-08-30  ptmono  <ptmono@naver.com>
+
+	* indexer.py: To use __dict__ in template, I saved previous source.
+
+2011-08-27  ptmono  <ptmono@naver.com>
+
+	* indexer.py, viewer.py: New file.
+
