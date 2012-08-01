@@ -1,0 +1,47 @@
+(setq ppf-report-json '(("1205220431" ("doc_id" . "1205220431") ("date" . "1205220436") ("tag" . "tools") ("climit" . "") ("update" . "1205220436") ("title" . "sikuli with emacs") ("unpublished" . "") ("author" . "dalsoo") ("category" . "tools")) ("1205220506" ("doc_id" . "1205220506") ("date" . "1205220508") ("tag" . "vision algorithm") ("climit" . "") ("update" . "1205220508") ("author" . "dalsoo") ("unpublished" . "") ("title" . "template matching with OpenCV") ("category" . "vision")) ("1205220747" ("doc_id" . "1205220747") ("date" . "1205220748") ("tag" . "tools") ("climit" . "") ("update" . "1205220748") ("title" . "Screen capture in Windows") ("unpublished" . "") ("author" . "dalsoo") ("category" . "tools")) ("0000000001" ("title" . "Welcome") ("category" . "a")) ("1205220314" ("doc_id" . "1205220314") ("date" . "1207120505") ("tag" . "tools") ("climit" . "") ("update" . "1207120505") ("author" . "dalsoo") ("unpublished" . "") ("title" . "eManual") ("category" . "tools")) ("1201170413" ("doc_id" . "1201170413") ("date" . "1201170414") ("tag" . "test test2") ("climit" . "") ("update" . "1201170414") ("title" . "What a test") ("unpublished" . "true") ("author" . "dalsoo") ("category" . ""))))
+
+(setq ppf-report-doc-ids/public '("1205220747" "1205220506" "1205220431" "1205220314" "1201170413" "0000000001"))
+
+(setq ppf-report/variables '(("title" 30 "Title")
+			     ("doc_id" 14 "ID")
+			     ("climit" 10 "Limit")))
+
+(deftest "ppf-report-doc-ids"
+  ;(assert-equal (ppf-report-doc-ids/get)))
+  )
+  
+
+(deftest "ppf-report-view"
+  (let* ((values1 '("This is the title" "1207252055" "5"))
+	 (values2 (list (make-string 32 ?a) "1207252058" "7"))
+	 )
+
+    (assert-equal (ppf-report-view/getJsonKeys)
+		  '("title" "doc_id" "climit"))
+
+    (assert-equal (ppf-report-view/encode values1)
+		  "This is the title             1207252055    5         ")
+    ;; Check cutting
+    (assert-equal (ppf-report-view/encode values2)
+		  "aaaaaaaaaaaaaaaaaaaaaaaaaaaa  1207252058    7         ")
+    )
+  )
+
+(deftest "ppf-report/getKeys"
+  (assert-equal (ppf-report/getKeys 2)
+		'("Title" "ID" "Limit"))
+  (assert-equal (ppf-report/getKeys 1)
+		'(30 14 10))
+  )
+
+(deftest "ppf-report/getInfos"
+  (assert-equal (ppf-report/getInfos "1205220506")
+		'("template matching with OpenCV" "1205220506" ""))
+  )
+
+(deftest "ppf-report/isUnPublishedArticle"
+  (assert-equal (ppf-report-doc-ids/isUnPublishedArticle "1201170413")
+		t)
+  (assert-equal (ppf-report-doc-ids/isUnPublishedArticle "1205220431")
+		nil)
+  )
