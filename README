@@ -40,14 +40,15 @@ Requirements
  - python: I am using 2.7. Not tested in other version.
  - jinja2
 
+(Optional)
+ - nosetest
+ - doctest
+
 
 Using
 =====
 
-1. Config config.py. url_root, url_api, server_host, server_user_id, se
-
-
-
+1. Config config.py.
 
 2. Correct the permission of your files. Your web server can read/write
 required directories.
@@ -55,13 +56,6 @@ required directories.
 3. Upload the file with following command. The file permission also is
 tanslated.
  - python tools/uploader.py --with-config
-
-
-Using
-=====
-
-
-
 
 
 TODO

@@ -2,7 +2,6 @@ comment_order_db
 comments
 config.py.ori
 htmls
-Makefile
 muses
 study.py
 test.py
@@ -13,3 +12,5 @@ secure-git.sh
 .svnignore
 .ropeproject
 passwd
+dbs/recent_comments_db
+htmlstest

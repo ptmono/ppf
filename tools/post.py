@@ -7,6 +7,7 @@ import re
 from urllib2 import urlopen, Request
 import hmac
 import inspect
+import json
 
 #lib_path = os.path.abspath('..')
 lib_path = os.path.abspath(__file__)
@@ -27,8 +28,8 @@ class MuseArticle(object):
 
     >>> ##ma = MuseArticle('1201132049')
     >>> ma = MuseArticle('1201170413')    
-    >>> ma.html
-    >>> ma.files
+    >>> #ma.html
+    >>> #ma.files
     ['/home/ptmono/.emacs.d/imgs/image2090.jpg', '/home/ptmono/.emacs.d/imgs/image2099.jpg', '/home/ptmono/.emacs.d/imgs/image2100.jpg', '/home/ptmono/.emacs.d/imgs/image2098.jpg']
     >>> ma.json #doctest: +SKIP
 
@@ -40,6 +41,7 @@ class MuseArticle(object):
     ['/home/ptmono/.emacs.d/imgs/image2173.jpg']
     >>> ma.listFilesFromMuse(source)
     ['/home/ptmono/files/120312050912_003.jpg']
+
     '''
     def __init__(self, doc_id):
         self.doc_id = doc_id
@@ -213,9 +215,8 @@ def updateArticle(doc_id):
     use the function we need the muse file for index, the html file for
     article.
     >>> ma = MuseArticle('1201170413')    
-    >>> ma.html
-    >>> updateArticle('1201170413')
-    >>> 
+    >>> #ma.html
+    >>> #updateArticle('1201170413')
     """
     mu = MuseArticle(doc_id)
     index = mu.json
@@ -380,6 +381,43 @@ def updateFileWithFtp(filename):
     This function uses ftp to upload a file.
     """
     return uploadFile(filename)
+
+
+def indexFilename():
+    return config.index_filename()
+
+
+def getArticleInfosAsJson (doc_id):
+    article = Article()
+    article.setFromId(doc_id)
+    return json.dumps(article.__dict__)
+
+def getFilename (id):
+    '''
+    >>> getFilename("1207262047") #doctest: +ELLIPSIS
+    '/home/.../1207262047.muse'
+    '''
+    article = Article()
+    return article._path(id)
+
+def getConfig (attr, *args):
+    '''
+    >>> getConfig("index_filename") #doctest: +ELLIPSIS
+    '/.../index.json'
+    >>> getConfig("char_set")
+    'utf-8'
+    >>> getConfig("article_filename", "1207271735") #doctest: +ELLIPSIS
+    '/.../1207271735.html'
+    '''
+    attr = getattr(config, attr)
+    if callable(attr):
+        if args:
+            return attr(*args)
+        else:
+            return attr()
+    else:
+        return attr
+
 
 ### tools
 
