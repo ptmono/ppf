@@ -42,8 +42,6 @@ class MuseArticle(object):
     >>> ma.listFilesFromMuse(source)
     ['/home/ptmono/files/120312050912_003.jpg']
 
-    >>> MuseArticle.getFullHtml(1208011003)
-
     '''
     def __init__(self, doc_id):
         self.doc_id = doc_id

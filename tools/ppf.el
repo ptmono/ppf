@@ -131,6 +131,7 @@ update the html of article."
     (browse-url-firefox html-file-name)))
 
 (defun ppf/article-preview ()
+  (interactive)
   (ppf/article-publish-view))
 
 
