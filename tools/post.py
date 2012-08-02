@@ -42,6 +42,8 @@ class MuseArticle(object):
     >>> ma.listFilesFromMuse(source)
     ['/home/ptmono/files/120312050912_003.jpg']
 
+    >>> MuseArticle.getFullHtml(1208011003)
+
     '''
     def __init__(self, doc_id):
         self.doc_id = doc_id
@@ -88,6 +90,47 @@ class MuseArticle(object):
             return None
 
         return content[body_start:body_end]
+
+    # TODO: Consider elegant(?) way
+    @staticmethod
+    def getFullHtml(doc_id):
+        filename = config.muses_d + str(doc_id) + config.html_extension
+        fd = file(filename, 'r')
+        content = fd.read()
+        fd.close()
+        try:
+            body_start = re.search("<body>", content).end()
+            body_end = re.search("</body>", content).start()
+        except AttributeError:
+            return None
+
+        body = content[body_start:body_end]
+        html_header = '''
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link rel="stylesheet" type="text/css" href="../medias/css_body.css" />
+<link rel="stylesheet" type="text/css" href="../medias/css_muse.css" />
+
+<style type="text/css">
+body {
+  background: white; color: black;
+  margin-left: 3%; margin-right: 7%;
+  width:630px;
+  border-style:solid;
+  border-width:1px;
+  padding:15px 19px 5px;
+  
+}
+</style>
+
+
+</head><body>
+'''
+        html_footer = "</html>"
+
+        html = html_header + body + html_footer
+        return html
+        
 
 
     def listImages(self, html_source):
@@ -141,8 +184,8 @@ class MuseArticle(object):
         return filename
                 
 
-    def html_full(self):
-        pass
+
+        
 
 
 class API(object):
@@ -427,13 +470,7 @@ def indexAllArticles():
 
 def getArticleHtml(doc_id):
     "Get the content of html verion of document."
-    filename = config.article_filename(doc_id)
-    fd = file(filename, 'r')
-    content = fd.read()
-    # We need only the content of body
-    start = content.find('<body>') + len('<body>')
-    end = content.find('</body>')
-    return content[start:end]
+    return MuseArticle.getFullHtml(doc_id)
 
 
 def getUnupdatedArticles():

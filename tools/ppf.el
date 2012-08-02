@@ -108,18 +108,30 @@
 update the html of article."
   (interactive)
   (let* ((buffer-file-name (buffer-file-name))
-	 (html-file-name (replace-regexp-in-string "muse" "html" buffer-file-name)))
+	 (html-file-name (replace-regexp-in-string "muse" "html" buffer-file-name))
+	 (doc-id (replace-regexp-in-string "\\.muse" "" (file-name-nondirectory buffer-file-name)))
+	 html)
     (muse-publish-file buffer-file-name
 		       "d-html-derive"
 		       ppf/publish-dir
 		       t)
+    ;; Current css is of muse. Change of ppf.
+    (ppf/pymacs-init)
+    (setq html (ppf-getArticleHtml doc-id))
+    (with-temp-file
+	html-file-name
+      (insert html))
+      
     html-file-name))
+
 
 (defun ppf/article-publish-view ()
   "To see the published file."
-  (interactive)
   (let* ((html-file-name (ppf/article-publish)))
     (browse-url-firefox html-file-name)))
+
+(defun ppf/article-preview ()
+  (ppf/article-publish-view))
 
 
 (defun ppf/article-update ()
@@ -544,7 +556,8 @@ the list of key."
 
 ;;; === Keybinding
 ;;; --------------------------------------------------------------
-(define-key muse-mode-map [?\C-c ?p ?v] 'ppf/article-publish)
+(define-key muse-mode-map [?\C-c ?p ?p] 'ppf/article-publish)
+(define-key muse-mode-map [?\C-c ?p ?v] 'ppf/article-preview)
 (define-key muse-mode-map [?\C-c ?p ?u] 'ppf/article-update)
 (define-key muse-mode-map [?\C-c ?p ?i ?u] 'ppf/article-update)
 (define-key python-mode-map [?\C-c ?p ?u] 'ppf/upload-this-file)
