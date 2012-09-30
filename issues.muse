@@ -1,0 +1,18 @@
+
+* 1209081157 muse-mode publish problem
+
+See 1209071536.muse. muse-mode couldn't publish the code for color.
+
+
+* 1209071423  [Fixed]bad name parsing of
+
+ppf-report-doc-ids/notPosted-public
+
+1209071418.muse, 1209071418.muse~, 1209071418.muse~~
+
+all file are added to the variable.
+
+ - [[pos:///home/ptmono/Desktop/Documents/ppf/tools/ppf.el#7617][/home/ptmono/Desktop/Documents/ppf/tools/ppf.el]]
+
+
+
