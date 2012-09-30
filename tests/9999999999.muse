@@ -21,6 +21,9 @@
 [[/home/ptmono/.emacs.d/imgs/image2099.jpg]]
 
 
+[[~/.emacs.d/imgs/image2099.jpg]]
+
+
 
 * 기타
 

@@ -1,3 +1,11 @@
+2011-12-15  ptmono  <ptmono@gmail.com>
+
+	* poster.py: We can replace newline in comment to <br>.
+
+	* indexer.py: Add some error handling.
+	Some bug fixed.
+	Add unittest for apis.
+
 2011-12-15  ptmono  <ptmono@naver.com>
 
 	* poster.py: We can replace newline in comment to <br>.

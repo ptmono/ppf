@@ -10,13 +10,18 @@
 ;; - Detect ftp is turn off
 
 
+(require 'muse-mode)
+
+
 ;; Dosen't work with "~"
 (defcustom ppf/root-dir "/home/ptmono/Desktop/Documents/ppf/" "")
 (defcustom ppf/post-dir (concat ppf/root-dir "tools/") "")
 (defcustom ppf/publish-dir (concat ppf/root-dir "dbs/") "")
-(defcustom ppf/publish-mode "d-html-derive" "")
+(defcustom ppf/publish-mode "d-html-derive" "muse-mode publishing style.")
 (defcustom ppf/post-program (concat ppf/post-dir "post.py") "")
 (defcustom ppf/cmd (concat ppf/post-dir "ppf_cmd.py") "")
+
+(defcustom ppf/browse "firefox" "Choose firefox or chrome")
 
 ;;(add-to-list 'load-path ppf/post-dir)
 
@@ -112,7 +117,7 @@ update the html of article."
 	 (doc-id (replace-regexp-in-string "\\.muse" "" (file-name-nondirectory buffer-file-name)))
 	 html)
     (muse-publish-file buffer-file-name
-		       "d-html-derive"
+		       ppf/publish-mode
 		       ppf/publish-dir
 		       t)
     ;; Current css is of muse. Change of ppf.
@@ -128,7 +133,9 @@ update the html of article."
 (defun ppf/article-publish-view ()
   "To see the published file."
   (let* ((html-file-name (ppf/article-publish)))
-    (browse-url-firefox html-file-name)))
+    (if (equal ppf/browse "chrome")
+	(browse-url-chromium html-file-name)
+      (browse-url-firefox html-file-name))))
 
 (defun ppf/article-preview ()
   (interactive)
@@ -308,7 +315,7 @@ method befor I solve that."
     ("climit" 10 "Limit")
     )
   
-    "")
+    "See ppf-report/getInfos")
 
 (defun ppf-report/getKeys (nth)
   (let* ((key-lists ppf-report/variables)
@@ -461,7 +468,7 @@ the list of key."
 
 
 (defun ppf-report-dired/getFileIds ()
-  (let* ((files (directory-files ppf/publish-dir nil ".*.muse"))
+  (let* ((files (directory-files ppf/publish-dir nil ".*.muse$"))
 	 file
 	 result
 	 )
@@ -551,16 +558,13 @@ the list of key."
   )
 
 
-
-
-
-
 ;;; === Keybinding
 ;;; --------------------------------------------------------------
 (define-key muse-mode-map [?\C-c ?p ?p] 'ppf/article-publish)
 (define-key muse-mode-map [?\C-c ?p ?v] 'ppf/article-preview)
 (define-key muse-mode-map [?\C-c ?p ?u] 'ppf/article-update)
 (define-key muse-mode-map [?\C-c ?p ?i ?u] 'ppf/article-update)
+(require 'python)
 (define-key python-mode-map [?\C-c ?p ?u] 'ppf/upload-this-file)
 
 (provide 'ppf)

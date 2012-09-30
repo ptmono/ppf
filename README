@@ -3,35 +3,40 @@ Purpose
 =======
 
 I need a place to write my consideration, study, story. The site ppf.je.ro
-is the solution up to 2006. The site is based on Zeroboard version 4. It was created
+was the solution up to 2006. The site is based on Zeroboard version 4. It was created
 in 2003. That time I am not interesting the software development and just
 want a page I can post.
 
-Currently I use Emacs to write all of note, article. Muse-mode that is an
-Emacs module is used. The page to be written by muse-mode can publish
-other text formats such as html, latex, pdf, texi. I can more conveniently
-write and maintain my note with Emacs and Emacs modules such as muse-mode,
-planner-mode, outline-mode, fill-mode, abbrev-mode, flyspell-mode, etc.
-Most powerful thing is I can freely modify and combine the modules. It is
-the main problem when I used Microsoft Office.
+Currently I am using Emacs to write all of note, article. Muse-mode that
+is an Emacs module is used. The page to be written by muse-mode can
+publish other text formats such as html, latex, pdf, texi. I can more
+conveniently write and maintain my note with Emacs and Emacs modules such
+as muse-mode, planner-mode, outline-mode, fill-mode, abbrev-mode,
+flyspell-mode, etc. Most powerful thing is I can freely modify and combine
+the modules. It is the main problem when I used Microsoft Office.
 
-Main problem of previous site is the spam comments. Zeroboard is famous
-free webboard in Korea. I think that there is spam bot for Zeroboard
-version 3. One day in 2008 I was reading the posts I written. I surprised
-some page has hundreds comment. All the comments are spam. I permit the
-commenting for only registered users. However, I couldn't stop spam. The
-bot automatically join and continuously comments the spam. The author of
-Zeroboard version 4 currently doesn't maintain Zeroboard version 4 any
-more. I have to fix that. 
+Main problem of previous site is the spam for comment. Zeroboard is a
+famous free webboard in Korea. I think that there is spam bot for
+Zeroboard version 3. One day in 2008 I was reading the posts I written. I
+surprised some page has hundreds of comments. All the comments are spam. I
+permit the commenting for only registered users. However, I couldn't stop
+spam. The bot automatically join and continuously comments the spam. The
+author of Zeroboard version 4 currently doesn't maintain Zeroboard version
+4 any more. I have to fix that.
 
 Another problem is to maintain the articles and the comments with Emacs. I
 want to write the article with muse-mode and to maintain the comments with
 gnus which is an Newsreader of Emacs. It requires some modification and
 third party tools.
 
-Where the best choice is to use/modify Django or WordPress. It provides
-more stable/extensible/useful stuffs. 
+This is my solution. Convenient editing for the source and the article is
+a main goal. There is no consideration the use of other user. But someone
+want to that, I will explain/add the code for more readable code. I think
+the interesting is good payment for coding.
 
+ - Convenient writing of a article (for me).
+ - Convenient configuring of a article (for me).
+ - Convenient configuring of program (for me).
 
 
 Requirements
@@ -39,8 +44,13 @@ Requirements
 
  - python: I am using 2.7. Not tested in other version.
  - jinja2
+ - pymacs
+ - muse-mode of emacs
+ - json-mode of emacs
+
 
 (Optional)
+ - ftp server: server side
  - nosetest
  - doctest
 
@@ -48,18 +58,114 @@ Requirements
 Using
 =====
 
-1. Config config.py.
+Notice: Current versions depends my emacs configuration. I had not
+considered other the use of other users. So it has fewer documentation.
+Someone want to use this and has problems. Please comment. I will happy to
+reply.
 
-2. Correct the permission of your files. Your web server can read/write
+ - http://ppf.je.ro : Demo
+
+Upload
+------
+1. Download with "git clone https://github.com/ptmono/ppf.git"
+
+2. Config config.py.
+
+3. Correct the permission of your files. Your web server can read/write
 required directories.
 
-3. Upload the file with following command. The file permission also is
-tanslated.
+4. Upload the file with following command. The file permission is also
+translated. You need ftp service in server side.
  - python tools/uploader.py --with-config
+
+Or manually upload the files.
+
+
+Emacs
+-----
+1. Configure tools/ppf.el
+
+2. load ppf.el.
+
+(add-to-list 'load-path "YOUR_PATH/tools/ppf.el")
+(require 'ppf)
+
+3. M-x ppf-report will list your articles.
+
+
+Writing article
+---------------
+You article start with directives such as
+
+1201132049.muse
+
+#title Screen capture in Windows
+#author dalsoo
+#date 1205220748
+#update 1205220748
+#tag tools
+#category tools
+#climit 3
+#unpublished true
+
+Content ...
+
+
+The "climit" will determines the number of maximum comment. The
+"unpublished" determines show/hide of the article on the web. "true" means
+that anyone can not see this article from his browser.
+
+This file is written by muse-mode of emacs. The name of file is
+"1201132049.muse". It is current time. I am using following code to create
+the time.
+
+(defvar d-myel-previous-time nil)
+
+(defun d-insert-time ()
+  "Inserting current time with \"\#\" e.g #0606300955 and rememberf this"
+  (interactive)
+  (let* ((current-time (d-create-citation)))
+    (progn
+      (kill-new current-time)
+      (yank)
+      (setq d-myel-previous-time current-time))))
+
+(defun d-create-anchor ()
+  (concat "#" (d-create-citation)))
+
+(defun d-create-citation ()
+  (let* ((current-time (d-current-time)))
+    (if d-myel-previous-time
+	(when (>= (string-to-number d-myel-previous-time)
+		  (string-to-number current-time))
+	  (setq current-time 
+		(number-to-string
+		 (+ (string-to-number d-myel-previous-time) 1)))))
+    current-time))
+
+(defun d-current-time ()
+"create current time"
+(format-time-string "%y%m%d%H%M" (current-time)))
+
+
+Publish the muse article with the function 'muse-publish-this-file' of
+muse-mode. Or tools/ppf.el contains the function 'ppf/article-publish'.
+ppf.el also contains following functions and keybinded.
+
+(define-key muse-mode-map [?\C-c ?p ?p] 'ppf/article-publish)
+(define-key muse-mode-map [?\C-c ?p ?v] 'ppf/article-preview)
+(define-key muse-mode-map [?\C-c ?p ?u] 'ppf/article-update)
+(define-key muse-mode-map [?\C-c ?p ?i ?u] 'ppf/article-update)
+(require 'python)
+(define-key python-mode-map [?\C-c ?p ?u] 'ppf/upload-this-file)
+
+ - ppf/article/publish: Convert muse to html
+ - ppf/article-preview: Show me current article with web browser
+ - ppf/article-update: Upload this article to web
 
 
 TODO
 ====
 
- - Determine secure method for api
+ - See todo.muse
 

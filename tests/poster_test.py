@@ -3,8 +3,9 @@
 
 from common import *
 import urllib
+import re
 
-from tools.post import updateArticle
+from tools.post import updateArticle, MuseArticle
 from poster import addComment
 
 
@@ -86,4 +87,18 @@ class Comment_test(TestCase):
         assert web_content.find(content + str(counts - 1)) != -1
         assert web_content.find(content + str(counts)) == -1
 
+
+    def test_articleHooking_homeChar(self):
+        '''
+        config.py ArticleHook has a problem. We couldn't replace '~'
+        character.
+        '''
+        dummy_id = Var.dummy_id
+        # The text will be "files/image2099.jpg"
+        text_willbe_changed = "~/.emacs.d/imgs/image2099.jpg"        
+        article = MuseArticle(dummy_id)
+        content = article.getHtml()
+        
+        matchobj = re.match(content, text_willbe_changed)
+        assert matchobj != 0
 

@@ -42,6 +42,7 @@ class MuseArticle(object):
     >>> ma.listFilesFromMuse(source)
     ['/home/ptmono/files/120312050912_003.jpg']
 
+    >>> ma2 = MuseArticle('1208011003')
     '''
     def __init__(self, doc_id):
         self.doc_id = doc_id
@@ -85,6 +86,8 @@ class MuseArticle(object):
             body_start = re.search("<body>", content).end()
             body_end = re.search("</body>", content).start()
         except AttributeError:
+            msg = self.filename_html + " has no body tag."
+            libs.log(msg)
             return None
 
         return content[body_start:body_end]
@@ -99,9 +102,10 @@ class MuseArticle(object):
         try:
             body_start = re.search("<body>", content).end()
             body_end = re.search("</body>", content).start()
+            body_end = body_end + len("</body>")
         except AttributeError:
             return None
-
+        
         body = content[body_start:body_end]
         html_header = '''
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
