@@ -43,10 +43,12 @@ Requirements
 ============
 
  - python: I am using 2.7. Not tested in other version.
- - jinja2
+ - jinja2(added)
  - pymacs
  - muse-mode of emacs
  - json-mode of emacs
+ - scrubber(added)
+   - BeautifulSoup(added)
 
 
 (Optional)

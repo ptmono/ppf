@@ -15,3 +15,4 @@ passwd
 dbs/recent_comments_db
 htmlstest
 config_flymake.py
+private/

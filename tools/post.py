@@ -248,6 +248,7 @@ class API(object):
 
         data = self.required_data.urlencode()
         req = Request(self.url, data)
+        #libs.log(req)
         return urlopen(req)
 
 ### apis

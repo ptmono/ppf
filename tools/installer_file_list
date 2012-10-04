@@ -78,3 +78,5 @@ jinja2/_markupsafe/tests.py
 
 scrubber/
 scrubber/__init__.py
+
+BeautifulSoup.py

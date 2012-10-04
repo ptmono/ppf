@@ -80,9 +80,9 @@ import hmac
 import inspect
 
 import config
-if config.LOCAL_TEST:
-    import cgitb
-    cgitb.enable()
+#if config.LOCAL_TEST:
+import cgitb
+cgitb.enable()
 
 import libs
 
@@ -385,6 +385,8 @@ def main():
         apply(cmd, values)
         #except:
         #    sys.exit(1)
+    # print "Content-type: text/html\n"
+    # print "test"
 
 if __name__ == "__main__":
     main()
