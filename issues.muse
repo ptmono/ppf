@@ -1,5 +1,3 @@
-
-
 * 1210041028 error with testing
 
 tests/uploader_test.py has problem with testing for server. couldn't check
@@ -46,6 +44,33 @@ The title has a problem.
 [[~/.emacs.d/imgs/image2230.jpg]]
 
 This is the problem of je.ro. I changed this to english.
+
+
+
+
+* [Fixed] 1301120605 testing and index.json problem
+
+If I test, then all index.json is removed.
+
+#1301140742
+REPORT: Added upload-init-db, upload-remote-init-db, upload-without-db in
+Makefile. If you are first upload, then 'make upload-new'. This will init
+remote dbs. If you only upload server sources, then use
+upload-new/upload-without-db. upload-init-db will init both local and
+remote db. If you want to init only remote, then use upload-remote-init-db.
+
+
+* [Fixed] 1301120552 upload problem
+
+$ make upload
+will upload ppf to server. It upload init dbs/index.json.
+
+I want to upload only ppf without db. So the db continuously can be used.
+To do this We can remove the db files from upload_file_list. But it will
+touch local dbs. So I have to re register the articles.
+
+#1301140749
+REPORT: See #1301140742
 
 
 

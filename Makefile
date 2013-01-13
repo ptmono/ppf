@@ -13,6 +13,29 @@ else
 	PASS_SERVER=`cat private/passwd_server`
 endif
 
+LOCAL_TEST=$(shell cat config.py |sed -n '/^LOCAL_TEST/p' |awk 'BEGIN { FS = "="} {print $$2}')
+
+ifneq (, $(findstring True,${LOCAL_TEST}))
+	AAAK="ccd"
+else
+	AAAK="ddc"
+endif
+
+
+t:
+	$(if $(findstring False, ${LOCAL_TEST}),\
+	echo "aaa",\
+	echo "bbb")
+
+	@echo ${LOCAL_TEST}
+	@if test "aaa" != "aaa"; then \
+	echo "ccccccccccc"; \
+	else echo "ddddddddd"; fi
+
+	if test "aaa" == "aaa"; then exit 2; fi
+	@echo "mmmmmmmmmmmmm"
+y:
+	@echo "aaak"
 
 
 test: doctest unittest
@@ -26,15 +49,62 @@ unittest: test-mode
 zip:
 	tar cf ppf.tar -l `cat tools/zip_file_list`
 
+
 prepare-upload:
-	sed -i "s/$(PASS)/USER_PASSWORD/g" config.py
+	@if test ${LOCAL_TEST} == False; then \
+	sed -i "s/$(PASS)/USER_PASSWORD/g" config.py; fi
+	chmod 755 *.py
 	chmod 777 dbs
 	chmod 777 files
 	chmod 666 dbs/index.json
 
-upload: prepare-upload
+exclude-dbs-in-upload-files:
+	echo "______________________________________"; \
+	echo "Echo: Backup tools/installer_file_list"; \
+	if [ -f tools/installer_file_list.bak ]; then \
+	( echo "Error: tools/installer_file_list is locked. It means tools/installer_file_list is exists. Do make restore-dbs-in-upload-files"; \
+	  exit 2 ); \
+	else \
+	( cp tools/installer_file_list tools/installer_file_list.bak; \
+	  sed -i -n '/^dbs/ !p' tools/installer_file_list ); fi
+
+restore-dbs-in-upload-files:
+	if [ -f tools/installer_file_list.bak ]; then \
+	( rm tools/installer_file_list; \
+	  mv tools/installer_file_list.bak tools/installer_file_list ); \
+	else \
+	( echo "Error: Why tools/installer_file_list.bak is not exist ? \ restore-dbs-in-upload-files requires exclude-dbs-in-upload-files"; \
+	  exit 2); fi
+
+backup-index:
+	@echo "_____________________"
+	@echo "Echo: Backup index..."
+	cp dbs/index.json dbs/index.json.bak
+
+restore-index:
+	@echo "______________________"
+	@echo "Echo: Restore index..."
+	cp dbs/index.json.bak dbs/index.json
+
+upload: upload-without-db
+upload-new: upload-remote-init-db
+
+# Init db and upload. local/remote will be init.
+upload-init-db: prepare-upload
 	python tools/uploader.py --with-config
-	sed -i "s/USER_PASSWORD/$(PASS)/g" config.py
+	echo ${LOCAL_TEST}
+	if test ${LOCAL_TEST} == False; then \
+	sed -i "s/USER_PASSWORD/$(PASS)/g" config.py; fi
+
+# Upload init db to remote. local db will not be init.
+upload-remote-init-db: backup-index upload-init-db restore-index
+
+upload-without-db: exclude-dbs-in-upload-files upload-remote-init-db restore-dbs-in-upload-files
+
+
+#TODO: write this
+#upload-sync-db
+
 
 unload:
 	python -c 'from tests.common import destroy; destroy()'

@@ -68,6 +68,23 @@ class File(object):
     >>> #print file1
     >>> file1.write('bbc')
     >>> #os.path.exists(file1._lock_filename())
+
+    ### === Recently comment
+    ### __________________________________________________________
+    >>> content = "13011103471\\n"
+    >>> file2 = File(None, 'rc', 'a+')
+    >>> file2.write(content)
+    >>> file2.close()
+
+    >>> content = '99011103471\\n'
+    >>> file2 = File(None, 'rc', 'a+')
+    >>> file2.write(content)
+    >>> file2.close()
+
+    >>> file2 = File(None, 'rc', 'r')
+    >>> file2.read()
+    '13011103471\n99011103471\n'
+    >>> file2._remove()
     """
     def __init__(self, doc_id, file_type, mode):
         self.doc_id = str(doc_id)

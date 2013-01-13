@@ -43,6 +43,7 @@ Requirements
 ============
 
  - python: I am using 2.7. Not tested in other version.
+ - emacs lisp
  - jinja2(added)
  - pymacs
  - muse-mode of emacs

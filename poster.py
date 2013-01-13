@@ -20,7 +20,7 @@ if config.LOCAL_TEST:
     cgitb.enable()
 
 import libs
-from indexer import Comments, Comment, Articles
+from indexer import Comments, Comment, Articles, File
 
 import html_messages as hm
 
@@ -47,11 +47,24 @@ def addComment(doc_id, form):
     comments.updateFromObj(comment)
     comments.save()
 
+    try:
+        # Newly created comment key. Write to recentdb
+        comment_key = comments.indexes[0]
+        comment_id = doc_id + comment_key
+        fd = File(None, 'rc', 'a')
+        fd.write(comment_id)
+        fd.close()
+    except Exception, err:
+        config.logger.error(err)
+
+
+
     # Send notification mail
     try:
         if config.comment_mail_me: sendMail(comment)
     except:
-        pass
+        msg = "Falied to send mail, comment_id %s" % comment_id
+        config.logger.error(msg)
         
     print "Content-type: text/html\n"
     print hm.redirect % (doc_id + "#" + comment.comment_id)
