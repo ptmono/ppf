@@ -105,6 +105,22 @@ class ViewAbstract(object):
         lastest_json = articles.indexes[-1]
         return lastest_json
 
+    def lastestDocNumberPublished(self):
+        ""
+        articles = indexer.Articles()
+        articles.set()
+        # try:
+        #     articles.indexes.reverse()
+        # except:
+        #     return '0000000000'
+
+        for article in articles:
+            if article.unpublished:
+                continue
+            return article.doc_id
+        return '0000000000'
+        
+
     def fileContentWithUnicode(self, filename, char_set=config.char_set):
         "Jinja requires unicode content. So have to read the file as unicode."
         fd = file(filename, 'r')
@@ -216,7 +232,7 @@ class ViewHome(ViewId):
     # contains javascript.
 
     def __init__(self):
-        doc_id = self.lastestDocNumber()
+        doc_id = self.lastestDocNumberPublished()
         super(ViewHome, self).__init__(doc_id)
 
 

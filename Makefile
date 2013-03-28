@@ -89,7 +89,7 @@ restore-index:
 upload: upload-without-db
 upload-new: upload-remote-init-db
 
-# Init db and upload. local/remote will be init.
+# Init db and upload. both local/remote will be init.
 upload-init-db: prepare-upload
 	python tools/uploader.py --with-config
 	echo ${LOCAL_TEST}

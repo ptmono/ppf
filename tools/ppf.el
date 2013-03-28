@@ -564,7 +564,7 @@ the list of key."
 (define-key muse-mode-map [?\C-c ?p ?v] 'ppf/article-preview)
 (define-key muse-mode-map [?\C-c ?p ?u] 'ppf/article-update)
 (define-key muse-mode-map [?\C-c ?p ?i ?u] 'ppf/article-update)
-(require 'python)
+(require 'python-mode)
 (define-key python-mode-map [?\C-c ?p ?u] 'ppf/upload-this-file)
 
 (provide 'ppf)
