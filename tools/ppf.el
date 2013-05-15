@@ -217,9 +217,11 @@ method befor I solve that."
 
 ;;; ppf-report-doc-ids/
 
-(defvar ppf-report-json)
+(defvar ppf-report-json nil
+  "The index file for articles.")
 
 (defun ppf-report-json/set ()
+  "Set index file for articles."
   (let* ((index-filename (ppf-indexFilename))
 	 (json-key-type 'string))
     (setq ppf-report-json (json-read-file index-filename)))
@@ -310,9 +312,10 @@ method befor I solve that."
 ;;; ppf-report-view/
 
 (defcustom ppf-report/variables
-  '(("title" 30 "Title")
-    ("doc_id" 14 "ID")
-    ("climit" 10 "Limit")
+  '(("title" 35 "Title")
+    ("doc_id" 12 "ID")
+    ("climit" 3 "Lm")
+    ("category" 16 "Category")
     )
   
     "See ppf-report/getInfos")
@@ -527,7 +530,23 @@ the list of key."
     (find-file filename))
   )
 	 
-  
+(defun ppf-report/new-article ()
+  "Create new article"
+  (interactive)
+  (let* ((title (read-string "Title: "))
+	 (date (d-create-citation))
+	 (category (read-string "Category: "))
+	 (header (concat
+		  "#title " title "\n"
+		  "#author dalsoo\n"
+		  "#date " date "\n"
+		  "#update " date "\n"
+		  "#category " category "\n"
+		  "#unpublished false\n")))
+    (find-file (concat ppf/publish-dir date ".muse"))
+    (insert header)
+    ))
+
 (defun ppf-report ()
   (interactive)
   (if (get-buffer "*ppf-report*")
@@ -546,8 +565,10 @@ the list of key."
     (define-key map [?\C-m] 'ppf-report/jumpTo)
     (define-key map [?f] 'ppf-report/jumpTo)
     (define-key map [?p] 'previous-line)
+    (define-key map [?N] 'ppf-report/new-article)
     (define-key map [?n] 'next-line)
     (define-key map [?g] 'ppf-report)
+
     map)
   "Keymap used by d-w3m-ytn-mode")
 
