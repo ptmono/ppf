@@ -18,3 +18,5 @@ config_flymake.py
 private/
 tools/installer_file_list.bakn
 dbs2/
+/aa
+/dbs/index.json.bak.pre.aaa

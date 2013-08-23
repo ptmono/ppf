@@ -153,6 +153,7 @@ test-mode:
 	sed -i "s/LOCAL_TEST=False/LOCAL_TEST=True/g" config.py
 	@if [ ! -f dbs/index.json.bak ]; then \
 		cp dbs/index.json dbs/index.json.bak; \
+		cp dbs/index.json dbs/index.json.bak.pre; \
 	fi
 
 real-mode:

@@ -10,7 +10,7 @@ h1 { margin-top: 25px; margin-bottom: 10px; }
 h2 { margin-top: 25px; margin-bottom: 18px; margin-left: -10px; text-decoration: none; border-bottom: 3px double #000000; }
 h3 { margin-top: 8px; margin-bottom: 14px; margin-left: -10px; text-decoration: none; border-bottom: 1px solid #aaaaaa; }
 h4 { margin-top: 8px; margin-bottom: 14px; margin-left: -10px; text-decoration: underline; }
-pre { width: 570px; background: #3c3c3c; color: white; border-style:solid; border-width:1px; border-color: blue; padding: 20px 20px 5px 5px; font-size: 12px; overflow: auto; }
+pre { width: 570px; background: #3c3c3c; color: white; border-style:solid; border-width:1px; border-color: blue; padding: 7px 20px 7px 9px; font-size: 12px; overflow: auto; }
 blockquote { font-size: 13px; }
 p.image img { max-width: 630px; }
 table.muse-table { width: 570px; margin: 0; font-size: 13px; border-collapse: collapse; background: #e2effa; border: 1px solid #aadeed; }

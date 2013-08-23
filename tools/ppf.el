@@ -547,6 +547,7 @@ the list of key."
     (insert header)
     ))
 
+
 (defun ppf-report ()
   (interactive)
   (if (get-buffer "*ppf-report*")

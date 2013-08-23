@@ -1,0 +1,68 @@
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link rel="stylesheet" type="text/css" href="../medias/css_body.css" />
+<link rel="stylesheet" type="text/css" href="../medias/css_muse.css" />
+
+<style type="text/css">
+body {
+  background: white; color: black;
+  margin-left: 3%; margin-right: 7%;
+  width:630px;
+  border-style:solid;
+  border-width:1px;
+  padding:15px 19px 5px;
+  
+}
+</style>
+
+
+</head><body>
+
+    <h1>css_muse.css</h1>
+    <!-- Page published by Emacs Muse begins here -->
+<p>p { margin-top: 8px; }
+p.verse { margin-left: 3%; }</p>
+
+<p>.example { margin-left: 3%; }
+.src { margin-left: 3%; }
+/* For quote <em>/
+blockquote { border-left: thin solid #000000; margin-left: 3%; padding: 0 0 0 5; }</p>
+
+<p>h1 { margin-top: 25px; margin-bottom: 10px; }
+h2 { margin-top: 25px; margin-bottom: 18px; margin-left: -10px; text-decoration: none; border-bottom: 3px double #000000; }
+h3 { margin-top: 8px; margin-bottom: 14px; margin-left: -10px; text-decoration: none; border-bottom: 1px solid #aaaaaa; }
+h4 { margin-top: 8px; margin-bottom: 14px; margin-left: -10px; text-decoration: underline; }
+pre { width: 570px; background: #3c3c3c; color: white; border-style:solid; border-width:1px; border-color: blue; padding: 7px 20px 7px 9px; font-size: 12px; overflow: auto; }
+blockquote { font-size: 13px; }
+p.image img { max-width: 630px; }
+table.muse-table { width: 570px; margin: 0; font-size: 13px; border-collapse: collapse; background: #e2effa; border: 1px solid #aadeed; }
+table.muse-table tbody td { border: 1px solid #ccdeed; }</p>
+
+<p>/</em> nested sections <em>/
+.section { margin: 0; padding: 10px; margin-bottom: 10px; font-size: 13px; margin-left: -10px; }
+.section .section { margin: 0; margin-left: 0px; font-size: 13px; }
+.title { margin: 0; padding; 0 }</p>
+
+<p>/</em> #sec2 { margin-left: 20px; } <em>/</p>
+
+<p>.image-caption { font-size: 17px; margin-top: 20px; }</p>
+
+<p>/</em> Diary section <em>/
+<a name="diary" id="diary"></a>
+p { margin-top: 1em; }</p>
+
+<p>/</em> Tasks section <em>/
+.task .A { color: red }
+.task .B { color: green }
+.task .C { color: navy }
+.task .done      { color: gray; text-decoration: line-through; }
+.task .cancelled { color: gray; text-decoration: italic; }</p>
+
+<p>/</em> Notes section */
+.note { margin-top: 1.5em; }
+.note .anchor  { float: left; margin-right: 5px; }
+.note .details { margin-top: .5em; }</p>
+
+<!-- Page published by Emacs Muse ends here -->
+  </body></html>

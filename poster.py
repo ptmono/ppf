@@ -158,6 +158,7 @@ class CommentMailer(object):
         self.setFormat()
         if self.smtp == 'gmail': self._sendWithGmail()
         elif self.smtp == 'local': self._sendWithLocal()
+        elif self.smtp == 'file': self._sendWithFile()
 
     def setFormat(self):
         # subject_length = 30
@@ -188,6 +189,8 @@ class CommentMailer(object):
         s.sendmail(config.email_site, config.email_admin, self.outer.as_string())
         s.quit()
 
+    def _sendWithFile(self):
+        pass
 
 def sendMailUsingSendmail(obj):
     """

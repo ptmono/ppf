@@ -150,6 +150,10 @@ class RecentComments(object):
     # >>> rrcomment.recent()
 
     #>>> rrcomment.recent()
+
+    >>> rcomment = RecentComments()
+    >>> rcomment.start_pointer = 30
+    >>> rcomment.recent()
     """
 
     order_db = config.recent_comment_filename()	# DB filename
