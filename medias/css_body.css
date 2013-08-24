@@ -94,3 +94,9 @@ td.column_tag_h { width: 100px; font-weight: bold; font-size: 15px; }
 td.column_b_n_t { width: 10px; }
 td.column_b_t_c { width: 20px; }
 
+
+/* content_job */
+td.job_column_title 	{ width: 400px; font-size: 13px; }
+td.job_column_title_h 	{ width: 400px; font-weight: bold; font-size: 15px; }
+td.job_column_corname 	{ width: 130px; font-size:13px; }
+td.job_column_corname_h { width: 130px; font-weight: bold; font-size: 15px; }

@@ -147,7 +147,7 @@ class ViewAll(ViewAbstract):
         temp = self.jinja_env.get_template('jinja_list.html')
         result = temp.render(temp_context)
 
-       # The result is unicode
+        # The result is unicode
         result = result.encode(config.char_set)
         return result
 
