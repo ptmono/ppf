@@ -21,6 +21,8 @@ from sqlalchemy		import Table, Column, Integer, String, MetaData, Unicode
 from sqlalchemy		import MetaData
 from sqlalchemy.orm import mapper, sessionmaker
 
+from dlibs.logger	import loggero
+
 metadata = MetaData()
 
 class MapperClass(object): pass
@@ -59,8 +61,6 @@ class ModelMapper(object):
         table is created by model.
 
         """
-        if not objcls: 
-            objcls = self.object()
         if not table:
             table = self.table()
         mapper(objcls, table)
@@ -75,7 +75,8 @@ class ModelMapper(object):
     def table(self):
         table_name = self._model.__class__.__name__
         table = Table(table_name, metadata, Column('_id', Integer, primary_key=True),
-                      *(Column(col, Unicode) for col in self._model._info['columns'].keys()))
+                      *(Column(col, Unicode) for col in self._model._info['columns'].keys()),
+                      extend_existing=True)
         return table
 
 

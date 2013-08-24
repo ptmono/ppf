@@ -63,7 +63,7 @@ class Test_ModelMapper(TestCase):
 
         from sqlalchemy import exc
         # Table NateBreakingNewsModel is already defined for this MetaData
-        self.assertRaises(exc.InvalidRequestError, mapper.mapper)
+        #self.assertRaises(exc.InvalidRequestError, mapper.mapper)
 
         nate2 = MapperClass()
         nate2.title = "title2"
@@ -72,3 +72,6 @@ class Test_ModelMapper(TestCase):
         session.commit()
 
 
+        class DummyModel2(object): pass
+
+        assert(mapper.mapper(DummyModel2))
