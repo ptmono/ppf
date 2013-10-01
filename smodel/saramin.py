@@ -110,7 +110,7 @@ class SaraminIt(GetSetModel, CssParsers):
         """
         # selector = 'ul li span:nth-child(1)'
         # return self.css_all_content(self.etree_joblist, selector)
-        xpath_region = '//td[@class="area_detail"]//a'
+        xpath_region = '//td[@class="area_detail"]//a[1]'
         region = CssParsers.xpath_all_content(self.etree_joblist, xpath_region)
         return region
     

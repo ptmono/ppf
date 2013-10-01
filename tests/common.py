@@ -193,3 +193,4 @@ def __create_dummy():
     fd = open(Var.dummy_list_path, 'wb')
     pickle.dump(info_list, fd, protocol=2, fix_imports=True)
     fd.close()
+

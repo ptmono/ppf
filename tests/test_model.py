@@ -102,16 +102,12 @@ class Test_GetSetModel(TestCase):
         data = fd.read()
         fd.close()
 
-
-
         if PY3:
             self.assertEqual(str(type(dummy.get(data)['title'][0])), "<class 'str'>")
             self.assertEqual(dummy.get(data)['title'][0], '인사말하는 진영 장관')
         else:
             self.assertEqual(str(type(dummy.get(data)['title'][0])), "<type 'unicode'>")
             self.assertEqual(dummy.get(data)['title'][0], u('인사말하는 진영 장관'))
-
-
 
 class Test_libs(TestCase):
 

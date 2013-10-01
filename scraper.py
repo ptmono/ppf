@@ -2,7 +2,7 @@
 from sqlalchemy		import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-from mapper import metadata, MapperClass, ModelMapper
+from dnews.mapper import metadata, MapperClass, ModelMapper
 import threading
 from collections import deque
         
@@ -63,7 +63,7 @@ class Scraper(object):
     """
 
     def __init__(self, smodel, engine_name, thread=None):
-        class MappedClass: pass
+        class MappedClass(object): pass
         self.mapped_class = MappedClass
         self.engine_name = engine_name
         #self.model = smodel()
@@ -152,6 +152,8 @@ class Scraper(object):
                 count += 1
             self.session.add(orm)
 
+            
+        import pdb, sys; pdb.Pdb(stdin=sys.__stdin__,stdout=sys.__stdout__).set_trace()
         self.session.commit()
 
 class Worker(threading.Thread):

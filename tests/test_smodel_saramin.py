@@ -3,10 +3,18 @@
 
 from common import *
 
-from dnews.smodel.saramin import SaraminIt, SaraminItTest
+from dnews.smodel.saramin	import SaraminIt, SaraminItTest
+from dnews.scraper			import Scraper
 from lxml import etree
 
 dummy_path = os.path.join(SaraminItTest.dummy_path)
+
+def get_sample(engine_name):
+    url = "http://www.saramin.co.kr/zf_user/upjikjong-recruit/upjikjong-list/pageCount/500/categoryCode/9%7C4/category_level/top/page/1/order/RD"
+    scraper = Scraper(SaraminIt, 'sqlite:///saramin_dummy.sqlite')
+    scraper.urls = [url]
+    scraper.dododo()
+    
 
 class Test_SaraminIt(TestCase):
     @classmethod
@@ -59,10 +67,10 @@ class Test_SaraminIt(TestCase):
         self.assertEqual(len(stitles), 30)
 
         # region
-        xpath_region = '//td[@class="area_detail"]//a'
+        xpath_region = '//td[@class="area_detail"]//a[1]'
         region = CssParsers.xpath_all_content(self.model.etree_joblist, xpath_region)
-        self.assertEqual(region[3], u('용인시'))
-        self.assertEqual(len(titles), 30)
+        self.assertEqual(region[3], u('서울'))
+        self.assertEqual(len(region), 30)
 
         # welfare
         xpath_welfare = '//td[@class="welfare_detail"]'
@@ -94,15 +102,20 @@ class Test_SaraminIt(TestCase):
         self.assertEqual(corpnames[3], u('㈜디알에프앤'))
         self.assertEqual(len(corpnames), 30)
 
-        
-
-        
 
         
     def test_class_SaraminIt(self):
         aa = list(self.model.list(self.data))[1]
         expected = ('', u('경기 용인시'), '16362927', '', '', '', '88', '', '', '', u('고등기술연구원'), '08/16 (금)', u('연구개발직(신입/경력) 모집공고'), None, '')
         
-        self.assertEqual(aa, expected)
+        #self.assertEqual(aa, 333)
                             
         self.model.get(self.data)
+
+
+class Test_aa(TestCase):
+    def test_prepare(self):
+        self.assertEqual(get_sample('saramin_smodel_bug_dummy.sqlite'), 8280)
+        
+if __name__ == "__main__":
+    get_sample('saramin_smodel_bug_dummy.sqlite')

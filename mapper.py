@@ -63,7 +63,10 @@ class ModelMapper(object):
         """
         if not table:
             table = self.table()
+        loggero().debug(objcls)
+        loggero().debug(type(objcls))
         mapper(objcls, table)
+        
         return objcls
 
     def object(self):

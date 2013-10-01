@@ -158,6 +158,7 @@ class GetSetMixin(GetMixin):
         self.source = source
         self.init_get()
         result = {}
+        loggero().debug(self._info['variables'])
 
         # Set variables
         for var in self._info['variables']:
@@ -180,12 +181,13 @@ class GetSetMixin(GetMixin):
                 result[col] = [unicode(ele) for ele in parsed_result]
             except NameError:
                 result[col] = [str(ele) for ele in parsed_result]
+
         return result
 
     def init_get(self):
         """It is pre hook for self.source or get method"""
         pass
-        
+
 
 class UrlsMixin(object):
     """

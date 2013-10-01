@@ -20,6 +20,8 @@ import re
 from sqlalchemy import MetaData, create_engine, Table
 from sqlalchemy.orm import sessionmaker, mapper
 
+from dlibs.logger import loggero
+
 
 def db_print(engine_name, table_name, attrs, tid):
     engine = create_engine(engine_name)
@@ -51,6 +53,9 @@ class NetTools:
 
     @classmethod
     def read(self, path):
+        if path[:4] == 'http':
+            data = requests.get(path).content
+            return data
         try:
             fd = open(path, 'r')
             return fd.read()            
