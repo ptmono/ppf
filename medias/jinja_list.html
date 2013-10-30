@@ -21,7 +21,7 @@
   </table>
 
   <!-- For loop start -->
-  {% for doc_num, title, tag, href in article %}  
+  {% for doc_num, title, tag, href, comments_count in article %}  
   <div class="column">
     <table class="list_table">
       <tr>
@@ -30,6 +30,7 @@
 	<td class="column_title"><a href={{ href }}>{{ title }}</a></td>
 	<td class="column_b_t_c"></td>
 	<td class="column_tag">{{ tag }}</td>
+	<td class="column_comments_count">{{ comments_count }}</td>
       </tr>
     </table>
   </div>

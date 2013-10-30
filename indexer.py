@@ -76,14 +76,15 @@ class File(object):
     >>> file2.write(content)
     >>> file2.close()
 
-    >>> content = '99011103471\\n'
+    >>> content = "99011103471\\n"
     >>> file2 = File(None, 'rc', 'a+')
     >>> file2.write(content)
     >>> file2.close()
 
     >>> file2 = File(None, 'rc', 'r')
     >>> file2.read()
-    '13011103471\n99011103471\n'
+    '13011103471\\n99011103471\\n'
+
     >>> file2._remove()
     """
     def __init__(self, doc_id, file_type, mode):
@@ -539,6 +540,11 @@ class Comments(InfosTemplate):
     >>> #{}
     >>> #new_comments.updateFromObj(comment)
 
+    === Test count
+    --------------
+    >>> comments.counts()
+    4
+
 
     === Test delete/update static method
     ____________________________________
@@ -549,6 +555,9 @@ class Comments(InfosTemplate):
 
     >>> Comments.update('0706012057', '8', comment)
     >>> comments = Comments('0706012057')
+
+
+
     """
     infoObj = Comment
 
@@ -586,6 +595,9 @@ class Comments(InfosTemplate):
     def filename(self):
         self.checkDocId()
         return config.comments_d + self.doc_id + config.comment_extension
+
+    def counts(self):
+        return len(self)
 
     def updateFromObj(self, comment_obj):
         """

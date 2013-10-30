@@ -44,3 +44,56 @@ function MM_swapImage() { //v3.0
 
 $("textarea[class=comment]").autoResize();
 
+
+// scrolling
+
+var g_page_count = 1;
+
+function scrollOnce() {
+    window.g_page_count = window.g_page_count + 1;
+	
+    var surl = "job/page/" + window.g_page_count.toString();
+    $('div#loadmoreajaxloader').show();
+    $.ajax({
+        url: surl,
+        success: function(html)
+        {
+            if(html)
+            {
+		
+		$('#more_jobs_button').hide();
+                $('div#loadmoreajaxloader').fadeIn();
+		var delay = 0;
+                $("#ajax_more_jobs").append(html).delay().animate({opacity:1}, 200);
+		delay += 100;
+		$('div#loadmoreajaxloader').fadeOut();
+		$('#more_jobs_button').show();
+
+            }else
+            {
+		$('#more_jobs_button').hide();		
+                $('div#loadmoreajaxloader').fadeIn();
+                $('div#loadmoreajaxloader').html('<center>No more posts to show.</center>');
+            }
+        },
+    });
+
+}
+
+$(window).scroll(function()
+{
+    // if ($(window).height() > $('body').innerHeight())
+    // 	{
+    // 	    $('div#loadmoreajaxloader').height(
+    // 		$(window).height() - (
+    // 		    $('body').innerHeight()));
+    // 	}
+
+    
+    if($(window).scrollTop() == $(document).height() - $(window).height())
+    {
+	// temporarily unhook the scroll event watcher so we don't call a bunch of times in a row
+	scrollOnce();
+    }
+});
+

@@ -21,28 +21,25 @@
   </table>
 
   <!-- For loop start -->
-  {% for doc_num, title, tag, href in article %}  
-  <div class="column">
-    <table class="list_table">
-      <tr>
-	<td class="column_num">{{ doc_num }}</td>
-	<td class="column_b_n_t"></td>
-	<td class="job_column_title"><a href={{ href }}>{{ title }}</a></td>
-	<td class="column_b_t_c"></td>
-	<td class="job_column_corname">{{ tag|truncate(10, True) }}</td>
-      </tr>
-    </table>
-  </div>
-  <table border="0" cellpadding="0" cellspacing="0">
-    <tr>
-      <td width="652" height="1px">
-	<img src="medias/img_line.gif" height="1px" width="90%">
-      </td>
-    </tr>
-  </table>
-  {% endfor %}
   <!-- End loop -->
+  {% include 'content_page_request.html' %}
+  <div id="ajax_more_jobs" style></div>
+
+  <div id="loadmoreajaxloader" style="display:none;"><center>Loading ...</center></div>
+
+  <div id="endmoreajaxloader" style="display:none;"><center>No more content.</center></div>
+
+  <div id="more_jobs_button">
+    <center><a href="javascript:void(0)" onclick="window.scrollOnce()">More Jobs</a>
+    </center>
+  </div>
+
+
+
 </div>
+
+
+
 {% endblock %}
 
 

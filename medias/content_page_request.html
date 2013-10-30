@@ -1,0 +1,26 @@
+  {% for article in articles %}  
+  {% if not is_spam(article.title) %}
+  <div class="column">
+    <table class="list_table">
+      <tr>
+	{% if is_near(article.city) %}
+	<td class="column_num"><font color="red">{{ article.city }}</font></td>
+	{% else %}
+	<td class="column_num">{{ article.city }}</td>
+	{% endif %}
+	<td class="column_b_n_t"></td>
+	<td class="job_column_title"><a href="http://www.saramin.co.kr/zf_user/recruit/view/idx/{{ article.idx }}" target="_blank">{{ article.title }}</a></td>
+	<td class="column_b_t_c"></td>
+	<td class="job_column_corname">{{ article.corpname|truncate(8, True) }}</td>
+      </tr>
+    </table>
+  </div>
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="652" height="1px">
+	<img src="medias/img_line.gif" height="1px" width="90%">
+      </td>
+    </tr>
+  </table>
+  {% endif %}
+  {% endfor %}

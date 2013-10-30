@@ -156,13 +156,16 @@ class ViewAll(ViewAbstract):
         article_info_l = []
         articles = indexer.Articles()
         articles.set()
+
         for article in articles:
             href = 'server.py?id=' + article.doc_id
+            comments = indexer.Comments(article.doc_id)
+            comments_count = len(comments)
             # We want only own tag.
             tag = article.tag.split(" ")[0]
             if article.unpublished:
                 continue
-            article_info_tup = (article.doc_id, article.title, tag, href)
+            article_info_tup = (article.doc_id, article.title, tag, href, comments_count)
             article_info_l.append(article_info_tup)
         return article_info_l
         

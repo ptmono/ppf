@@ -40,6 +40,7 @@ medias/jinja_door.html
 medias/jinja_list.html
 medias/css_muse.css
 medias/css_body.css
+medias/jquery-1.8.3.min.js
 
 
 tools/

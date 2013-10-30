@@ -1,0 +1,7 @@
+{% load endless %}
+{% paginate articles %}
+{% for article in articles %}
+{{ article.title }}<br/>
+{% endfor %}
+{% show_pages %}
+
