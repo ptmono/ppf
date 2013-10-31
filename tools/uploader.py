@@ -3,6 +3,7 @@
 
 from ftplib import FTP, error_perm
 import os
+import re
 import getpass
 import sys
 import shutil
@@ -379,8 +380,40 @@ class UploadInfoFromConfig(UploadInfoCommon):
         # - file permission will sync with the uploaded files.
         init_db()               # Init index.json
 
+class UploadInfoDb(UploadInfoCommon):
+    """
 
+    >>> up_db = UploadInfoDb()
+
+    >>> #up_db._get_only_muse_files(os.listdir(config.htmls_d))
+    >>> dbfiles = up_db.getDbFiles()
+    >>> #dbfiles
+
+    """
+    def get(self):
+        self.host = config.server_host
+        self.user = config.server_user_id
+        self.passwd = config.server_passwd
+        self.dir_to_be_installed = config.server_root_directory
+        self.files = self.getDbFiles()
+
+    def getDbFiles(self):
         
+        files = os.listdir(config.htmls_d)
+        html_files = self._get_only_html_files(files)
+        html_files.append(config.dbs_d + 'index.json')
+        return html_files
+
+    def _get_only_html_files(self, files):
+        result = []
+        regex = config.html_extension + '$'
+        
+        for file in files:
+            if re.search(regex, file):
+                result.append(config.dbs_d + file)
+        return result
+                
+    
 class Uploader:
     '''
     >>> uploader = Uploader("kfsdjkf") #doctest: +IGNORE_EXCEPTION_DETAIL
@@ -449,8 +482,9 @@ usage = \
 
 usage: options
 
-  --with-config : Use the configuration of config.py
-  -h, --help     : Shows this
+  --with-config       : Use the configuration of config.py
+  --syncdb            : upload posts and index.json into server
+  -h, --help          : Shows this
 '''
 
 def main():
@@ -458,6 +492,9 @@ def main():
         opt = sys.argv[1]
         if opt == "--with-config":
             uploader = Uploader(UploadInfoFromConfig)
+            uploader.upload()
+        elif opt == "--syncdb":
+            uploader = Uploader(UploadInfoDb)
             uploader.upload()
         else:
             print usage % ("uploader.py")
