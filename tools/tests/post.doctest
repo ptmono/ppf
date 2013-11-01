@@ -1,0 +1,57 @@
+    >>> from common import *
+    >>> from post import MuseArticle
+
+    >>> dummy_html = "<html><head></head><body>aaa</body></html>"
+    >>> dummy_html_without_body = "aaa"
+
+    >>> html_dummies = [dummy_html, dummy_html_without_body]
+
+
+* Create dummy_html
+
+    >>> dummy_path = os.path.join(lib_path, 'tests')
+    >>> dummy_abfilename = os.path.join(dummy_path, '2222222222.html')
+
+    >>> fd = open(dummy_abfilename, 'w')
+    >>> fd.write(dummy_html)
+    >>> fd.close()
+
+
+* MuseArticle.getHtmlBody
+
+    >>> MuseArticle.getHtmlBody(dummy_abfilename)
+    'aaa'
+
+    >>> fd = open(dummy_abfilename, 'w')
+    >>> fd.write(dummy_html_without_body)
+    >>> fd.close()
+    >>> MuseArticle.getHtmlBody(dummy_abfilename)
+    'aaa'
+  
+
+
+
+* previous tests
+
+    >>> ##ma = MuseArticle('1201132049')
+    >>> ma = MuseArticle('1201170413')    
+    >>> #ma.html
+    >>> #ma.files
+    ['/home/ptmono/.emacs.d/imgs/image2090.jpg', '/home/ptmono/.emacs.d/imgs/image2099.jpg', '/home/ptmono/.emacs.d/imgs/image2100.jpg', '/home/ptmono/.emacs.d/imgs/image2098.jpg']
+    >>> ma.json #doctest: +SKIP
+
+    >>> ma.getFilename('/home/ttt/image.jpg')
+    'image.jpg'
+
+    >>> source = "[[/home/ptmono/.emacs.d/imgs/image2173.jpg]]nnnn[[/home/ptmono/files/120312050912_003.jpg][120312050912_003.jpg]]"
+    >>> ma.listImagesFromMuse(source)
+    ['/home/ptmono/.emacs.d/imgs/image2173.jpg']
+    >>> ma.listFilesFromMuse(source)
+    ['/home/ptmono/files/120312050912_003.jpg']
+
+    >>> #ma2 = MuseArticle('1208011003')
+
+
+* Remove dummy
+
+    >>> os.remove(dummy_abfilename)

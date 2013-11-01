@@ -24,26 +24,6 @@ from tools.uploader import uploadFile
 
 
 class MuseArticle(object):
-    '''
-
-    >>> ##ma = MuseArticle('1201132049')
-    >>> ma = MuseArticle('1201170413')    
-    >>> #ma.html
-    >>> #ma.files
-    ['/home/ptmono/.emacs.d/imgs/image2090.jpg', '/home/ptmono/.emacs.d/imgs/image2099.jpg', '/home/ptmono/.emacs.d/imgs/image2100.jpg', '/home/ptmono/.emacs.d/imgs/image2098.jpg']
-    >>> ma.json #doctest: +SKIP
-
-    >>> ma.getFilename('/home/ttt/image.jpg')
-    'image.jpg'
-
-    >>> source = "[[/home/ptmono/.emacs.d/imgs/image2173.jpg]]nnnn[[/home/ptmono/files/120312050912_003.jpg][120312050912_003.jpg]]"
-    >>> ma.listImagesFromMuse(source)
-    ['/home/ptmono/.emacs.d/imgs/image2173.jpg']
-    >>> ma.listFilesFromMuse(source)
-    ['/home/ptmono/files/120312050912_003.jpg']
-
-    >>> ma2 = MuseArticle('1208011003')
-    '''
     def __init__(self, doc_id):
         self.doc_id = doc_id
         self.filename = config.muses_d + str(doc_id) + config.muse_extension
@@ -77,21 +57,25 @@ class MuseArticle(object):
         return content
 
     def _html(self):
-        fd = file(self.filename_html, 'r')
+        return self.getHtmlBody(self.filename_html)
+
+    @classmethod
+    def getHtmlBody(self, filename):
+        fd = file(filename, 'r')
         content = fd.read()
         fd.close()
 
         try:
-            # We only need the body of the html.
             body_start = re.search("<body>", content).end()
             body_end = re.search("</body>", content).start()
         except AttributeError:
-            msg = self.filename_html + " has no body tag."
-            libs.log(msg)
-            return None
+            msg = filename + " has no body tag."
+            config.logger.debug(msg)
+            return content
 
         return content[body_start:body_end]
-
+            
+    
     # TODO: Consider elegant(?) way
     @staticmethod
     def getFullHtml(doc_id):

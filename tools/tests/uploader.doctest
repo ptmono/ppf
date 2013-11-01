@@ -1,0 +1,50 @@
+
+    >>> from common import *
+    >>> from uploader import UploadInfoDb
+
+* Create dummy_html
+
+    >>> dummy_html = "<html><head></head><body>aaa</body></html>"
+    >>> dummy_html_without_body = "aaa"
+
+    >>> dummies = [dummy_html]
+
+    >>> dummy_path = os.path.join(lib_path, 'tests')
+    >>> dummy_abfilename = os.path.join(dummy_path, '2222222222.html')
+
+    >>> fd = open(dummy_abfilename, 'w')
+    >>> fd.write(dummy_html)
+    >>> fd.close()
+
+
+
+
+    >>> up_db = UploadInfoDb()
+
+    >>> #up_db._get_only_muse_files(os.listdir(config.htmls_d))
+    >>> dbfiles = up_db.getDbFiles()
+    >>> #dbfiles
+
+
+* getDocId
+
+    >>> up_db.getDocId('dbs/1311010029.muse')
+    '1311010029'
+    >>> up_db.getDocId('1311010030.html')
+    '1311010030'
+    
+
+* UploadInfoDb.prepare_htmls
+
+abpath = os.path.join(config.current_abpath, fn)
+
+    >>> UploadInfoDb.prepare_htmls('.')
+    >>> fd = open(dummy_abfilename, 'r')
+    >>> content = fd.read()
+    >>> fd.close()
+    >>> content
+    'aaa'
+
+* Remove dummy
+
+    >>> os.remove(dummy_abfilename)

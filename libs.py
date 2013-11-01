@@ -36,6 +36,8 @@ def _backupFileName(filename):
 
 # TODO: I need more reuseable/stable logging method. Consider logging
 # module.
+
+#Obsoleted. Use config.logger
 def log(msg):
     t = time.strftime("%Y-%m-%d %H:%M:%S")
     msg = "LOG[" + t + "]: " + msg + "\n"
@@ -45,6 +47,7 @@ def log(msg):
         fd = file(config.log_file, 'a')
         fd.write(msg)
 
+#Obsoleted. Use config.logger
 def logError(msg):
     t = time.strftime("%Y-%m-%d %H:%M:%S")
     msg = "ERROR[" + t + "]: " + msg + "\n"

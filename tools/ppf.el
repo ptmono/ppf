@@ -112,23 +112,32 @@
   "We need a method to convert the article to html before to
 update the html of article."
   (interactive)
-  (let* ((buffer-file-name (buffer-file-name))
-	 (html-file-name (replace-regexp-in-string "muse" "html" buffer-file-name))
-	 (doc-id (replace-regexp-in-string "\\.muse" "" (file-name-nondirectory buffer-file-name)))
+  (let* ((buffer-file-name (buffer-file-name)))
+    (ppf/_article-publish buffer-file-name)))
+
+(defun ppf/_article-publish (filename)
+  (let* ((html-file-name (replace-regexp-in-string "muse" "html" filename))
+	 (doc-id (replace-regexp-in-string "\\.muse" "" (file-name-nondirectory filename)))
 	 html)
-    (muse-publish-file buffer-file-name
+    (muse-publish-file filename
 		       ppf/publish-mode
 		       ppf/publish-dir
 		       t)
+
     ;; Current css is of muse. Change of ppf.
     (ppf/pymacs-init)
     (setq html (ppf-getArticleHtml doc-id))
     (with-temp-file
 	html-file-name
       (insert html))
-      
+
     html-file-name))
 
+(defun ppf/article-publish-all ()
+  (interactive)
+  (let* ((muse-files (directory-files ppf/publish-dir t ".muse$")))
+    (dolist (filename muse-files)
+      (ppf/_article-publish filename))))
 
 (defun ppf/article-publish-view ()
   "To see the published file."

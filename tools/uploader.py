@@ -16,6 +16,7 @@ if root_path not in sys.path:
 
 import config
 from install import init_db
+import dlibs
 
 # Consider: How about to use ftptool?
 class UFTP(FTP):
@@ -380,16 +381,8 @@ class UploadInfoFromConfig(UploadInfoCommon):
         # - file permission will sync with the uploaded files.
         init_db()               # Init index.json
 
+
 class UploadInfoDb(UploadInfoCommon):
-    """
-
-    >>> up_db = UploadInfoDb()
-
-    >>> #up_db._get_only_muse_files(os.listdir(config.htmls_d))
-    >>> dbfiles = up_db.getDbFiles()
-    >>> #dbfiles
-
-    """
     def get(self):
         self.host = config.server_host
         self.user = config.server_user_id
@@ -397,23 +390,67 @@ class UploadInfoDb(UploadInfoCommon):
         self.dir_to_be_installed = config.server_root_directory
         self.files = self.getDbFiles()
 
+        # The html files contains css. We have to remove that to see on
+        # web.
+        self.prepare_htmls(config.htmls_d)
+        return self.files
+
+    @classmethod
+    def getDocId(self, filename):
+        match = re.match('.*([0-9]{10}).*', filename)
+        return match.group(1)
+            
+
     def getDbFiles(self):
         
         files = os.listdir(config.htmls_d)
-        html_files = self._get_only_html_files(files)
-        html_files.append(config.dbs_d + 'index.json')
+        html_files = self._get_only_html_files(files, config.dbs_d)
+        html_files.append(config.dbs_d + config.index_file)
         return html_files
 
-    def _get_only_html_files(self, files):
+    @classmethod
+    def _get_only_html_files(self, files, prefix=None):
         result = []
         regex = config.html_extension + '$'
         
         for file in files:
             if re.search(regex, file):
-                result.append(config.dbs_d + file)
+                if prefix:
+                    result.append(os.path.join(prefix,file))
+                else:
+                    result.append(file)
         return result
-                
-    
+
+    @classmethod
+    def prepare_htmls(self, path):
+        """
+        Our local htmls has their css to preview the content on the
+        browser. It conflict the html on the server. The server require
+        only body of html. This method will extract body of html and
+        replace the content of the file on PATH.
+        """
+
+        abpath = os.path.abspath(path)
+        files = os.listdir(abpath)
+        html_files = self._get_only_html_files(files)
+
+        html_files = [os.path.join(abpath, f) for f in html_files]
+
+        from post import MuseArticle
+        
+        for abfn in html_files:
+            body = MuseArticle.getHtmlBody(abfn)
+            fd = open(abfn, 'w')
+            try:
+                print(len(body))                
+                fd.write(body)
+                fd.close()                
+            except TypeError as err:
+                # empty body
+                print(abfn)
+                fd.close()
+
+        
 class Uploader:
     '''
     >>> uploader = Uploader("kfsdjkf") #doctest: +IGNORE_EXCEPTION_DETAIL
