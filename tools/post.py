@@ -236,7 +236,7 @@ class API(object):
         return urlopen(req)
 
 ### apis
-# TODO: We can more simply create the api functions.
+# TODO: We can create more simple apis.
 
 #TODO: error handling.
 def updateArticle(doc_id):
