@@ -25,7 +25,8 @@ endif
 t:
 	$(if $(findstring False, ${LOCAL_TEST}),\
 	echo "aaa",\
-	echo "bbb")
+	( echo "bbb";\
+	echo "ddd" ))
 
 	@echo ${LOCAL_TEST}
 	@if test "aaa" != "aaa"; then \
@@ -51,13 +52,14 @@ zip:
 
 
 prepare-upload:
-	@if test ${LOCAL_TEST} == False; then \
-	sed -i "s/$(PASS)/USER_PASSWORD/g" config.py; fi
-	chmod 755 *.py
-	chmod 777 dbs
-	chmod 777 files
-	chmod 666 dbs/index.json
+	$(if $(findstring False,${LOCAL_TEST}),\
+	sed -i "s/$(PASS)/USER_PASSWORD/g" config.py;\
+	chmod 755 *.py;\
+	chmod 777 dbs;\
+	chmod 777 files;\
+	chmod 666 dbs/index.json;,)
 
+# This exclude dbs directory in the upload file list
 exclude-dbs-in-upload-files:
 	echo "______________________________________"; \
 	echo "Echo: Backup tools/installer_file_list"; \
@@ -86,25 +88,23 @@ restore-index:
 	@echo "Echo: Restore index..."
 	cp dbs/index.json.bak dbs/index.json
 
-upload: upload-without-db
+upload: upload-remote-init-db
 upload-new: upload-remote-init-db
 
 # Init db and upload. both local/remote will be init.
 upload-init-db: prepare-upload
 	python tools/uploader.py --with-config
 	echo ${LOCAL_TEST}
-	if test ${LOCAL_TEST} == False; then \
-	sed -i "s/USER_PASSWORD/$(PASS)/g" config.py; fi
+	$(if $(findstring False, ${LOCAL_TEST}),\
+	sed -i "s/USER_PASSWORD/$(PASS)/g" config.py;)
 
 # Upload init db to remote. local db will not be init.
 upload-remote-init-db: backup-index upload-init-db restore-index
 
 upload-without-db: exclude-dbs-in-upload-files upload-remote-init-db restore-dbs-in-upload-files
 
-
-#TODO: write this
-#upload-sync-db
-
+upload-sync-db:
+	python tools/uploader.py --syncdb
 
 unload:
 	python -c 'from tests.common import destroy; destroy()'
