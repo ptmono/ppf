@@ -10,13 +10,14 @@ import shutil
 
 cur_file_path = os.path.abspath(__file__)
 cur_dir_path = os.path.dirname(cur_file_path)
-root_path = os.path.dirname(cur_dir_path)
-if root_path not in sys.path:
-    sys.path.insert(0, root_path)
+ROOT_PATH = os.path.dirname(cur_dir_path)
+if ROOT_PATH not in sys.path:
+    sys.path.insert(0, ROOT_PATH)
 
 import config
-from install import init_db
+from install		import init_db
 import dlibs
+from dlibs.d_os		import recursive_glob2
 
 # Consider: How about to use ftptool?
 class UFTP(FTP):
@@ -79,7 +80,7 @@ class UFTP(FTP):
     >>> server_path = "/home/ptmono/anan/ccd"
     >>> ftp.upload(server_path, UploadInfoCommon._getFileListFromListFile('installer_file_list'))
 
-    >>> client_filename = root_path + "/teest.bbcsyn"
+    >>> client_filename = ROOT_PATH + "/teest.bbcsyn"
     >>> server_filename = server_path + "/teest.bbcsyn"
     >>> fd = open(client_filename, 'w')
     >>> fd.write("aaa")
@@ -168,9 +169,9 @@ class UFTP(FTP):
         if filename[0] == '/':
             ab_filename = filename
             # We need related name for in ftp.
-            filename = filename.replace(root_path + '/', '')
+            filename = filename.replace(ROOT_PATH + '/', '')
         else:
-            ab_filename = root_path + '/' + filename
+            ab_filename = ROOT_PATH + '/' + filename
 
         # SITE CHMOD uses owner/member/others permission
         # representation
@@ -237,7 +238,7 @@ class UFTP(FTP):
 
             # uploader.py places in tools. To create the file descriptor
             # we need absolute filename.
-            ab_filename = root_path + '/' + f
+            ab_filename = ROOT_PATH + '/' + f
 
             # SITE CHMOD uses owner/member/others permission
             # representation
@@ -334,10 +335,16 @@ class UploadInfoCommon:
         We specify the names of files to be uploaded in the file. FILELIST
         is the file.
         '''
+        results = []
         fd = open(filename, 'r')
         content = fd.read()
         fd.close()
-        return content.split("\n")
+        
+        for path in content.split("\n"):
+            # To support asterisk
+            paths = recursive_glob2(path)
+            results.extend(paths)
+        return results
 
 
 class UploadInfoFromInput(UploadInfoCommon):
@@ -363,7 +370,6 @@ class UploadInfoFromInput(UploadInfoCommon):
             self.files = raw_input("The list of file: ")
         else:
             self.files = self._getFileListFromListFile(self.files_list_file)
-                                   
         
     def getHost(self): pass
     def getUserId(self): pass
@@ -376,7 +382,6 @@ class UploadInfoFromConfig(UploadInfoCommon):
         self.passwd = config.server_passwd
         self.dir_to_be_installed = config.server_root_directory
         self.files = self._getFileListFromListFile(config.list_of_files_to_be_installed)
-
         # - install.py will create dbs/0000000001.html and dbs/index.json
         # - file permission will sync with the uploaded files.
         init_db()               # Init index.json
@@ -472,7 +477,6 @@ class Uploader:
                 raise AttributeError(err)
 
     def upload(self):
-
         ftp = UFTP(self.upload_info.host,
                    self.upload_info.user,
                    self.upload_info.passwd)
@@ -482,7 +486,7 @@ class Uploader:
 
 def uploadFile(filename):
     '''
-    >>> test_filename = root_path + "/testttt.testttt"
+    >>> test_filename = ROOT_PATH + "/testttt.testttt"
     >>> fd = open(test_filename, 'w')
     >>> fd.write("aaa")
     >>> fd.close()
@@ -523,6 +527,7 @@ usage: options
   --syncdb            : upload posts and index.json into server
   -h, --help          : Shows this
 '''
+
 
 def main():
     try:

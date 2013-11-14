@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # coding: utf-8
 
+import sys
+import config
+
 import cgi
 import cgitb
 cgitb.enable()

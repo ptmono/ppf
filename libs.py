@@ -6,9 +6,12 @@ import time
 import sys
 import re
 import logging
+import fnmatch
 
 import config
 import html_messages as hm
+
+
 
 
 def openFileSafely(filename):
