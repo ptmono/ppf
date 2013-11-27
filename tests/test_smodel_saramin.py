@@ -113,9 +113,26 @@ class Test_SaraminIt(TestCase):
         self.model.get(self.data)
 
 
-class Test_aa(TestCase):
-    def test_prepare(self):
-        self.assertEqual(get_sample('saramin_smodel_bug_dummy.sqlite'), 8280)
-        
-if __name__ == "__main__":
-    get_sample('saramin_smodel_bug_dummy.sqlite')
+
+class Test_SaraminIt2(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    def test_error1(self):
+        '''
+
+        Total index is missed when no city. The employer empty the form
+        of city.
+        '''
+    
+        fd = open('saramin_error_sample1.html', 'rb')
+        source = fd.read()
+        fd.close()
+
+        model = SaraminIt()
+        infos = model.get(source)
+
+        # the title missing the city form
+        self.assertEqual((infos['title'][133], infos['city'][133]), (u('생생정보통신(주)KT 아파트 (IF)내선 공사 현장 기사 모집..'), u('')))
+

@@ -110,10 +110,22 @@ class SaraminIt(GetSetModel, CssParsers):
         """
         # selector = 'ul li span:nth-child(1)'
         # return self.css_all_content(self.etree_joblist, selector)
-        xpath_region = '//td[@class="area_detail"]//a[1]'
-        region = CssParsers.xpath_all_content(self.etree_joblist, xpath_region)
-        return region
-    
+
+        # If emplyer doesn't write cith, then it will loss the city. So we
+        # will get only 499 on 500.
+        result = []
+        xpath_region = '//td[@class="area_detail"]'
+        sel_list = self.etree_joblist.xpath(xpath_region)
+        for sel in sel_list:
+            region = sel.xpath('a[1]')
+            try:
+                result.append(region[0].text)
+            except:
+                # Index error will be occured when no region
+                result.append('')
+        return result
+
+        
 
     def getMoney(self):
         return [""] * self._range

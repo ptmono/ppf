@@ -87,7 +87,7 @@ class CssParsers:
     @classmethod
     def css_all_content(self, data, selector, removetabs=False):
         """
-        It seems so slow. Consider xpath_all_content.
+        It seems so slow. Consider to use xpath_all_content.
         
         """
         result = []

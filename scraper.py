@@ -152,8 +152,6 @@ class Scraper(object):
                 count += 1
             self.session.add(orm)
 
-            
-        import pdb, sys; pdb.Pdb(stdin=sys.__stdin__,stdout=sys.__stdout__).set_trace()
         self.session.commit()
 
 class Worker(threading.Thread):
