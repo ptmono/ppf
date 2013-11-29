@@ -529,6 +529,9 @@ the list of key."
 		 ppf-report-doc-ids/public))
 	 (sid (nth nth type))
 	 (filename (ppf-getFilename sid)))
+    ;; Disable symbolic redirection
+    (make-local-variable 'vc-follow-symlinks)
+    (setq vc-follow-symlinks nil)
     (find-file filename))
   )
 
