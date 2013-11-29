@@ -13,6 +13,7 @@ msg = ''
 import cgitb
 cgitb.enable()
 import os
+import stat
 
 
 def fault_check_msg(filename):
@@ -79,6 +80,9 @@ def create_file(ab_filename, content):
     fd = open(ab_filename, 'w')
     fd.write(content)
     fd.close()
+
+    st = os.stat(ab_filename)
+    os.chmod(ab_filename, st.st_mode | stat.S_IWOTH)    
 
 def main():
     if os.path.exists(config.installed_checkp):
