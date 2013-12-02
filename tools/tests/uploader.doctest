@@ -36,7 +36,7 @@
 
 * UploadInfoDb.prepare_htmls
 
-abpath = os.path.join(config.current_abpath, fn)
+abpath = os.path.join(config.root_abpath, fn)
 
     >>> UploadInfoDb.prepare_htmls('.')
     >>> fd = open(dummy_abfilename, 'r')

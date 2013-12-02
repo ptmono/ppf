@@ -1,3 +1,4 @@
+config_priv.py
 comment_order_db
 comments
 config.py.ori
@@ -20,3 +21,4 @@ tools/installer_file_list.bakn
 dbs2/
 /aa
 /dbs/index.json.bak.pre.aaa
+/dbs/dbs/recent_comments_db

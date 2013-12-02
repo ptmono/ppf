@@ -16,7 +16,7 @@ def test_uploadFile():
     fd.close()
 
     dummy2_name = 'dummy.py'
-    dummy2_path = config.current_abpath + dummy2_name
+    dummy2_path = config.root_abpath + dummy2_name
     fd = file(dummy2_path, 'w')
     fd.write('dummy')
     fd.close()

@@ -2,7 +2,6 @@
 # coding: utf-8
 
 import re, os, time
-import container as cn
 import config
 import libs
 
@@ -20,9 +19,6 @@ def ddError(msg):
 def ddWarnning(msg):
     if WARNP:
         print "WARNNING: ", msg
-
-
-
 
 
 #TODO: consider the use of FileLock, lockfile
@@ -52,7 +48,7 @@ class File(object):
     'ttuuaa'
     >>> aa._remove()
 
-    >>> config.htmls_d = config.current_abpath + 'htmlstest/'
+    >>> config.htmls_d = config.root_abpath + 'htmlstest/'
     >>> aa = File('1111111112', 'a', 'w')
     >>> aa.write('fjskdf')
     >>> path = aa.filename[:aa.filename.rfind('/')]
@@ -1020,194 +1016,3 @@ class CommentsL(object):
         self.json = sorted(json_dict, reverse=True)
         self.length = len(self.json)
 
-
-
-#Obsolete
-class ArticleL(cn.Basic):
-
-    def __init__(self, doc_num=None):
-        # Get specified keys
-        super(ArticleL, self).__init__()
-        self.keys_d = self.__dict__
-
-        #Fixme: It has problem when doc_num start 0.
-        self.doc_num = ''
-        self.doc_filename = ''
-        self.json = []
-
-        if doc_num:
-            self.set(doc_num)
-            
-
-    def __repr__(self):
-        return repr(self.keys_d)
-
-    def set(self, doc_num):
-        self.setNumAndFilename(doc_num)
-        self.json = self.getJson()
-
-    def setNumAndFilename(self, doc_num):
-        self.doc_num = doc_num
-        self.doc_filename = config.muses_d + str(self.doc_num) + config.muse_extension
-
-    def setFromJson(self, json):
-        """
-        JSON has a form somthing like
-        {u'0702052016': {u'category': u'emacs planner', u'date': u'1108170951', u'author': u'this is author', u'update': u'1108170952', u'title': u'Title'}}
-        """
-        # Init
-        self.json = json
-        key = json.keys()[0]
-        value = json[key]
-        self.setNumAndFilename(key)
-
-        # Set the info for object
-        info_d = value
-        for key in self.keys_d:
-            try:
-                setattr(self, key, info_d[key])
-            except:
-                continue
-
-    def getJson(self):
-        return {str(self.doc_num): self.getInfoFromFile()}
-
-    def getInfoFromFile(self):
-        result = {}
-        article_info_d = self.getInfoFromFileAsDictionary()
-        for key in self.keys_d:
-            try:
-                result[key] = article_info_d[key]
-            except:
-                continue
-        return result
-
-
-    def getInfoFromFileAsDictionary(self):
-        result = {}
-        key_and_value_regexp = "^#([a-z]+) (.*)"
-        content = self.getInfoAsString()
-        content_l = content.split('\n')
-        regexobj = re.compile(key_and_value_regexp)
-
-        for el in content_l:
-            try:
-                matchobj = regexobj.match(el)
-                key = matchobj.group(1)
-                value = matchobj.group(2)
-            except AttributeError, err:
-                # There is no key and value in article
-                ddWarnning(repr(err))
-                continue
-            result[key] = value
-
-        return result
-
-    def getInfoAsString(self):
-        end_of_info_regexp = "\n\n"
-
-        try:
-            fd = file(self.doc_filename, 'r')
-            content = fd.read()
-        except IOError:
-            # There is no article
-            content = ''
-
-        end_of_info_pos = self._getMatchPosition(end_of_info_regexp, content)
-        return content[:end_of_info_pos]
-
-    def _getMatchPosition(self, regexp, text):
-        try:
-            ab = re.search(regexp, text)
-            point_to_be_match = ab.start()
-        except:
-            point_to_be_match = 0
-        return point_to_be_match
-
-
-#Obsolete
-class IndexL(object):
-    """
-    obj.json is sorted. The first is lastest article.
-    """
-    def __init__(self):
-        self.filename = config.muses_d + config.index_file
-        self.json = []
-        self.getFromFile(self.filename)
-        self.idx = 0
-
-        self.length = len(self.json)
-        #self.iterator = self.next()
-
-    def __repr__(self):
-        return repr(self.json)
-
-    def next(self):
-        if self.idx >= self.length:
-            self.refresh()
-            raise StopIteration
-        value = self.json[self.idx]
-        self.idx += 1
-        return value
-
-    def refresh(self):
-        self.idx = 0
-
-    def __iter__(self):
-        return self
-
-    def setNew(self):
-        self.json = self.createNew()
-
-    def createNew(self):
-        result = []
-        file_l = os.listdir(config.muses_d)
-
-        for f in file_l:
-            if self._museExtensionp(f):
-                doc_num = self._getDocNumFromFilename(f)
-                articleObj = ArticleL(doc_num)
-                result.append(articleObj.json)
-            else:
-                continue
-        return result
-
-    def update(self):
-        "Update index.json file when we add/remove new file."
-        self.setNew()
-        self.save()
-            
-    def save(self):
-        json_dump = json.dumps(self.json)
-        fd = file(self.filename, 'w')
-        fd.write(json_dump)
-        fd.close()
-
-    def getFromFile(self, filename):
-        fd = file(filename, 'r')
-        content = fd.read()
-        fd.close()
-        json_load = json.loads(content)
-        self.json = sorted(json_load, reverse=True)
-        
-    def _museExtensionp(self, filename):
-        "Is it has the muse extension?"
-        ext_length = len(config.muse_extension)
-        if filename[-ext_length:] == config.muse_extension:
-            return True
-        else:
-            return False
-
-    def _getDocNumFromFilename(self, filename):
-        ext_length = len(config.muse_extension)
-        return filename[:-ext_length]
-
-
-
-
-# def _test():
-#     import doctest
-#     doctest.testmod()
-
-# if __name__ == "__main__":
-#     _test()

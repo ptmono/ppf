@@ -1,0 +1,11 @@
+
+    >>> from common import *
+    >>> from ppf.indexer import Comment
+
+    >>> from werkzeug.datastructures import ImmutableMultiDict
+    >>> imdict = ImmutableMultiDict([('content', 'aaa'), ('doc_id', '0000000001'), ('name', 'bb')])
+    >>> comment = Comment()
+    >>> comment.setFromDict(imdict)
+    >>> comment
+    {'name': 'bb', 'comment_id': '', 'content': 'aaa', 'date': '', 'password': '', 'email': ''}
+

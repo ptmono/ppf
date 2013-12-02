@@ -6,7 +6,7 @@ redirect = """
 <html>
 <head>
 <title>Posting</title>
-<meta http-equiv="REFRESH" content="0;url=server.py?id=%s"></HEAD>
+<meta http-equiv="REFRESH" content="0;url=/article/%s"></HEAD>
 <BODY>
 Posting...
 </BODY>
@@ -17,7 +17,7 @@ redirect_requirement = """
 <html>
 <head>
 <title>Error</title>
-<meta http-equiv="REFRESH" content="2;url=server.py?id=%s"></HEAD>
+<meta http-equiv="REFRESH" content="2;url=/article/%s"></HEAD>
 <BODY>
 최소한 내용은 적어 주세요.
 </BODY>
@@ -28,7 +28,7 @@ redirect_error = """
 <html>
 <head>
 <title>Error</title>
-<meta http-equiv="REFRESH" content="2;url=server.py"></HEAD>
+<meta http-equiv="REFRESH" content="2;url=/"></HEAD>
 <BODY>
 잘못된 접근입니다.
 </BODY>
@@ -50,7 +50,7 @@ redirect_error_limit_comments = """
 <html>
 <head>
 <title>Posting</title>
-<meta http-equiv="REFRESH" content="10;url=server.py?id=%s"></HEAD>
+<meta http-equiv="REFRESH" content="10;url=/article/%s"></HEAD>
 <BODY>
 We can not write the comment, <br>
 because this article has <b>limited the count</b> for posting comments.<br>
@@ -65,7 +65,7 @@ def redirect_doc(title, wait_time, doc_id, body):
 <html>
 <head>
 <title>%s</title>
-<meta http-equiv="REFRESH" content="%s;url=server.py?id=%s"></HEAD>
+<meta http-equiv="REFRESH" content="%s;url=/article/%s"></HEAD>
 <BODY>
 %s
 </BODY>

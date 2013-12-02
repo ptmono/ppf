@@ -15,9 +15,9 @@ import cgi
 #from web.utils import sendmail
 import config
 
-if config.LOCAL_TEST:
-    import cgitb
-    cgitb.enable()
+#if config.LOCAL_TEST:
+import cgitb
+cgitb.enable()
 
 import libs
 from indexer import Comments, Comment, Articles, File
@@ -69,7 +69,48 @@ def addComment(doc_id, form):
     print "Content-type: text/html\n"
     print hm.redirect % (doc_id + "#" + comment.comment_id)
 
+from flask import request
+    
+def addComment_wsgi(request):
+    # Form is werkzeug's ImmutableMultiDict
+    form = request.form
+    doc_id = form['doc_id']
+    
+    comments = Comments()
+    comments.set(doc_id)
+    if not canComments(doc_id, comments):
+        return hm.redirect_error_limit_comments % doc_id
 
+    comment = Comment()
+    comment.setFromDict(form)
+    comment.date = time.strftime("%m/%d|%y", time.localtime())
+    comment.name = prepareName(comment.name)
+    comment.password = preparePassword(comment.password)
+    comment.content = prepareContent(comment.content)
+    # updateFormObj will add the comment_id attribute to comment
+    comments.updateFromObj(comment)
+    comments.save()
+
+    try:
+        # Newly created comment key. Write to recentdb
+        comment_key = comments.indexes[0]
+        comment_id = doc_id + comment_key
+        fd = File(None, 'rc', 'a')
+        fd.write(comment_id)
+        fd.close()
+    except Exception, err:
+        config.logger.error(err)
+
+    # Send notification mail
+    try:
+        if config.comment_mail_me: sendMail(comment)
+    except:
+        msg = "Falied to send mail, comment_id %s" % comment_id
+        config.logger.error(msg)
+        
+    return hm.redirect % (doc_id + "#" + comment.comment_id)
+
+    
 def canComments(doc_id, comments):
     '''
     Check the restricted count of the comment of document.
@@ -109,7 +150,10 @@ def specified_limit_comments(doc_id):
     articles = Articles()
     articles.set()
     article = articles.article(doc_id)
-    return article.climit
+    try:
+        return article.climit
+    except AttributeError:
+        return config.max_comments
 
 
 def sendMail(comment):

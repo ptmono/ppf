@@ -1,10 +1,8 @@
 import os, sys
 import shutil
-cur_file_path = os.path.abspath(__file__)
-cur_dir_path = os.path.dirname(cur_file_path)
-root_path = os.path.dirname(cur_dir_path)
-if root_path not in sys.path:
-    sys.path.insert(0, root_path)
+
+from dlibs.libs import add_sys_path
+add_sys_path(__file__, subpath=True)
 
 from unittest import TestCase
 from tools.uploader import Uploader, UploadInfoFromConfig
@@ -57,10 +55,10 @@ def init():
 
 def destroy():
     '''
-    >>> destroy() #doctest: +ELLIPSIS
+    >>> destroy() #doctest: +SKIP
     /... is deleted
     >>> import os.path
-    >>> os.path.exists(config.server_root_directory)
+    >>> os.path.exists(config.server_root_directory) #doctest: +SKIP
     False
     '''
     # Delete installed files
@@ -75,4 +73,4 @@ def destroy():
         pass
 
     # Init index.json
-    init_db()
+    #init_db()

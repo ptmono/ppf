@@ -1,18 +1,10 @@
 # The list of files to be updated
 
-api.py
-config.py
-container.py
-html_messages.py
-indexer.py
-install.py
-libs.py
-poster.py
-server.py
-viewer.py
 README
 .htaccess
 index.html
+
+ppf/*
 
 
 files/

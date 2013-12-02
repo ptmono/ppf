@@ -106,6 +106,7 @@ upload-without-db: exclude-dbs-in-upload-files upload-remote-init-db restore-dbs
 upload-sync-db:
 	python tools/uploader.py --syncdb
 
+# Only work on local
 unload:
 	python -c 'from tests.common import destroy; destroy()'
 

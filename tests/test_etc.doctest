@@ -1,0 +1,8 @@
+
+    >>> from common import *
+
+
+    >>> from ppf import config
+    >>> config.index_file
+    'index.json'
+

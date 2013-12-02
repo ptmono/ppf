@@ -30,7 +30,7 @@ def test_file_permission():
     s_permission = os.stat(s_database_directory)
     s_permission_with = oct(s_permission.st_mode)[3:]
 
-    c_database_directory = config.current_abpath + config.dbs_d
+    c_database_directory = config.root_abpath + config.dbs_d
     c_permission = os.stat(c_database_directory)
     c_permission_with = oct(c_permission.st_mode)[3:]
     assert s_permission_with == c_permission_with

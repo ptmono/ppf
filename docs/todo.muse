@@ -1,3 +1,4 @@
+ - 1311291543 Support multi server
  - 1301140745 Automatically detect dbs directory
  - 1301140556 Variable for index.json in Makefile
  - 1209251625 Consider about the use of capcha

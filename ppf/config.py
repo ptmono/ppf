@@ -1,15 +1,16 @@
 #!/usr/bin/python
 # coding: utf-8
 
+import os.path
 from os.path import dirname, abspath
 import sys
 
 ZIP_SOURCE = False
 UPLOAD_ZIP_SOURCE = False
 
-#current_abpath = '/home/USER_ID/public_html/0ttd/0ppf2/server/'
-current_abpath = abspath(dirname(__file__)) + "/"
-
+#current_abpath = '/home/ptmono/public_html/0ttd/0ppf2/server/'
+__current_abpath = abspath(dirname(__file__)) + "/"
+root_abpath = os.path.dirname(os.path.dirname(__current_abpath))
 
 # The list of header of article. Each header contains the information of
 # the article. e.g) climit restrict the number of comment.
@@ -26,29 +27,29 @@ index_file = 'index.json'
 dbs_d = 'dbs/'
 
 # The muses directory contains original articles.
-muses_d = current_abpath + dbs_d
+muses_d = os.path.join(root_abpath, dbs_d)
 
 # The htmls directory contains html file which converted from the original
 # article.
-htmls_d = current_abpath + dbs_d
+htmls_d = os.path.join(root_abpath, dbs_d)
 
 # The comment directory contains comment db file.
-comments_d = current_abpath + dbs_d
+comments_d = os.path.join(root_abpath, dbs_d)
 
 # The medias directory contains html templates, css, js files.
-medias_d = current_abpath + 'medias/'
+medias_d = os.path.join(root_abpath, 'medias/')
 
 # The files directory contains the image files that used by the web
 # content, the files will can be downloaded by user.
-files_d = current_abpath + 'files/'
+files_d = os.path.join(root_abpath, 'files/')
 
 # 3rd party modules
-modules_d = current_abpath + 'modules/'
+modules_d = os.path.join(root_abpath, 'modules/')
 set_path = set(sys.path)
 if not modules_d in set_path: sys.path.insert(0, modules_d)
     
 # The file name of recent comments db.
-recent_comments_db = 'recent_comments_db'
+recent_comments_db = os.path.join(dbs_d, 'recent_comments_db')
 
 # The extension of original file
 muse_extension = ".muse"
@@ -66,17 +67,17 @@ html_footer = medias_d + "basic_footer.html"
 # template_home = medias_d + 'jinja_home.html'
 
 # html template for the list of article
-template_all_l = medias_d + 'jinja_list.html'
+template_all_l = os.path.join(medias_d, 'jinja_list.html')
 
 # welcome file
-welcome_file = current_abpath + 'README'
+welcome_file = os.path.join(root_abpath, 'README')
 
 # Maximum comment count. Article's climit determines that.
 max_comments = '20'
 
 # This file is created when you have installed the pages.
 installed_check_file = '0installed'
-installed_checkp = current_abpath + dbs_d + installed_check_file
+installed_checkp = root_abpath + dbs_d + installed_check_file
 
 
 ERRORP = False
@@ -87,7 +88,7 @@ char_set = 'utf-8'
 # If you posting an article, the client uses this key as the password.
 SECURE_KEY = '66b43ed7577cb74511fa6a5836f613448b4f47dc'
 
-update_lock_filename = current_abpath + "updating"
+update_lock_filename = root_abpath + "updating"
 
 
 def article_filename(doc_id):
@@ -122,8 +123,8 @@ class ArticleHook:
 
      e.g) 
 
-     'image_name = "/home/USER_ID/.emacs.d/imgs", "files")' will replace
-     "/home/USER_ID/.emacs.d/imgs" as "files".
+     'image_name = "/home/ptmono/.emacs.d/imgs", "files")' will replace
+     "/home/ptmono/.emacs.d/imgs" as "files".
 
      or
 
@@ -132,9 +133,9 @@ class ArticleHook:
            _repalce_image_url()
     '''
     # Fixme: Solve globally the ~ problem.
-    image_name = ("/home/USER_ID/.emacs.d/imgs", "files")
+    image_name = ("/home/ptmono/.emacs.d/imgs", "files")
     image_name2 = ("~/.emacs.d/imgs", "files")
-    file_name = ("/home/USER_ID/files", "files")
+    file_name = ("/home/ptmono/files", "files")
     file_name2 = ("~/files", "files")
 
 
@@ -145,7 +146,7 @@ import logging
 
 LOG_TO_FILEP = True
 if LOG_TO_FILEP:
-    LOG_FILE_FILENAME = current_abpath + dbs_d + 'logging.log'
+    LOG_FILE_FILENAME = os.path.join(root_abpath, dbs_d, 'logging.log')
     LOG_FILE_MODE = 'a'
 else:
     LOG_FILE_FILENAME = None
@@ -172,7 +173,7 @@ logger = logging.getLogger('ppf')
 ### === Mail
 ### --------------------------------------------------------------
 comment_mail_me = False
-email_admin = "USER_ID@localhost"
+email_admin = "ptmono@localhost"
 email_site = "ppf@ppf.pe.kr"
 # smtp type. 'gmail', 'local'.If you use 'gmail' smtp, we requires
 # gmail_user and gmail_password
@@ -186,36 +187,34 @@ gmail_password = ''
 # will upload ppf into web server with ftp. The server have to turn on the
 # ftp server.
 
-LOCAL_TEST=True
-# url_root : The url of page
+try:
+    import config_priv
+    usr_root		= config_priv.url_root
+    url_api			= config_priv.url_api
+    server_host 	= config_priv.server_host
+    server_user_id	= config_priv.server_user_id
+    server_passwd	= config_priv.server_passwd
+    server_root_directory = config_priv.server_root_directory
+    
+except:
+    usr_root		= ''
+    url_api			= ''
+    server_host 	= ''
+    server_user_id	= ''
+    server_passwd	= ''
+    server_root_directory = ''
 
-if LOCAL_TEST:
-    url_root = "http://localhost/~USER_ID/0ttd/0ppf2/ppf/"
-    url_api = url_root + "api.py"
-    server_host = "localhost"
-    server_user_id  = "USER_ID"
-    server_passwd = "USER_PASSWORD"
-    server_root_directory = '/home/USER_ID/public_html/0ttd/0ppf2/ppf'
-
-else:
-    url_root = "http://USER_ID.linuxstudy.pe.kr/ppf/"
-    url_api = url_root + "api.py"
-    server_host = "USER_ID.linuxstudy.pe.kr"
-    server_user_id  = "USER_ID"
-    server_passwd = "USER_PASSWORD"
-    # Any ftp host's root directory start from '/'. 
-    server_root_directory = '/public_html/ppf'
-    #server_root_directory = '/home/member/USER_ID/public_html/ppf'
+    
 
 # Muse uses the images of this directory. The images of article will be
 # duplicated into dbs_d.
 original_images_directory = '~/.emacs.d/imgs/'
 # Muse uses the files of this directory. The file links of article that we
 # want to upload will be duplicated into dbs_d.
-original_files_directory = '/home/USER_ID/files/'
+original_files_directory = '/home/ptmono/files/'
 
 
-list_of_files_to_be_installed = current_abpath + 'tools/' + 'installer_file_list'
+list_of_files_to_be_installed = root_abpath + 'tools/' + 'installer_file_list'
 
 
 ### for install

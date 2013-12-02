@@ -8,6 +8,8 @@ import install
 from jinja2 import Environment, FileSystemLoader, Markup
 import scrubber
 
+
+
 class Var:
     http_header = "Content-type: text/html; charset=utf-8\n\n"
     page_not_found_msg = "We has no page %s"
@@ -79,7 +81,7 @@ class ViewAbstract(object):
 
     def show(self):
         result = ''
-        result += Var.http_header
+        #result += Var.http_header
         result += self.content
         return result
 
@@ -158,7 +160,7 @@ class ViewAll(ViewAbstract):
         articles.set()
 
         for article in articles:
-            href = 'server.py?id=' + article.doc_id
+            href = '/article/' + article.doc_id
             comments = indexer.Comments(article.doc_id)
             comments_count = len(comments)
             # We want only own tag.
@@ -265,92 +267,4 @@ class ViewHome(ViewId):
         result = result.encode(config.char_set)
         return result
 
-
-#Obsolete
-class ViewCategory(ViewAbstract):
-
-    def __init__(self):
-        super(ViewCategory, self).__init__()
-        
-
-    def getContent(self):
-        result = ''
-        result += self.getHeader()
-        result += self.getColumns()
-        result += self.getFooter()
-        return result
-
-
-    def getHeader(self):
-        result = ''
-        fd = file(config.html_header, 'r')
-        result = fd.read()
-
-        result += \
-        """
-        <div class="content_list">
-          <div class="column_header">
-          <table>
-            <tr>
-              <td class="column_num_h">No.</td>
-              <td class="column_b_n_t"></td>
-              <td class="column_title_h">Title</td>
-              <td class="column_b_t_c"></td>
-              <td class="column_tag_h">Tag</td>
-            </tr>
-          </table>
-          </div>
-          <div class="ddhr"></div>
-        """
-        return result
-
-    def getFooter(self):
-        result = ''
-
-        result += \
-        """
-        </div>
-        """
-
-        fd = file(config.html_footer, 'r')
-        result += fd.read()
-        return result
-
-    def getColumns(self):
-        result = ''
-        colomn_header = \
-            """
-              <div class="column">
-                <table>
-                  <tr>
-            """
-        colomn_footer = \
-            """
-                  </tr>
-                </table>
-              </div>
-
-            """
-        indexObj = indexer.IndexL()
-        for index in indexObj:
-            articleObj = indexer.ArticleL()
-            articleObj.setFromJson(index)
-
-            title_a = '<a href="server.py?id=' + articleObj.doc_num + '">' + articleObj.title + '</a>'
-
-            # Start a colomn
-            num_td = '<td class="column_num">' + articleObj.doc_num + '</td>'
-            title_td = '<td class="column_title">' + title_a + '</td>'
-            tag_td = '<td class="column_tag">' + articleObj.tag + '</td>'
-
-            result += colomn_header
-            result += num_td
-            result += '<td class="column_b_n_t"></td>' # empty space
-            result += title_td
-            result += '<td class="column_b_t_c"></td>' # empty space
-            result += tag_td
-            result += colomn_footer
-            result += '<div class="ddhr"></div>'
-        return result
-                    
 
