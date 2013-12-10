@@ -1,3 +1,20 @@
+
+* 1312061902 support html5
+
+current doctype declaration is
+<example>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+</example>
+
+Support html5
+<example>
+<!DOCTYPE html> 
+</example>
+
+But you have to re-write the layout of ppf.
+
+
+
 * 1210041028 error with testing
 
 tests/uploader_test.py has problem with testing for server. couldn't check

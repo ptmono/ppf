@@ -68,7 +68,6 @@ function scrollOnce() {
 		delay += 100;
 		$('div#loadmoreajaxloader').fadeOut();
 		$('#more_jobs_button').show();
-
             }else
             {
 		$('#more_jobs_button').hide();		
@@ -80,20 +79,13 @@ function scrollOnce() {
 
 }
 
-$(window).scroll(function()
-{
-    // if ($(window).height() > $('body').innerHeight())
-    // 	{
-    // 	    $('div#loadmoreajaxloader').height(
-    // 		$(window).height() - (
-    // 		    $('body').innerHeight()));
-    // 	}
-
-    
-    if($(window).scrollTop() == $(document).height() - $(window).height())
+function infinit_scrolling() {
+    if($(window).scrollTop() > $(document).height() - $(window).height() - 120)
     {
-	// temporarily unhook the scroll event watcher so we don't call a bunch of times in a row
-	scrollOnce();
+    	scrollOnce();
     }
-});
+};
+
+var throttled = _.throttle(infinit_scrolling, 400);
+$(window).scroll(throttled);
 

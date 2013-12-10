@@ -2,14 +2,14 @@
 # coding: utf-8
 
 import os.path
-from os.path import dirname, abspath
+from os.path import dirname, abspath, realpath
 import sys
 
 ZIP_SOURCE = False
 UPLOAD_ZIP_SOURCE = False
 
 #current_abpath = '/home/ptmono/public_html/0ttd/0ppf2/server/'
-__current_abpath = abspath(dirname(__file__)) + "/"
+__current_abpath = realpath(dirname(__file__)) + "/"
 root_abpath = os.path.dirname(os.path.dirname(__current_abpath))
 
 # The list of header of article. Each header contains the information of
@@ -108,7 +108,10 @@ def recent_comment_filename():
 
 
 def read_welcome():
-    fd = open(welcome_file, 'r')
+    try:
+        fd = open(welcome_file, 'r')
+    except IOError:
+        return ''
     content = fd.read()
     content = content.replace('\n', '<br>')
     return content
@@ -166,7 +169,8 @@ logging.basicConfig(filename=LOG_FILE_FILENAME,
 #     import os
 #     os.chmod(LOG_FILE_FILENAME, 0777)
     
-    
+
+# Fixme: It force the log file
 logger = logging.getLogger('ppf')
 
 
