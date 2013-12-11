@@ -9,17 +9,17 @@ import hmac
 import inspect
 import json
 
-#lib_path = os.path.abspath('..')
-lib_path = os.path.abspath(__file__)
-lib_path = lib_path[:os.path.dirname(lib_path).rfind('/')]
-if lib_path not in sys.path:
-    sys.path.insert(0, lib_path)
+__current_abpath = os.path.realpath(os.path.dirname(__file__)) + "/"
+root_abpath = os.path.dirname(os.path.dirname(__current_abpath))
 
-import api
-import config
-from api import Data
-import libs
-from indexer import Index, Article, Articles
+if root_abpath not in sys.path:
+    sys.path.insert(0, root_abpath)
+    
+from ppf import api
+from ppf import config
+from ppf.api import Data
+from ppf import libs
+from ppf.indexer import Index, Article, Articles
 from tools.uploader import uploadFile
 
 

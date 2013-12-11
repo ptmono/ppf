@@ -1,6 +1,7 @@
 
     >>> from common import *
     >>> from ppf.indexer import Comment
+    >>> import ppf
 
     >>> from werkzeug.datastructures import ImmutableMultiDict
     >>> imdict = ImmutableMultiDict([('content', 'aaa'), ('doc_id', '0000000001'), ('name', 'bb')])
@@ -8,4 +9,32 @@
     >>> comment.setFromDict(imdict)
     >>> comment
     {'name': 'bb', 'comment_id': '', 'content': 'aaa', 'date': '', 'password': '', 'email': ''}
+
+
+* Article
+
+    >>> from ppf.indexer import Article
+
+    >>> #Create dummy article
+    >>> ppf.config.htmls_d #doctest: +SKIP
+    '/home/ptmono/Desktop/Documents/ppf/htmls/'
+
+    >>> article = Article()
+    >>> article.info #doctest: +SKIP
+    ['doc_id', 'title', 'author', 'date', 'update', 'tag', 'category', 'unpublished', 'climit']
+
+
+** writeHtml
+
+    >>> dummy_name = '9999999999.html'
+    >>> dummy_full_path = os.path.join(ppf.config.htmls_d, dummy_name)
+    >>> article.writeHtml('9999999999', 'aaa')
+    >>> isfile = os.path.exists(dummy_full_path)
+    >>> isfile
+    True
+
+    >>> if isfile:
+    ...     os.remove(dummy_full_path)
+    >>> os.path.exists(dummy_full_path)
+    False
 

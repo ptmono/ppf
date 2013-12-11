@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
+import os
 import config
 import indexer
 import install
@@ -191,7 +192,7 @@ class ViewId(ViewAbstract):
         try:
             temp_context = self.fileContentWithUnicode(html_f)
         except:
-            self._showPageNotFoundError()
+            return self._showPageNotFoundError()
 
         comments = self.getComments()
 
@@ -207,9 +208,8 @@ class ViewId(ViewAbstract):
 
     def _showPageNotFoundError(self):
         content = Var.page_not_found_msg % self.doc_id
-        print Var.http_header
-        print content
-        exit(0)
+        #content = Var.http_header + '\n\n' + content
+        return content
 
     def _check(self):
         "let's check for validate doc_id. doc_id is 10 dicimal number."
@@ -243,11 +243,12 @@ class ViewHome(ViewId):
 
     def getContent(self):
         result = ''
-        html_f = config.htmls_d + str(self.doc_id) + ".html"
+        html_f = os.path.join(config.htmls_d, str(self.doc_id) + ".html")
         try:
             temp_context = self.fileContentWithUnicode(html_f)
         except:
-            self._showPageNotFoundError()
+            #raise
+            return self._showPageNotFoundError()
 
         comments = self.getComments()
         if comments:

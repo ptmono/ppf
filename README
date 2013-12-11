@@ -50,7 +50,8 @@ Requirements
  - json-mode of emacs
  - scrubber(added)
    - BeautifulSoup(added)
-
+ - flask
+ - werkzeug
 
 (Optional)
  - ftp server: server side

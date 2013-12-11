@@ -19,6 +19,8 @@ import config
 import cgitb
 cgitb.enable()
 
+from flask import request
+
 import libs
 from indexer import Comments, Comment, Articles, File
 
@@ -69,8 +71,6 @@ def addComment(doc_id, form):
     print "Content-type: text/html\n"
     print hm.redirect % (doc_id + "#" + comment.comment_id)
 
-from flask import request
-    
 def addComment_wsgi(request):
     # Form is werkzeug's ImmutableMultiDict
     form = request.form

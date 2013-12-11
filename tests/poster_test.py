@@ -48,7 +48,7 @@ class Comment_test(TestCase):
 
 
 
-    def test_posting_comment(self):
+    def posting_comment(self):
         # Let's post comment
         content = 'akkccunnnt'
         pre_query = {'doc_id': Var.dummy_id,
@@ -63,7 +63,7 @@ class Comment_test(TestCase):
         web_content = b.get_html()
         assert web_content.find(content) != -1
 
-    def test_limiting_comment(self):
+    def limiting_comment(self):
         '''
         The tag can limit the number of comment of the article.
         '''
@@ -88,7 +88,7 @@ class Comment_test(TestCase):
         assert web_content.find(content + str(counts)) == -1
 
 
-    def test_articleHooking_homeChar(self):
+    def articleHooking_homeChar(self):
         '''
         config.py ArticleHook has a problem. We couldn't replace '~'
         character.

@@ -1,0 +1,42 @@
+
+    >>> from common import *
+    >>> import os
+    >>> import ppf
+    >>> from ppf import api
+    >>> from ppf.app import app
+
+    >>> tapp = app.test_client()
+
+    >>> data = {'cmd': 'writeArticle',
+    ...         'content': 'test'}
+
+    >>> rv = tapp.post('api', data=data)
+    >>> rv.status_code is 200
+    True
+    >>> rv.data
+    'denied'
+
+
+* writeArticle
+
+** request test
+
+    >>> base64_content = api.Data.encode_base64('content')
+
+    >>> data = {'cmd': 'writeArticle',
+    ...         'doc_id': '9999999999',
+    ...         'secure_key': ppf.config.SECURE_KEY,
+    ...         '_base64_content': base64_content}
+
+    >>> rv = tapp.post('api', data=data) #doctest: +ELLIPSIS
+    Con...
+    >>> rv.status_code is 200
+    True
+    >>> dummy_fullpath = ppf.config.article_filename('9999999999')
+    >>> dummy_fullpath #doctest: +SKIP
+    '/home/ptmono/Desktop/Documents/ppf/htmls/9999999999.html'
+    >>> filep = os.path.exists(dummy_fullpath)
+    >>> filep
+    True
+    >>> if filep: os.remove(dummy_fullpath)
+

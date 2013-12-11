@@ -7,9 +7,9 @@ add_sys_path(__file__, subpath=True)
 from unittest import TestCase
 from tools.uploader import Uploader, UploadInfoFromConfig
 
-import config
-import libs
-from install import init_db
+from ppf import config
+from ppf import libs
+from ppf.install import init_db
 
 from twill import get_browser
 

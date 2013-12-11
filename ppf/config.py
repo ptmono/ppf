@@ -4,6 +4,8 @@
 import os.path
 from os.path import dirname, abspath, realpath
 import sys
+import config_priv
+
 
 ZIP_SOURCE = False
 UPLOAD_ZIP_SOURCE = False
@@ -31,10 +33,10 @@ muses_d = os.path.join(root_abpath, dbs_d)
 
 # The htmls directory contains html file which converted from the original
 # article.
-htmls_d = os.path.join(root_abpath, dbs_d)
+htmls_d = os.path.join(root_abpath, 'htmls/')
 
 # The comment directory contains comment db file.
-comments_d = os.path.join(root_abpath, dbs_d)
+comments_d = os.path.join(root_abpath, htmls_d)
 
 # The medias directory contains html templates, css, js files.
 medias_d = os.path.join(root_abpath, 'medias/')
@@ -77,7 +79,7 @@ max_comments = '20'
 
 # This file is created when you have installed the pages.
 installed_check_file = '0installed'
-installed_checkp = root_abpath + dbs_d + installed_check_file
+installed_checkp = os.path.join(root_abpath, installed_check_file)
 
 
 ERRORP = False
@@ -86,25 +88,25 @@ WARNP = True
 char_set = 'utf-8'
 
 # If you posting an article, the client uses this key as the password.
-SECURE_KEY = '66b43ed7577cb74511fa6a5836f613448b4f47dc'
+SECURE_KEY = config_priv.SECURE_KEY
 
 update_lock_filename = root_abpath + "updating"
 
 
 def article_filename(doc_id):
     "Full path of article."
-    return htmls_d + doc_id + html_extension
+    return os.path.join(htmls_d, doc_id + html_extension)
 
 def comment_filename(doc_id):
     "Full path of comment of article."
-    return comments_d + doc_id + comment_extension
+    return os.path.join(comments_d, doc_id + comment_extension)
 
 def index_filename():
     "Full path of the table of articles."
-    return muses_d + index_file
+    return os.path.join(htmls_d, index_file)
 
 def recent_comment_filename():
-    return comments_d + recent_comments_db
+    return os.path.join(comments_d, recent_comments_db)
 
 
 def read_welcome():
@@ -136,10 +138,11 @@ class ArticleHook:
            _repalce_image_url()
     '''
     # Fixme: Solve globally the ~ problem.
-    image_name = ("/home/ptmono/.emacs.d/imgs", "files")
-    image_name2 = ("~/.emacs.d/imgs", "files")
-    file_name = ("/home/ptmono/files", "files")
-    file_name2 = ("~/files", "files")
+    image_name = ("/home/ptmono/.emacs.d/imgs", "/files")
+    image_name2 = ("~/.emacs.d/imgs", "/files")
+    file_name = ("/home/ptmono/files", "/files")
+    file_name2 = ("~/files", "/files")
+
 
 
 ###
@@ -191,8 +194,9 @@ gmail_password = ''
 # will upload ppf into web server with ftp. The server have to turn on the
 # ftp server.
 
+
+
 try:
-    import config_priv
     usr_root		= config_priv.url_root
     url_api			= config_priv.url_api
     server_host 	= config_priv.server_host

@@ -680,6 +680,7 @@ class Article(InfoTemplate):
             content = ''
         return content
 
+    @classmethod
     def writeHtml(self, doc_id, content):
         "Set the content of article. The file is html."
         try:
@@ -748,7 +749,7 @@ class Article(InfoTemplate):
         if not doc_id:
             result = None
         else:
-            result = config.muses_d + doc_id + config.muse_extension
+            result = os.path.join(config.muses_d, doc_id + config.muse_extension)
         return result
 
     def _getMatchPosition(self, regexp, text):

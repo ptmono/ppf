@@ -5,8 +5,8 @@ from common import *
 
 import json
 
-from api import Data
-from indexer import Article
+from ppf.api import Data
+from ppf.indexer import Article
 from tools.post import writeArticle, updateIndex, \
     updateServerFile, deleteComment, writeComment, \
     updateArticle, updateFile, updateFileWithFtp

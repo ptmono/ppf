@@ -8,14 +8,14 @@ import getpass
 import sys
 import shutil
 
-cur_file_path = os.path.abspath(__file__)
-cur_dir_path = os.path.dirname(cur_file_path)
-ROOT_PATH = os.path.dirname(cur_dir_path)
+__current_abpath = os.path.realpath(os.path.dirname(__file__)) + "/"
+ROOT_PATH = os.path.dirname(os.path.dirname(__current_abpath))
+
 if ROOT_PATH not in sys.path:
     sys.path.insert(0, ROOT_PATH)
 
-import config
-from install		import init_db
+from ppf import config
+from ppf.install		import init_db
 import dlibs
 from dlibs.d_os		import recursive_glob2
 

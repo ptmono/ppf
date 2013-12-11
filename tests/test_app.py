@@ -33,3 +33,4 @@ class TestApp(TestCase):
         rv = self.app.get(uri)
         self.assertTrue(rv.data)
         self.assertEquals(rv.status_code, 200)
+

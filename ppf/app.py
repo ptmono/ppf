@@ -5,10 +5,10 @@ from flask import Flask, request
 
 from viewer import ViewHome, ViewId, ViewAll
 from poster import addComment_wsgi
+import api
 
 import config
 
-#app = Flask(__name__, static_folder=config.medias_d)
 app = Flask(__name__)
 app.debug = True
 
@@ -37,6 +37,9 @@ def article_all():
     docs = ViewAll()
     return docs.show()
 
+@app.route('/api', methods=["POST"])
+def use_api():
+    return api.main_wsgi(request)
 
 @app.route('/writecomment', methods=["POST"])
 def write_comment():

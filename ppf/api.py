@@ -84,6 +84,8 @@ import config
 import cgitb
 cgitb.enable()
 
+from flask import request
+
 import libs
 
 from urllib import urlencode
@@ -286,6 +288,7 @@ def writeComment(doc_id, _base64_content, _base64_name='', password=''):
 
 def writeArticle(doc_id, _base64_content):
     "Used to create/modify the content of an article."
+
     article = Article()
     article.writeHtml(doc_id, _base64_content)
 
@@ -360,12 +363,11 @@ def article_json(doc_id):
     hm.print_msg(json.dumps(article.__dict__))
 
 def main():
-    
-    form = cgi.FieldStorage()
 
+    form = cgi.FieldStorage()
     try: secure_key = form['secure_key'].value
-    except: return
-    if not checkSecureKey(secure_key): return
+    except: return "denied"
+    if not checkSecureKey(secure_key): return "denied"
 
     if form.has_key('cmd'):
         data = Data()
@@ -374,6 +376,7 @@ def main():
         # Get comment object
         try: cmd = eval(scmd)
         except: return
+
         # Get the arguments of function
         spec = inspect.getargspec(cmd)
         #try:
@@ -387,6 +390,41 @@ def main():
         #    sys.exit(1)
     # print "Content-type: text/html\n"
     # print "test"
+    return
+
+
+def main_wsgi(request):
+
+    form = request.form
+    try: secure_key = form['secure_key']
+    except: return "denied"
+
+    if not checkSecureKey(secure_key): return "denied"
+
+    if form.has_key('cmd'):
+        data = Data()
+        values = []
+        scmd = form['cmd']
+        # Get comment object
+        try: cmd = eval(scmd)
+        except: return
+
+        # Get the arguments of function
+        spec = inspect.getargspec(cmd)
+        #try:
+        for arg in spec.args:
+            value = form[arg]
+            # Encode
+            if data.hasPrefix(arg): value = data.decode_value(arg, value)
+            values.append(value)
+
+        try:
+            apply(cmd, values)
+        except IOError as err:
+            config.logger.error(str(err))
+            return "false"
+            
+    return 'ok'
 
 if __name__ == "__main__":
     main()
