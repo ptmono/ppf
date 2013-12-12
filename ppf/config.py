@@ -4,8 +4,6 @@
 import os.path
 from os.path import dirname, abspath, realpath
 import sys
-import config_priv
-
 
 ZIP_SOURCE = False
 UPLOAD_ZIP_SOURCE = False
@@ -88,9 +86,9 @@ WARNP = True
 char_set = 'utf-8'
 
 # If you posting an article, the client uses this key as the password.
-SECURE_KEY = config_priv.SECURE_KEY
+SECURE_KEY = '66b43ed7577cb74511fa6a5836f613448b4f47dc'
 
-update_lock_filename = root_abpath + "updating"
+update_lock_filename = os.path.join(root_abpath, "updating")
 
 
 def article_filename(doc_id):
@@ -197,6 +195,7 @@ gmail_password = ''
 
 
 try:
+    import ocnfig_priv
     usr_root		= config_priv.url_root
     url_api			= config_priv.url_api
     server_host 	= config_priv.server_host
