@@ -2,7 +2,7 @@ import os, sys
 import shutil
 
 from dlibs.libs import add_sys_path
-add_sys_path(__file__, subpath=True)
+ROOT_PATH = add_sys_path(__file__, subpath=True)
 
 from unittest import TestCase
 from tools.uploader import Uploader, UploadInfoFromConfig

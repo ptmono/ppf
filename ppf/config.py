@@ -161,11 +161,14 @@ LOG_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 LOG_LEVEL = logging.DEBUG
 
 # logger doesn't create rw-rw-rw. Manually change the permission
-logging.basicConfig(filename=LOG_FILE_FILENAME,
-                    filemode=LOG_FILE_MODE,
-                    format=LOG_FORMAT,
-                    datefmt=LOG_TIME_FORMAT,
-                    level=LOG_LEVEL)
+try:
+    logging.basicConfig(filename=LOG_FILE_FILENAME,
+                        filemode=LOG_FILE_MODE,
+                        format=LOG_FORMAT,
+                        datefmt=LOG_TIME_FORMAT,
+                        level=LOG_LEVEL)
+except IOError as err:
+    raise Exception("aaaa")
 # except:
 #     import os
 #     os.chmod(LOG_FILE_FILENAME, 0777)
@@ -195,7 +198,7 @@ gmail_password = ''
 
 
 try:
-    import ocnfig_priv
+    import config_priv
     usr_root		= config_priv.url_root
     url_api			= config_priv.url_api
     server_host 	= config_priv.server_host

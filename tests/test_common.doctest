@@ -1,0 +1,6 @@
+
+    >>> from common import *
+
+    >>> ROOT_PATH #doctest: +SKIP
+    '/home/ptmono/Desktop/Documents/ppf'
+

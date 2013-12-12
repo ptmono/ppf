@@ -1,0 +1,28 @@
+
+
+    >>> from common import *
+    >>> from tools.uploader import uploadFile
+
+    >>> test_filename = os.path.join(ROOT_PATH, "testttt.testttt")
+    >>> test_filename #doctest: +SKIP
+    '/home/ptmono/Desktop/Documents/ppf/testttt.testttt'
+
+    >>> fd = open(test_filename, 'w')
+    >>> fd.write("aaa")
+    >>> fd.close()
+
+    >>> fd = open(test_filename, 'rb')
+    >>> print(fd.read())
+    aaa
+    >>> fd.close()
+
+    >>> print(config.server_root_directory) #doctest: +SKIP
+    /home/ptmono/myscript/0services/ppf
+
+    >>> uploadFile(test_filename)
+
+    >>> server_filename = config.server_root_directory + "/" + os.path.basename(test_filename)
+    >>> os.path.exists(server_filename)
+    True
+    >>> os.remove(test_filename)
+    >>> os.remove(server_filename)

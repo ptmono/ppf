@@ -486,23 +486,6 @@ class Uploader:
 
 def uploadFile(filename):
     '''
-    >>> test_filename = ROOT_PATH + "/testttt.testttt"
-    >>> fd = open(test_filename, 'w')
-    >>> fd.write("aaa")
-    >>> fd.close()
-    >>> uploadFile(test_filename)
-
-    >>> fd = open(test_filename, 'rb')
-    >>> print fd.read()
-    aaa
-    >>> fd.close()
-    >>> print config.server_root_directory
-    /home/ptmono/public_html/0ttd/0ppf2/ppf
-    >>> server_filename = config.server_root_directory + "/" + os.path.basename(test_filename)
-    >>> os.path.exists(server_filename)
-    True
-    >>> os.remove(test_filename)
-    >>> os.remove(server_filename)
     '''
     host = config.server_host
     user = config.server_user_id
