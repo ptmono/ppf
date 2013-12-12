@@ -193,9 +193,9 @@ class ViewId(ViewAbstract):
         try:
             temp_context = self.fileContentWithUnicode(html_f)
         except:
-            raise PageNotFound(self.doc_id)
-            #return self._showPageNotFoundError()
-
+            from flask import abort
+            abort(403)
+            
         comments = self.getComments()
 
         temp = self.jinja_env.get_template('jinja_content.html')

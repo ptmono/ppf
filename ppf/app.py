@@ -59,11 +59,6 @@ def write_comment():
     return addComment_wsgi(request)
 
 
-@app.route('/error/permission_log')
-def error_permission_log():
-    return "akfksdksfksf"
-
-
 def _checkArticleIndex(err_msg):
     msg = str(err_msg)
     if msg.find(config.index_file) == -1:
