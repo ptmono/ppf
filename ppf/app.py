@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
+
 from flask import Flask, request
 app = Flask(__name__)
 app.debug = True
@@ -11,8 +13,8 @@ from viewer import ViewHome, ViewId, ViewAll
 from poster import addComment_wsgi
 import api
 
+from app_exceptions import InitError, PageNotFound
 from werkzeug import SharedDataMiddleware
-import os
 
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/medias':	config.medias_d,
@@ -68,12 +70,18 @@ def _checkArticleIndex(err_msg):
         return False
     return True
 
-from app_exceptions import InitError
-
 @app.errorhandler(InitError)
 def handle_init_error(error):
     import install
     return install.main()
+
+@app.errorhandler(PageNotFound)
+def handle_PageNotFound(error):
+    from flask import jsonify
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
 
 
 

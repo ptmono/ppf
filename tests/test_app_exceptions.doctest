@@ -1,0 +1,27 @@
+
+    >>> from common import *
+
+* PageNotFound
+
+    >>> from ppf.app_exceptions import PageNotFound
+
+    >>> raise PageNotFound("1111111111") #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    PageNotFound: 1111111111
+    >>> try:
+    ...     raise PageNotFound('1111111111')
+    ... except PageNotFound as err:
+    ...     err.to_dict()
+    {'message': '1111111111'}
+
+flask.json.jsonify work correctly on app
+
+    >>> try:
+    ...     raise PageNotFound('1111111111')
+    ... except PageNotFound as err:
+    ...     from flask import jsonify
+    ...     jsonify(err.to_dict()) #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    RuntimeError: working outside of application context
+
+

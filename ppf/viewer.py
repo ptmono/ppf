@@ -9,6 +9,7 @@ import install
 from jinja2 import Environment, FileSystemLoader, Markup
 import scrubber
 
+from app_exceptions import PageNotFound
 
 
 class Var:
@@ -192,7 +193,8 @@ class ViewId(ViewAbstract):
         try:
             temp_context = self.fileContentWithUnicode(html_f)
         except:
-            return self._showPageNotFoundError()
+            raise PageNotFound(self.doc_id)
+            #return self._showPageNotFoundError()
 
         comments = self.getComments()
 

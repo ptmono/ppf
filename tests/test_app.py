@@ -27,10 +27,24 @@ class TestApp(TestCase):
 
         rv = self.app.post('/writecomment', data=data)        
         self.assertEqual(rv.data, 3221)
-        
+
+
+    def test_PageNotFound(self):
+        rv = self.app.get('/article/1111111119')
+        self.assertEqual(rv.status_code, 404)
+        self.assertEqual(rv.data, '{\n  "message": "1111111119"\n}')
 
     def is_page_ok(self, uri):
         rv = self.app.get(uri)
         self.assertTrue(rv.data)
         self.assertEquals(rv.status_code, 200)
 
+
+class Test_app_exceptions(TestCase):
+    def setUp(self):
+        self.app = app.test_client()
+
+    def test_PageNotFound(self):
+        rv = self.app.get('/article/1111111119')
+        self.assertEqual(rv.status_code, 404)
+        self.assertEqual(rv.data, '{\n  "message": "1111111119"\n}')
