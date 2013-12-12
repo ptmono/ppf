@@ -10,6 +10,12 @@ How about
 
 $ make init
 
+ - dbs
+ - htmls
+ - create index.json
+
+ppf.install also do this work
+
 
 
 
