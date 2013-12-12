@@ -2,15 +2,14 @@
 # coding: utf-8
 
 from flask import Flask, request
+app = Flask(__name__)
+app.debug = True
+
+import config
 
 from viewer import ViewHome, ViewId, ViewAll
 from poster import addComment_wsgi
 import api
-
-import config
-
-app = Flask(__name__)
-app.debug = True
 
 from werkzeug import SharedDataMiddleware
 import os
@@ -20,11 +19,22 @@ app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/files':	config.files_d
     })
 
+
 @app.route('/home')
 @app.route('/')
 def home():
-    home = ViewHome()
-    return home.show()
+    try:
+        home = ViewHome()
+        return home.show()
+    except IOError as err:
+        if _checkArticleIndex(err):
+            # There is no index file
+            #_initArticleIndex()
+            # import install
+            # return install.main()
+            raise InitError()
+        raise IOError(str(err))
+
 
 @app.route('/article/<doc_id>')
 def article_doc(doc_id):
@@ -45,6 +55,27 @@ def use_api():
 def write_comment():
 
     return addComment_wsgi(request)
+
+
+@app.route('/error/permission_log')
+def error_permission_log():
+    return "akfksdksfksf"
+
+
+def _checkArticleIndex(err_msg):
+    msg = str(err_msg)
+    if msg.find(config.index_file) == -1:
+        return False
+    return True
+
+from app_exceptions import InitError
+
+@app.errorhandler(InitError)
+def handle_init_error(error):
+    import install
+    return install.main()
+
+
 
 if __name__ == '__main__':
     app.run(port=3108)

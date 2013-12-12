@@ -15,7 +15,7 @@ class Var:
     http_header = "Content-type: text/html; charset=utf-8\n\n"
     page_not_found_msg = "We has no page %s"
 
-
+#Obsolete
 class View(object):
     '''
     >>> ve = View()

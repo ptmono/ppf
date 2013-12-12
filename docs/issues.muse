@@ -17,6 +17,11 @@ $ make init
 ppf.install also do this work
 
 
+** How about to use install.main
+
+Already it has the facility. Add some permission checking.
+
+
 
 
 * 1312061902 support html5

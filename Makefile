@@ -13,7 +13,7 @@ else
 	PASS_SERVER=`cat private/passwd_server`
 endif
 
-LOCAL_TEST=$(shell cat config.py |sed -n '/^LOCAL_TEST/p' |awk 'BEGIN { FS = "="} {print $$2}')
+LOCAL_TEST=$(shell cat ppf/config.py |sed -n '/^LOCAL_TEST/p' |awk 'BEGIN { FS = "="} {print $$2}')
 
 ifneq (, $(findstring True,${LOCAL_TEST}))
 	AAAK="ccd"
@@ -22,31 +22,6 @@ else
 endif
 
 
-t:
-	$(if $(findstring False, ${LOCAL_TEST}),\
-	echo "aaa",\
-	( echo "bbb";\
-	echo "ddd" ))
-
-	@echo ${LOCAL_TEST}
-	@if test "aaa" != "aaa"; then \
-	echo "ccccccccccc"; \
-	else echo "ddddddddd"; fi
-
-	if test "aaa" == "aaa"; then exit 2; fi
-	@echo "mmmmmmmmmmmmm"
-y:
-	@echo "aaak"
-
-
-test: doctest unittest
-	@echo "Notice: You need \"make real-mode\" to restore files."
-
-doctest: test-mode
-	nosetests --with-doc *.py
-
-unittest: test-mode
-	nosetests
 zip:
 	tar cf ppf.tar -l `cat tools/zip_file_list`
 
@@ -164,3 +139,13 @@ real-mode:
 init-index:
 	echo '{"0000000001" : {"category": "a", "title":"Welcome"}}' > dbs/index.json
 	chmod 666 dbs/index.json
+
+test: doctest unittest
+	@echo "Notice: You need \"make real-mode\" to restore files."
+
+doctest: test-mode
+	nosetests --with-doc *.py
+
+unittest: test-mode
+	nosetests
+

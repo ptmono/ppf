@@ -86,9 +86,7 @@ def create_file(ab_filename, content):
 
 def main():
     if os.path.exists(config.installed_checkp):
-        print "Content-type: text/html\n\n"
-        print "If you want to re-install, delete '%s' file" % config.installed_check_file
-        return
+        return "If you want to re-install, delete '%s' file" % config.installed_check_file
     global msg
     check_and_make_directories()
     check_sys_files()
@@ -97,8 +95,7 @@ def main():
     fd = open(config.installed_checkp, 'w')
     fd.close()
 
-    print "Content-type: text/html\n\n"
-    print msg
+    return msg
 
 if __name__ == "__main__":
     main()

@@ -77,7 +77,7 @@ max_comments = '20'
 
 # This file is created when you have installed the pages.
 installed_check_file = '0installed'
-installed_checkp = os.path.join(root_abpath, installed_check_file)
+installed_checkp = os.path.join(htmls_d, installed_check_file)
 
 
 ERRORP = False
@@ -160,23 +160,13 @@ LOG_FORMAT = '%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s'
 LOG_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 LOG_LEVEL = logging.DEBUG
 
-# logger doesn't create rw-rw-rw. Manually change the permission
-try:
-    logging.basicConfig(filename=LOG_FILE_FILENAME,
-                        filemode=LOG_FILE_MODE,
-                        format=LOG_FORMAT,
-                        datefmt=LOG_TIME_FORMAT,
-                        level=LOG_LEVEL)
-except IOError as err:
-    raise Exception("aaaa")
-# except:
-#     import os
-#     os.chmod(LOG_FILE_FILENAME, 0777)
-    
-
-# Fixme: It force the log file
-logger = logging.getLogger('ppf')
-
+# To solve permission problem we need to execute install.py
+logging.basicConfig(filename=LOG_FILE_FILENAME,
+                    filemode=LOG_FILE_MODE,
+                    format=LOG_FORMAT,
+                    datefmt=LOG_TIME_FORMAT,
+                    level=LOG_LEVEL)
+logger = logging.getLogger('ppf')    
 
 ### === Mail
 ### --------------------------------------------------------------
@@ -234,9 +224,7 @@ required_dirs = \
     [muses_d, htmls_d, comments_d, files_d]
      
 required_sys_files = \
-    ['api.py', 'config.py', 'html_messages.py', 'indexer.py',
-     'libs.py', 'poster.py', 'server.py', 'viewer.py',
-     template_all_l]
+    [template_all_l]
 
 # The files to be initiated
 required_files = \
