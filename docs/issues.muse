@@ -1,3 +1,17 @@
+* 1312122052 Makefile doesn't work correctly 
+
+Restruct
+
+
+
+* 1312122051 log file permission problem
+
+How about
+
+$ make init
+
+
+
 
 * 1312061902 support html5
 
