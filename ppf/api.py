@@ -84,7 +84,7 @@ import config
 import cgitb
 cgitb.enable()
 
-from flask import request
+from flask import request, abort
 
 import libs
 
@@ -258,33 +258,33 @@ class Data(DataBasic):
         return result
 
 
+def getComments(doc_id):
+    comments = Comments(doc_id)
+    return str(comments)
+    
 def deleteComment(doc_id, comment_id):
     "Delete comment for an article."
     try:
         Comments.delete(doc_id, comment_id)
+        return 'ok'
     except:
-        print "Content-type: text/html\n\n"
-        print "False"
-        return
-
-    print "Content-type: text/html\n\n"
-    print "OK"
+        abort(500)
 
 def writeComment(doc_id, _base64_content, _base64_name='', password=''):
-    
-    comment = Comment()
-    comment.date = time.strftime("%m/%d|%y", time.localtime())
-    comment.name = _base64_name
-    # TODO: How to prevent password??
-    comment.password = password
-    comment.content = _base64_content
-    comments = Comments(doc_id)
-    comments.updateFromObj(comment)
-    comments.save()
 
-    print "Content-type: text/html\n\n"
-    print "OK"
-
+    try:    
+        comment = Comment()
+        comment.date = time.strftime("%m/%d|%y", time.localtime())
+        comment.name = _base64_name
+        # TODO: How to prevent password??
+        comment.password = password
+        comment.content = _base64_content
+        comments = Comments(doc_id)
+        comments.updateFromObj(comment)
+        comments.save()
+        return 'ok'
+    except:
+        abort(500)
 
 def writeArticle(doc_id, _base64_content):
     "Used to create/modify the content of an article."
@@ -292,10 +292,7 @@ def writeArticle(doc_id, _base64_content):
     article = Article()
     article.writeHtml(doc_id, _base64_content)
 
-    print "Content-type: text/html\n\n"
-    print "OK"
-
-
+    return 'ok'
 
 def updateIndex(doc_id, _jsonBase64_dict):
     "Used to add/modify the table of articles."
@@ -395,6 +392,9 @@ def main():
 
 def main_wsgi(request):
 
+    config.logger.debug('aaa')
+    
+
     form = request.form
     try: secure_key = form['secure_key']
     except: return "denied"
@@ -419,12 +419,12 @@ def main_wsgi(request):
             values.append(value)
 
         try:
-            apply(cmd, values)
+            msg = apply(cmd, values)
         except IOError as err:
             config.logger.error(str(err))
             return "false"
             
-    return 'ok'
+    return msg
 
 if __name__ == "__main__":
     main()
