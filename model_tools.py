@@ -16,6 +16,7 @@ from lxml.html import parse, fromstring, tostring
 
 import requests
 import re
+import os
 
 from sqlalchemy import MetaData, create_engine, Table
 from sqlalchemy.orm import sessionmaker, mapper
@@ -46,9 +47,16 @@ class NetTools:
 
     @classmethod
     def save_page(self, url, filename):
-        data = requests.get(url).content
+        r = requests.get(url)
+        data = r.content
+        if r.encoding == "EUC-KR":
+            data = data.decode('euc-kr')
         fd = open(filename, 'w')
-        fd.write(data)
+        try:
+            fd.write(data)
+        except TypeError:
+            fd = open(filename, 'bw')
+            fd.write(data)
         fd.close()
 
     @classmethod
@@ -177,3 +185,27 @@ def parseURL(url):
 
 
     
+
+
+class TestingMixin(object):
+    @classmethod
+    def _dummy_data(self, filename=None):
+        if not filename:
+            filename = self._generate_filename()
+        return NetTools.read(filename)
+
+    @classmethod
+    def _save_dummy_data(self, filename=None):
+        if not filename:
+            filename = self._generate_filename()
+        NetTools.save_page(self.urls[0], filename)
+
+    @classmethod
+    def _generate_filename(self):
+        dir = os.getcwd()
+        filename = self.__name__ + '_sample.html'
+        result = os.path.join(dir, '__tmp/' + filename)
+        return result
+
+
+
