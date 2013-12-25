@@ -22,5 +22,6 @@ dbs2/
 /aa
 /dbs/index.json.bak.pre.aaa
 /dbs/dbs/recent_comments_db
-ppfjob
 files
+ppfjob
+tests_ppfjob
