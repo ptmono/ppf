@@ -4,7 +4,7 @@ p.verse { margin-left: 3%; }
 .example { margin-left: 3%; }
 .src { margin-left: 3%; }
 /* For quote */
-blockquote { border-left: thin solid #000000; margin-left: 3%; padding: 0 0 0 5; }
+blockquote { border-left: thin solid #000000; margin-left: 3%; padding: 0 0 0 5px; }
 
 h1 { margin-top: 25px; margin-bottom: 10px; }
 h2 { margin-top: 25px; margin-bottom: 18px; margin-left: 0px; text-decoration: none; border-bottom: 3px double #000000; }
@@ -19,7 +19,7 @@ table.muse-table tbody td { border: 1px solid #ccdeed; }
 /* nested sections */
 .section { margin: 0; padding: 10px; margin-bottom: 10px; font-size: 15px; margin-left: -10px; }
 .section .subsection { margin: 0; margin-left: 0px; font-size: 15px;  }
-.title { margin: 0; padding; 0 }
+.title { margin: 0; padding: 0 }
 
 /* #sec2 { margin-left: 20px; } */
 
@@ -29,11 +29,11 @@ table.muse-table tbody td { border: 1px solid #ccdeed; }
 #diary p { margin-top: 1em; }
 
 /* Tasks section */
-.task .A { color: red }
-.task .B { color: green }
-.task .C { color: navy }
+.task .A { color: red; }
+.task .B { color: green; }
+.task .C { color: navy; }
 .task .done      { color: gray; text-decoration: line-through; }
-.task .cancelled { color: gray; text-decoration: italic; }
+.task .cancelled { color: gray; text-decoration: line-through; }
 
 /* Notes section */
 .note { margin-top: 1.5em; }

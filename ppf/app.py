@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import sys
 import os
 
 from flask import Flask, request
@@ -12,6 +13,13 @@ import config
 from viewer import ViewHome, ViewId, ViewAll
 from poster import addComment_wsgi
 import api
+
+try:
+    from ppfjob.views import jobs_filitered, job_page
+except ImportError:
+    root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    sys.path.insert(0, root_path)
+    from ppfjob.views import jobs_filtered, job_page
 
 from app_exceptions import InitError, PageNotFound
 from werkzeug import SharedDataMiddleware
@@ -57,6 +65,15 @@ def use_api():
 def write_comment():
 
     return addComment_wsgi(request)
+
+
+@app.route('/job/page/<page_num>')
+def ppfjob_page(page_num):
+    return job_page(page_num)
+
+@app.route('/ppfjobs')
+def ppfjobs():
+    return jobs_filtered()
 
 
 def _checkArticleIndex(err_msg):

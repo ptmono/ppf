@@ -1,9 +1,9 @@
-  <!-- <div class="sep_line" \> -->
   {% for article in articles %}  
   {% if not is_spam(article.title) %}
   <div class="column">
     <table class="list_table">
       <tr>
+	<td class="column_idx">{{ article.idx }}</td>
 	{% if is_near(article.city) %}
 	<td class="column_num"><font color="red">{{ article.city }}</font></td>
 	{% else %}
@@ -20,6 +20,7 @@
   <div class="column">
     <table class="list_table">
       <tr>
+	<td class="column_idx">{{ article.idx }}</td>
 	<td class="column_num_spam">{{ article.city }}</td>
 	<td class="column_b_n_t"></td>
 	<td class="job_column_title_spam"><a href="http://www.saramin.co.kr/zf_user/recruit/view/idx/{{ article.idx }}" target="_blank">{{ article.title }}</a></td>

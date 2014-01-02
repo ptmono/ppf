@@ -45,6 +45,43 @@ function MM_swapImage() { //v3.0
 $("textarea[class=comment]").autoResize();
 
 
+//var bookmark_color = {1: "#fffca6", 2: "white"};
+var bookmark_color = {1: "#fffa6d", 2: "white"};
+
+function toggle_on_click(obj) {
+    var idx = jQuery(obj).find(".column_idx").text();
+
+    var idx_color = $.jStorage.get(idx);
+    if (!(idx_color)){
+	idx_color = 1;
+	$.jStorage.set(idx, 1);
+    }
+    else{
+	if (idx_color == 1){
+	    idx_color = 2;
+	    $.jStorage.deleteKey(idx);
+	}
+	// if (idx_color == 2){
+	//     idx_color = 2;
+	//     $.jStorage.deleteKey(idx);
+	// }
+    }
+    console.log(idx_color);
+    obj.css("background-color", bookmark_color[idx_color]);
+};
+
+function init_job_content(obj) {
+
+    var idx = jQuery(obj).find(".column_idx").text();
+    var idx_color = $.jStorage.get(idx);
+
+    if (!(idx_color)){
+	return
+    }
+    obj.css("background-color", bookmark_color[idx_color]);
+}
+
+
 // scrolling
 
 var g_page_count = 1;
@@ -61,19 +98,23 @@ function scrollOnce() {
             if(html)
             {
 		
-		$('#more_jobs_button').hide();
+		$('div#more_jobs_button').hide();
                 $('div#loadmoreajaxloader').fadeIn();
 		var delay = 0;
-                $("#ajax_more_jobs").append(html).delay().animate({opacity:1}, 200);
+                $("div#ajax_more_jobs").append(html).delay().animate({opacity:1}, 200);
 		delay += 100;
 		$('div#loadmoreajaxloader').fadeOut();
-		$('#more_jobs_button').show();
+		$('div#more_jobs_button').show();
             }else
             {
-		$('#more_jobs_button').hide();		
+		$('div#more_jobs_button').hide();		
                 $('div#loadmoreajaxloader').fadeIn();
                 $('div#loadmoreajaxloader').html('<center>No more posts to show.</center>');
             }
+	    $(".column").each(function () {
+		init_job_content($(this));
+	    });
+
         },
     });
 
@@ -85,6 +126,29 @@ function infinit_scrolling() {
     	scrollOnce();
     }
 };
+
+// $(".column").one("click", function () {
+//     $(this).css("background-color", "red");
+// });
+
+// $(document).ready(function () {
+//     $("#column").on("click", function () {
+// 	$(this).css("background-color", "red");
+//     });
+// });
+
+// $(".column").click(function () {
+//     toggle_on_click($(this));
+// });
+
+$("body").on("click", ".column", function () {
+    toggle_on_click($(this));
+});
+
+
+$(".column").each(function () {
+    init_job_content($(this));
+});
 
 var throttled = _.throttle(infinit_scrolling, 400);
 $(window).scroll(throttled);

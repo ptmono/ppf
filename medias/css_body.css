@@ -48,8 +48,12 @@ div.menu_middle_two { width: 680px; height: 25px; background-color: white; }
 div.menu_middle_line_two { width: 2px; height: 25px; background-color: black; }
 div.menu_middle_three { width: 100px; height: 25px; background-color: white; }
 
-#icon_all { display:block; font-size:13px; margin-left: 10px; width 53px; height: 25px; background:url("img_all1.gif") no-repeat 0 0; }
+#icon_all { display:block; font-size:13px; margin-left: 10px; width: 53px; height: 25px; background:url("img_all1.gif") no-repeat 0 0; }
 #icon_all:hover { background:url("img_all2.gif") no-repeat 0 0; }
+
+#icon_jobs { display:block; font-size:13px; margin-left: 10px; width: 53px; height: 25px; background:url("img_job1.gif") no-repeat 0 0; }
+#icon_jobs:hover { background:url("img_job2.gif") no-repeat 0 0; }
+
 #icon_home { display:block; font-size:13px; margin-right: 10px; width: 53px; height: 25px; background:url("img_main1.gif") no-repeat 0 0;}
 #icon_home:hover { background:url("img_main2.gif") no-repeat 0 0; }
 
@@ -101,6 +105,7 @@ input.comment_submit { font-size: 12px; width: 65px; border: 1px solid black; }
 
 div.column { padding: 2px 0px 2px 0px; }
 div.column { margin:0 auto;text-align:left; font-size: 1px; }
+td.column_idx { width: 70px; font-size:9px; display:none; }
 td.column_num { width: 70px; font-size:9px; }
 td.column_title { width: 300px; font-size:13px; }
 td.column_tag { width: 100px; font-size:13px; }
@@ -139,3 +144,5 @@ div.sep_line { height:0px; border-top:  1px solid #00ff00; border-bottom: 0px; b
 /* tr:first-child:hover { */
 /*     background-color: white; */
 /* } */
+
+div.column:hover { background-color: #eee; }
