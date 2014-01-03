@@ -1,0 +1,460 @@
+(dp0
+S'articles'
+p1
+(lp2
+(dp3
+S'date'
+p4
+V01/25 (\ud1a0)
+p5
+sS'city'
+p6
+V\ucda9\ubd81
+p7
+sS'_id'
+p8
+I40403
+sS'idx'
+p9
+V17812528
+p10
+sS'title'
+p11
+V\uc815\uaddc\uc9c1 \uc0ac\uc6d0 \ubaa8\uc9d1
+p12
+sa(dp13
+g4
+V01/06 (\uc6d4)
+p14
+sg6
+V\uacbd\ub0a8
+p15
+sg8
+I40402
+sg9
+V17812457
+p16
+sg11
+V\uad00\uacf5\uc11c \uc5c5\ubb34 \uac1c\ubc1c\uc790(\ud504\ub85c\uadf8\ub798\uba38)\ub97c \ubaa8\uc9d1\ud569\ub2c8\ub2e4.
+p17
+sa(dp18
+g4
+V01/03 (\uae08)
+p19
+sg6
+V\uc11c\uc6b8
+p20
+sg8
+I40401
+sg9
+V17812417
+p21
+sg11
+V\ub2a5\ub825\uc788\ub294 \uc6f9\ub514\uc790\uc774\ub108 \ubaa8\uc9d1\ud569\ub2c8\ub2e4.
+p22
+sa(dp23
+g4
+V01/25 (\ud1a0)
+p24
+sg6
+V\uc11c\uc6b8
+p25
+sg8
+I40400
+sg9
+V17812339
+p26
+sg11
+V\ub124\ud2b8\uc6cc\ud06c \ubcf4\uc548 \uc5d4\uc9c0\ub2c8\uc5b4(SE) \ubaa8\uc9d1[\uacbd\ub825]
+p27
+sa(dp28
+g4
+V12/31 (\ud654)
+p29
+sg6
+V\uc11c\uc6b8
+p30
+sg8
+I40399
+sg9
+V17812336
+p31
+sg11
+VSK\ube0c\ub85c\ub4dc\ubc34\ub4dc HFC A/S(\uc7a5\uc560) \uacbd\ub825\uc9c1 \uae30\uc0ac\uad6c\uc778
+p32
+sa(dp33
+g4
+V\ucc44\uc6a9\uc2dc
+p34
+sg6
+V\uacbd\ub0a8
+p35
+sg8
+I40398
+sg9
+V17812311
+p36
+sg11
+V\uc0ac\ubb34\uc9c1(\uacbd\ub9ac)\ubc0f\ucf04\ud14c\uce20,\uc0ac\uc774\ud2b8\uc6b4\uc601
+p37
+sa(dp38
+g4
+V01/25 (\ud1a0)
+p39
+sg6
+V\uc11c\uc6b8
+p40
+sg8
+I40397
+sg9
+V17812264
+p41
+sg11
+V[\ud3ec\ud1a0\uc0f5/html] \uacbd\ub825 3\ub144 \uc774\uc0c1 \uc6f9 \ub514\uc790\uc774\ub108 \uad6c\uc778
+p42
+sa(dp43
+g4
+V01/25 (\ud1a0)
+p44
+sg6
+V\uc11c\uc6b8
+p45
+sg8
+I40396
+sg9
+V17812207
+p46
+sg11
+V\uc81c\uc774\uc564\ube44\ucef4\ud37c\ub2c8 \uc81c\uc774\uc5d4\ube44\ucef4\ud37c\ub2c8[\uc2e0\uc785/\uacbd\ub825]\uc6f9\ud37c\ube14..
+p47
+sa(dp48
+g4
+V01/25 (\ud1a0)
+p49
+sg6
+V\uc11c\uc6b8
+p50
+sg8
+I40395
+sg9
+V17812189
+p51
+sg11
+V\uc81c\uc774\uc564\ube44\ucef4\ud37c\ub2c8 \uc81c\uc774\uc5d4\ube44\ucef4\ud37c\ub2c8[\uc2e0\uc785/\uacbd\ub825]JAVA ..
+p52
+sa(dp53
+g4
+V01/15 (\uc218)
+p54
+sg6
+V\uc11c\uc6b8
+p55
+sg8
+I40394
+sg9
+V17811973
+p56
+sg11
+V\uad6c\ub85c AK\ud50c\ub77c\uc790 \uc804\uc0b0\uc2e4 \uc0c1\uc8fc\uadfc\ubb34\uc790 \ubaa8\uc9d1
+p57
+sa(dp58
+g4
+V01/25 (\ud1a0)
+p59
+sg6
+V\uc11c\uc6b8
+p60
+sg8
+I40393
+sg9
+V17811966
+p61
+sg11
+V\ud328\ube0c\ub9ad\uc1fc\ud551\ubab0(MD) \uacbd\ub825\uc0ac\uc6d0\uc744 \ucc44\uc6a9\ud569\ub2c8\ub2e4.
+p62
+sa(dp63
+g4
+V01/25 (\ud1a0)
+p64
+sg6
+V\uc11c\uc6b8
+p65
+sg8
+I40392
+sg9
+V17811963
+p66
+sg11
+V\ud328\ube0c\ub9ad\uc1fc\ud551\ubab0(MD) \uc2e0\uc785\uc0ac\uc6d0\uc744 \ucc44\uc6a9\ud569\ub2c8\ub2e4.
+p67
+sa(dp68
+g4
+V01/25 (\ud1a0)
+p69
+sg6
+V\ub300\uc804
+p70
+sg8
+I40391
+sg9
+V17811897
+p71
+sg11
+Vpc & \ub124\ud2b8\uc6cd \uc720\uc9c0\ubcf4\uc218
+p72
+sa(dp73
+g4
+V01/09 (\ubaa9)
+p74
+sg6
+V\ubd80\uc0b0
+p75
+sg8
+I40390
+sg9
+V17811896
+p76
+sg11
+V\uc6f9 \ud504\ub85c\uadf8\ub798\uba38 \ubaa8\uc9d1
+p77
+sa(dp78
+g4
+V01/03 (\uae08)
+p79
+sg6
+V\ub300\uc804
+p80
+sg8
+I40389
+sg9
+V17811867
+p81
+sg11
+V\uc0ac\ubb34\uad00\ub9ac\uc9c1 \uc2e0\uc785 \ubc0f \uacbd\ub825\uc0ac\uc6d0 \ubc0f \uad00\ub9ac\uc790 \uc0ac\uc6d0\ubaa8\uc9d1
+p82
+sa(dp83
+g4
+V01/25 (\ud1a0)
+p84
+sg6
+V\uc11c\uc6b8
+p85
+sg8
+I40388
+sg9
+V17811836
+p86
+sg11
+V\uc81c\uc774\uc564\ube44\ucef4\ud37c\ub2c8 \uc81c\uc774\uc5d4\ube44\ucef4\ud37c\ub2c8[\uc2e0\uc785/\uacbd\ub825]\uc6f9\ud37c\ube14..
+p87
+sa(dp88
+g4
+V01/25 (\ud1a0)
+p89
+sg6
+V\uc11c\uc6b8
+p90
+sg8
+I40387
+sg9
+V17811818
+p91
+sg11
+V\uc81c\uc774\uc564\ube44\ucef4\ud37c\ub2c8 \uc81c\uc774\uc5d4\ube44\ucef4\ud37c\ub2c8[\uc2e0\uc785/\uacbd\ub825]JAVA ..
+p92
+sa(dp93
+g4
+V01/25 (\ud1a0)
+p94
+sg6
+V\uacbd\uae30
+p95
+sg8
+I40386
+sg9
+V17811779
+p96
+sg11
+VLG U+ (Perfect\uc0f5)\uc5d0\uc11c\uac19\uc774\uc77c\ud560\uac00\uc871\ubd84\ub4e4\uad6c\ud574\uc694
+p97
+sa(dp98
+g4
+V\ucc44\uc6a9\uc2dc
+p99
+sg6
+V\ub300\uad6c
+p100
+sg8
+I40385
+sg9
+V17811759
+p101
+sg11
+V\ub2e4\ucc44\ub85c\uc6c0 \uc2e0\uc785\uc0ac\uc6d0\ubaa8\uc9d1
+p102
+sa(dp103
+g4
+V01/25 (\ud1a0)
+p104
+sg6
+V\ucda9\ub0a8
+p105
+sg8
+I40384
+sg9
+V17811530
+p106
+sg11
+VAPP\uac1c\ubc1c\uc790 \ud504\ub85c\uadf8\ub798\uba38 \uad6c\ud569\ub2c8\ub2e4.
+p107
+sa(dp108
+g4
+V01/25 (\ud1a0)
+p109
+sg6
+V\ub300\uad6c
+p110
+sg8
+I40383
+sg9
+V17811509
+p111
+sg11
+V\uc1fc\ud551\ubab0 \uc6f9\ub514\uc790\uc778 \ubc0f \uc8fc\ubb38\ubc30\uc1a1\uad00\ub9ac, \uc2e0\uc785/ \uacbd\ub825\uc0ac\uc6d0 ..
+p112
+sa(dp113
+g4
+V01/25 (\ud1a0)
+p114
+sg6
+V\uacbd\uae30
+p115
+sg8
+I40382
+sg9
+V17811507
+p116
+sg11
+V\uacbd\ub825 \uc6f9\ub514\uc790\uc774\ub108\ub97c \ubaa8\uc2ed\ub2c8\ub2e4 (\uc6cc\ub4dc\ud504\ub808\uc2a4 \uacbd\ub825\uc790 ..
+p117
+sa(dp118
+g4
+V01/25 (\ud1a0)
+p119
+sg6
+V\uacbd\uae30
+p120
+sg8
+I40381
+sg9
+V17811500
+p121
+sg11
+VTG\uc0bc\ubcf4\uc11c\ube44\uc2a4\ubd80\ucc9c\uc13c\ud130 \ucd9c\uc7a5 AS \uae30\uc220\uc0ac \ubaa8\uc9d1
+p122
+sa(dp123
+g4
+V01/04 (\ud1a0)
+p124
+sg6
+V\uc11c\uc6b8
+p125
+sg8
+I40380
+sg9
+V17811465
+p126
+sg11
+VPC \uc720\uc9c0\ubcf4\uc218 \ubc0f \ubcd1\uc6d0 \uc2dc\uc124\uad00\ub9ac \ub2f4\ub2f9\uc790 \ubaa8\uc9d1
+p127
+sa(dp128
+g4
+V01/25 (\ud1a0)
+p129
+sg6
+V\uc911\uad6d.\ud64d\ucf69
+p130
+sg8
+I40379
+sg9
+V17811420
+p131
+sg11
+V1004\ub9c8\ud2b8\uc5d0\uc11c \ud55c\uad6d\uc778 12\uae30 \uacf5\ucc44\uc0ac\uc6d0\uc744 \ubaa8\uc9d1\ud569\ub2c8\ub2e4/..
+p132
+sa(dp133
+g4
+V01/04 (\ud1a0)
+p134
+sg6
+V\uc11c\uc6b8
+p135
+sg8
+I40378
+sg9
+V17811336
+p136
+sg11
+V\uae30\uc5c5SNS, \ube14\ub85c\uadf8 \uc6b4\uc601 \ubc0f \ucee8\ud150\uce20 \uae30\ud68d\uc790 \ubaa8\uc9d1
+p137
+sa(dp138
+g4
+V01/25 (\ud1a0)
+p139
+sg6
+V\uc11c\uc6b8
+p140
+sg8
+I40377
+sg9
+V17811306
+p141
+sg11
+V\ud568\uaed8 \uc190\uc7a1\uace0 \uac78\uc5b4\uac08 \ub3d9\ub8cc\ub97c \uad6c\uc778\ud569\ub2c8\ub2e4.
+p142
+sa(dp143
+g4
+V01/25 (\ud1a0)
+p144
+sg6
+V\uc11c\uc6b8
+p145
+sg8
+I40376
+sg9
+V17811228
+p146
+sg11
+V\uc8fc)\ubc14\uc6b8\ub137[\uc0ac\uc774\ud2b8\uc6b4\uc601\uad00\ub9ac / \ucee8\ud150\uce20\uad00\ub9ac / \ube14\ub85c\uadf8\uad00..
+p147
+sa(dp148
+g4
+V01/25 (\ud1a0)
+p149
+sg6
+V\ubd80\uc0b0
+p150
+sg8
+I40375
+sg9
+V17811218
+p151
+sg11
+V\ud604\uc8fc\ucef4\ud4e8\ud130,\ub178\ud2b8\ubd81,\ubaa8\ub2c8\ud130 \uc218\ub9ac\uae30\uc0ac \ubaa8\uc9d1
+p152
+sa(dp153
+g4
+V01/25 (\ud1a0)
+p154
+sg6
+V\ubd80\uc0b0
+p155
+sg8
+I40374
+sg9
+V17811217
+p156
+sg11
+V\ud604\uc8fc\ucef4\ud4e8\ud130 \uc6d4 \uae09\uc5ec 320\ub9cc-900\ub9cc \uc774\uc0c1 \ucef4\ud4e8\ud130AS
+p157
+sas.

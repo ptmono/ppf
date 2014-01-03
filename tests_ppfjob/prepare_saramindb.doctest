@@ -1,0 +1,62 @@
+
+    >>> from common import *
+    >>> from dnews.scraper import Scraper
+    >>> from dScrapper.container.saramin import SaraminItModel
+
+    >>> smodel = SaraminItModel()
+    >>> scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScrapper/dScrapper/dbs/SaraminIt.sqlite")
+
+    >>> orms = scraper.session.query(scraper.mapped_class).all()
+
+    >>> print(dir(orms[0])) #doctest: +SKIP
+    ['__class__', '__delattr__', '__dict__', '__doc__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_id', '_sa_class_manager', '_sa_instance_state', 'body', 'city', 'content', 'corp_employ_num', 'corpidx', 'corpname', 'count', 'date', 'date_late', 'idx', 'money', 'priority', 'spam', 'submit_num', 'title']
+
+    >>> orms[1]._id #doctest: +SKIP
+    36343
+
+    >>> dir(smodel)
+    ['__class__', '__delattr__', '__dict__', '__doc__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_info', '_init', '_set_columns', '_set_urls', '_set_variables', 'all_content', 'columns', 'css_all_content', 'css_all_getattr', 'css_content', 'css_getattr', 'first_content', 'get', 'getBody', 'getCity', 'getContent', 'getCorp_employ_num', 'getCorpidx', 'getCorpname', 'getCount', 'getDate', 'getDate_late', 'getIdx', 'getMoney', 'getPriority', 'getSpam', 'getSubmit_num', 'getTitle', 'infoToList', 'init_get', 'list', 'remove_tabs', 'set_range', 'url_format', 'xpath_all_content']
+    >>> smodel._info['columns'] #doctest: +SKIP
+    {'body': 'getBody', 'city': 'getCity', 'submit_num': 'getSubmit_num', 'idx': 'getIdx', 'corp_employ_num': 'getCorp_employ_num', 'money': 'getMoney', 'spam': 'getSpam', 'count': 'getCount', 'content': 'getContent', 'corpidx': 'getCorpidx', 'title': 'getTitle', 'date': 'getDate', 'corpname': 'getCorpname', 'date_late': 'getDate_late', 'priority': 'getPriority'}
+
+    >>> smodel._info['columns'].keys()
+    ['body', 'city', 'submit_num', 'idx', 'corp_employ_num', 'money', 'spam', 'count', 'content', 'corpidx', 'title', 'date', 'corpname', 'date_late', 'priority']
+
+    # >>> t_orm = {}
+    # >>> t_orms = {}
+
+    # >>> for orm in orms:
+    # ...     t_orm = {}
+    # ...     for column in smodel._info['columns'].keys():
+    # ...         t_orm[column] = getattr(orm, column)
+    # ...     t_orms[orm._id] = t_orm
+
+    # >>> len(t_orms) #doctest: +SKIP
+    # 36343
+
+    # >>> del scraper
+    # >>> del orms
+    # >>> del SaraminItModel
+
+    >>> class Recruit(object):
+    ...     def __init__(self, orm):
+    ...         for na in dir(orm):
+    ...             if na[0] is not '_':
+    ...                 setattr(self, na, getattr(orm, na))
+
+    >>> from dScrapper.container.saramin import SaraminItModel
+    >>> scraper2 = Scraper(SaraminItModel, "sqlite:///temp_SaraminIt2.sqlite", mapped_class=Recruit)
+
+    >>> for orm in orms:
+    ...     orm = Recruit(orm)
+    ...     scraper2.session.add(orm)
+    >>> scraper2.session.commit()
+
+
+    >>> orms2 = scraper2.session.query(scraper.mapped_class).all()
+
+    >>> orms[1].title == orms2[1].title
+    True
+
+    >>> import os
+    >>> os.remove('temp_SaraminIt2.sqlite')

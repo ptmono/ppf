@@ -1,0 +1,41 @@
+
+    >>> from common import *
+    >>> from ppfjob.views		import jinja_render_to_response, getJobs
+
+    >>> import pickle
+
+* prepare
+
+    >>> dummy_template = open('__tmp/views_dummy_html.html', 'r').read()
+
+    >>> def save_dummy_joblist():
+    ...     contents = dict(articles=getJobs(1))
+    ...     result = {}
+    ...     elements = []
+    ...     for aa in contents['articles']:
+    ...         element = {'title':'', 'city':'', 'idx':'', '_id':'', 'date':''}
+    ...         element['title'] = aa.title
+    ...         element['city'] = aa.city
+    ...         element['idx'] = aa.idx
+    ...         element['_id'] = aa._id
+    ...         element['date'] = aa.date
+    ...         elements.append(element)
+    ...     result = {'articles': elements}
+    ...     fd = open('__tmp/views_dummy_joblist.pickle', 'w')
+    ...     pickle.dump(result, fd)
+    ...     fd.close()
+
+    >>> save_dummy_joblist() #doctest: +SKIP
+
+    >>> def read_dummy_joblist():
+    ...     fd = open('__tmp/views_dummy_joblist.pickle', 'r')
+    ...     return pickle.load(fd)
+
+    >>> dummy_content = read_dummy_joblist()
+
+
+* jinja_render_to_response
+
+    >>> html = jinja_render_to_response('content_page_request.html', dummy_content)
+    >>> len(html) > 8000
+    True

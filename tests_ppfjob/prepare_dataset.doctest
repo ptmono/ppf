@@ -1,0 +1,70 @@
+
+    >>> from common import *
+    >>> import os
+    >>> import sys
+
+    >>> from dnews.scraper import Scraper
+    >>> from dnews.smodel.saramin import SaraminIt
+
+    >>> from dScrapper.reporter import SaraminIt as SaraminIta
+
+    >>> from ppfjob.tools import DfreqDist
+    >>> from ppfjob.tools import save_to_pickle, open_to_pickle
+
+    >>> from ppfjob.sentence import ngrams, remove_special_chars
+
+* save dummy pickle
+
+    >>> CREATE_PICKLE = False
+    >>> if CREATE_PICKLE:
+    ...     sa = SaraminIta(engine_name='sqlite:///data/dummy.sqlite')
+    ...     orms = sa.session.query(sa.mapcls).all()
+    ...     datas = []
+    ...     for orm in orms:
+    ...         datas.append(orm.title)
+    ...     save_to_pickle(data_path('titles.pickle'), datas)
+
+
+    >>> scraper = Scraper(SaraminIt, 'sqlite:///data/dummy.sqlite') #doctest: +SKIP
+    >>> orms = scraper.session.query(scraper.mapped_class).all() #doctest: +SKIP
+    >>> len(orms) #doctest: +SKIP
+    0
+
+
+
+* Open titles.pickle
+
+    >>> g_titles = open_to_pickle(data_path('titles.pickle'))
+    >>> len(g_titles)
+    12283
+    >>> count = 40
+
+* Analize
+
+** prepare dataset
+
+    >>> CREATE_NGRAM_TOKENS = False
+    >>> if CREATE_NGRAM_TOKENS:
+    ...     tokens = []
+    ...     for title in g_titles:
+    ...         title = remove_special_chars(title)
+    ...         tokens = tokens + list(ngrams(title, 2, 4))
+    ...     save_to_pickle(data_path('titles_2_4_tokens.pickle'), tokens)
+
+    >>> g_tokens = open_to_pickle(data_path('titles_2_4_tokens.pickle'))
+    >>> from pympler.asizeof import asizeof #doctest: +SKIP
+    >>> asizeof(g_tokens) #doctest: +SKIP
+    47844560
+
+    >>> count = 40
+    >>> for token in g_tokens: #doctest: +SKIP
+    ...     print(token)
+    ...     count -= 1
+    ...     if not count: break
+
+** basics
+
+    >>> freq = DfreqDist(g_tokens)
+    >>> freq.save_counted_word_list(10, data_path('titles_2_4_over_10'))
+
+

@@ -1,0 +1,116 @@
+
+
+    >>> from common import *
+    >>> sys.path.insert(0, '/home/ptmono/works/0git/dScrapper')
+
+    >>> from dnews.scraper import Scraper
+    >>> from dnews.smodel.saramin import SaraminIt
+
+    >>> from dScrapper.reporter import SaraminIt as SaraminIta
+
+    >>> import ppfjob.tools
+    >>> from ppfjob.tools import save_to_pickle, open_to_pickle
+    >>> from ppfjob.sentence import remove_special_chars
+    >>> from dlibs.common import *
+
+* Open titles.pickle
+
+    >>> g_titles = open_to_pickle(data_path('titles.pickle'))
+    >>> len(g_titles)
+    12283
+    >>> count = 40
+
+* Analize
+
+** prepare dataset
+
+    >>> g_tokens = open_to_pickle(data_path('titles_2_4_tokens.pickle'))
+
+** basics
+
+    >>> #freq = DfreqDist(g_tokens)
+    >>> #freq.save_counted_word_list(10, 'titles_2_4_over_10')
+
+
+* read_keywords
+
+    >>> from ppfjob.sentence import read_keywords
+
+    >>> from ppfjob.sentence import _current_abpath
+    >>> _current_abpath #doctest: +SKIP
+
+    >>> from ppfjob.sentence import _spam_words
+    >>> _spam_words[0] == u('자이너')
+    True
+
+* is_spam
+
+    >>> from ppfjob.sentence import is_spam
+    >>> from ppfjob.sentence import Var
+    >>> from ppfjob.tools import get_samples
+
+    >>> Var.spam_keywords #doctest: +SKIP
+    
+    >>> spam_samples = get_samples(data_path('n_spam_samples'))
+    >>> for sample in spam_samples:
+    ...     if not is_spam(sample):
+    ...         raise AssertionError('%s is not spam' % sample)
+    
+    >>> non_spam_samples = get_samples(data_path('n_nonspam_samples'))
+    >>> for sample in non_spam_samples:
+    ...     assert not is_spam(sample)
+
+
+
+* remove_special_chars
+
+    >>> from ppfjob.sentence import remove_special_chars
+    >>> content = u('"아름 "다음" - $ !!! 이땅')
+    >>> content2 = u('ㅡ 집.에서 아르바이트 (초보 / 간편업무) 급여 + 보너스제')
+    >>> remove_special_chars(content) == u('아름다음이땅')
+    True
+    >>> remove_special_chars(content2) == u('ㅡ집에서아르바이트초보간편업무급여보너스제')
+    True
+
+* ngrams
+
+    >>> content = '점장매니져조리사캐셔음식료외식프랜차이즈보육'
+    >>> #list(tools.ngrams(content, 2, 3))
+    ['점장', '점장매', '장매', '장매니', '매니', '매니져', '니져', '니져조', '져조', '져조리', '조리', '조리사', '리사', '리사캐', '사캐', '사캐셔', '캐셔', '캐셔음', '셔음', '셔음식', '음식', '음식료', '식료', '식료외', '료외', '료외식', '외식', '외식프', '식프', '식프랜', '프랜', '프랜차', '랜차', '랜차이', '차이', '차이즈', '이즈', '이즈보', '즈보', '즈보육', '보육']
+
+* word_counter
+
+    >>> from ppfjob.sentence import read_keywords, word_counter
+    >>> _spam_words = read_keywords(data_path('spam_words'))
+    >>> _pos_words = read_keywords(data_path('pos_words'))
+
+    >>> content = u('점장/매니져/조리사/캐셔/(음식료/외식/프랜차이즈)/보육..')
+    >>> content2 = u('ㅡ 집.에서 아르바이트 (초보 / 간편업무) 급여 + 보너스제')
+    >>> content3 = u(' 	LGU+인터넷 익산서비스센터 장비담당기사모집')
+    >>> content4 = u(' 	컴퓨터, 가전제품 A/S사원(신입사원 가능)')
+    >>> spam_kw = [u('조리사'), u('캐셔'), u('외식'), u('아르바이'), u('장비담당'), u('lgu'), u('as사')]
+    >>> word_counter(content, spam_kw, 2, 4)
+    3
+    >>> word_counter(content2, spam_kw, 2, 4)
+    1
+    >>> word_counter(content3, spam_kw, 2, 4)
+    2
+    >>> word_counter(content3, _spam_words, 2, 4)
+    2
+    >>> word_counter(content4, _spam_words, 2, 4)
+    1
+    
+
+
+
+** LGU problem
+
+CountVectorizer.fit_transform only work for lower case. The option
+"lowercase" is true.
+
+    >>> content4 = u('LGU판매사원모집천안아산지역근무가능')
+    >>> spam_kw = [u('조리사'), u('캐셔'), u('외식'), u('아르바이'), u('장비담당'), u('lgu')]
+    >>> word_counter(content4, spam_kw, 2, 4)
+    1
+    >>> word_counter(content4, _spam_words, 2, 4)
+    2

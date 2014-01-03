@@ -1,0 +1,123 @@
+
+    >>> from common import *
+    >>> from ppfjob.search_saramin import determine_urls, keyword_search
+    >>> from ppfjob.search_saramin import KeywordInfos
+    >>> from dnews.model_tools		import NetTools
+    >>> from mock			import Mock
+    >>> import requests
+
+    >>> try:
+    ...     from urllib.parse		import quote
+    ... except:
+    ...     from urllib			import quote
+
+    >>> from dlibs.common		import *
+
+
+
+* setup
+
+    >>> url = 'http://www.saramin.co.kr/zf_user/search/jobs/page/1?pageCount=80&multiLine=&searchword=%s&company_cd=1&area=&domestic=&oversee=&jobCategory=&jobType=&career=&order=&periodType=&period=&condition=&arange=&company=&employ=&rSearchword=&hSearchword=&hInclude=&hExcept='
+    >>> keyword = u('데이터').encode('euc-kr')
+    >>> url = url % quote(keyword)
+    >>> NetTools.save_page(url, '__tmp/keyword_search_sample.html') #doctest: +SKIP
+    >>> data = NetTools.read('__tmp/keyword_search_sample.html')
+
+
+    >>> class Mock_request:
+    ...     def __init__(self, content):
+    ...         self.content = content
+
+    >>> mock_req = Mock_request(data)
+    >>> requests.get = Mock(return_value=mock_req)
+
+
+* determine_urls
+
+    >>> urls = determine_urls(url)
+    >>> len(urls)
+    6
+
+    >>> data = NetTools.read('__tmp/search_saramin_sample.html')
+    >>> data[:180].decode('euc-kr') #doctest: +SKIP
+    '<!DOCTYPE html><html lang="ko">\r\n<head>\r\n<meta charset="euc-kr" />\r\n<title>data :: 사람인 통합검색</title><meta http-equiv="Content-Language" content="ko-KR" >\n<meta http-equiv="X-'
+
+
+* korean url encoding
+
+
+    >>> url = 'http://www.saramin.co.kr/zf_user/search/jobs/page/1?pageCount=80&multiLine=&searchword=%s&company_cd=1&area=&domestic=&oversee=&jobCategory=&jobType=&career=&order=&periodType=&period=&condition=&arange=&company=&employ=&rSearchword=&hSearchword=&hInclude=&hExcept='
+    >>> keyword = u('데이터').encode('euc-kr')
+    >>> url = url % quote(keyword)
+    >>> url
+    'http://www.saramin.co.kr/zf_user/search/jobs/page/1?pageCount=80&multiLine=&searchword=%B5%A5%C0%CC%C5%CD&company_cd=1&area=&domestic=&oversee=&jobCategory=&jobType=&career=&order=&periodType=&period=&condition=&arange=&company=&employ=&rSearchword=&hSearchword=&hInclude=&hExcept='
+    
+
+* keyword_search
+
+
+
+** dododo
+
+keyword_search returns a list of {'title': '[종로/수원] Android / JS
+개발/운영', 'idx': '17744059', 'corpname': '한국정보'}
+
+Each element contains the info.
+
+    >>> infos = keyword_search(u('데이터'))
+    >>> len(infos)
+    480
+    >>> infos[0]['idx'] == u('17744059')
+    True
+
+
+* KeywordInfos
+
+    >>> infos = KeywordInfos()
+
+    >>> ele_keys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+
+    >>> for count in range(1, 5):
+    ...     ele = {}
+    ...     for key in ele_keys:
+    ...         value = key + str(count)
+    ...         ele[key] = value
+    ...     infos.append(ele)
+
+    >>> infos ==  [{'a': 'a1', 'c': 'c1', 'b': 'b1', 'e': 'e1', 'd': 'd1', 'g': 'g1', 'f': 'f1', 'h': 'h1'}, {'a': 'a2', 'c': 'c2', 'b': 'b2', 'e': 'e2', 'd': 'd2', 'g': 'g2', 'f': 'f2', 'h': 'h2'}, {'a': 'a3', 'c': 'c3', 'b': 'b3', 'e': 'e3', 'd': 'd3', 'g': 'g3', 'f': 'f3', 'h': 'h3'}, {'a': 'a4', 'c': 'c4', 'b': 'b4', 'e': 'e4', 'd': 'd4', 'g': 'g4', 'f': 'f4', 'h': 'h4'}]
+    True
+
+** KeywordInfos.keys()
+
+    >>> infos.keys() == ele_keys
+    True
+
+
+** KeywordInfos.lists(key)
+
+    >>> infos.values('a') == ['a1', 'a2', 'a3', 'a4']
+    True
+
+
+returns a list. [new from key_value, droped from key_value]
+    >>> infos_exclude, infos_droped = infos.exclude('a', ['a2', 'a3', 'a5'])
+
+    >>> for info in infos_exclude:
+    ...     if info['a'] in ['a2', 'a3']:
+    ...         raise Exception('Failed')
+    >>> infos_droped
+    ['a5']
+
+* new_result
+
+
+
+* Prepare
+
+** regexp korean
+
+    >>> st = u('총 470건')
+    >>> import re
+    >>> re.match(u('총 ([0-9]*)건'), st).group(1) == u('470')
+    True
+
