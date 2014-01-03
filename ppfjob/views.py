@@ -5,7 +5,10 @@ from django.conf import settings
 
 from jinja2 import FileSystemLoader, Environment, Markup
 
-settings.configure()
+try:
+    settings.configure()
+except RuntimeError:
+    pass
 from django.shortcuts import render_to_response
 
 from dnews.scraper		import Scraper
