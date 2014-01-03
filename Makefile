@@ -5,6 +5,7 @@
 # real-mode".
 
 # For other people
+
 IS_EXITS_PWD=$(wildcard passwd)
 ifeq ($(strip $(IS_EXITS_PWD)),)
 	PASS="USER_ID"
