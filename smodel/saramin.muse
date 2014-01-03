@@ -1,0 +1,8 @@
+
+* company info
+
+The site uses ajax to get the info of the company. The request is
+
+http://www.saramin.co.kr/zf_user/jobs/job/summary?rec_idx=17858153&t_category=jobcategory_recruit&t_content=generic
+
+

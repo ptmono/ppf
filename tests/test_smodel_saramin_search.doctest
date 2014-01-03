@@ -1,0 +1,49 @@
+    >>> from common import *
+
+    >>> from dnews.smodel.saramin	import SaraminItSearch
+
+* Get sample
+
+    >>> class SaraminItSearch(SaraminItSearch, TestingMixin):
+    ...     urls = ['http://www.saramin.co.kr/zf_user/search/jobs/page/1?pageCount=80&multiLine=&searchword=python&company_cd=1&area=&domestic=&oversee=&jobCategory=&jobType=&career=&order=&periodType=&period=&condition=&arange=&company=&employ=&rSearchword=&hSearchword=&hInclude=&hExcept=']
+
+
+    >>> SaraminItSearch._generate_filename() #doctest: +SKIP
+    /home/ptmono/Desktop/Documents/works/0git/dnews/tests/SaraminItSearch_sample.html'
+
+    >>> SaraminItSearch._save_dummy_data() #doctest: +SKIP
+    >>> dummy_data = SaraminItSearch._dummy_data()
+
+    >>> obj = SaraminItSearch()
+    >>> info = obj.get(dummy_data)
+    >>> print(info['corpname'][0])
+    현대자동차(주)
+    >>> len(info['corpname'])
+    39
+    >>> print(info['corpname']) #doctest: +SKIP
+
+    >>> info['title'][0]
+    'PHP/Python 개발자 모집'
+
+    >>> len(info['title'])
+    39
+
+    >>> print(info['title']) #doctest: +SKIP
+
+    >>> info['idx'][0]
+    '17598619'
+    >>> len(info['idx'])
+    39
+
+    >>> list(obj.infoToList(info)) #doctest: +SKIP
+
+
+* korean search keyword
+
+http://www.saramin.co.kr/zf_user/search?searchword=%C6%C4%C0%CC%BD%E3
+
+    >>> url = 'http://www.saramin.co.kr/zf_user/search/jobs/page/1?pageCount=80&multiLine=&searchword=%s&company_cd=1&area=&domestic=&oversee=&jobCategory=&jobType=&career=&order=&periodType=&period=&condition=&arange=&company=&employ=&rSearchword=&hSearchword=&hInclude=&hExcept='
+
+    >>> from urllib.parse import quote
+    >>> url = url % quote('파이썬'.encode('euc-kr'))
+    >>> NetTools.save_page(url, '__tmp/tmp_dummy.html') #doctest: +SKIP

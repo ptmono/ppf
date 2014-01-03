@@ -114,12 +114,11 @@ class SaraminIt(GetSetModel, CssParsers):
         # If emplyer doesn't write cith, then it will loss the city. So we
         # will get only 499 on 500.
         result = []
-        xpath_region = '//td[@class="area_detail"]'
+        xpath_region = '//div[@class="corp-con hs_corp"]//li//span[1]'
         sel_list = self.etree_joblist.xpath(xpath_region)
         for sel in sel_list:
-            region = sel.xpath('a[1]')
             try:
-                result.append(region[0].text)
+                result.append(sel.text)
             except:
                 # Index error will be occured when no region
                 result.append('')
@@ -150,20 +149,54 @@ class SaraminIt(GetSetModel, CssParsers):
 
     def getSpam(self):
         return [""] * self._range
+
+
+class SaraminItSearch(GetSetModel, CssParsers):
+
+    def init_get(self):
+        self.etree = etree.HTML(self.source)
+        self.etree_joblist = self.etree.xpath('//ul[@class="type02"]')[0]
     
+    def getCorpname(self):
+        xpath = '//li[@class="list"]//dl//dt//span'
+        return self.xpath_all_content(self.etree_joblist, xpath)
+
+    def getTitle(self):
+        xpath = '//dd[@class="txt-inline"]//a[1]'
+        result = []
+        sel_list = self.etree_joblist.xpath(xpath)
+        for s in sel_list:
+            data = s.get('title')
+            result.append(data)
+        return result
+
+
+    def getIdx(self):
+        xpath = '//dd[@class="txt-inline"]//a[1]'
+        result = []
+        sel_list = self.etree_joblist.xpath(xpath)
+        for s in sel_list:
+            data = s.get('href')
+            try:
+                idx = re.match(".*idx=([0-9]*).*", data).group(1)
+            except:
+                idx = ''
+            result.append(idx)
+        return result
+        
 
 class SaraminItTest(GetSetModel, CssParsers):
     """
     >>> #url = 'http://www.saramin.co.kr/zf_user/upjikjong-recruit/upjikjong-list/pageCount/0/categoryCode/9%7C4/category_level/top/page/2/order/RD'
     >>> #NetTools.save_page(url, _dummy_path)
         
-    >>> data = SaraminItTest._dummy_data()
+    >>> #data = SaraminItTest._dummy_data()
     
-    >>> obj = SaraminItTest()
-    >>> info = obj.get(data)
+    >>> #obj = SaraminItTest()
+    >>> #info = obj.get(data)
     >>> #len(info['corpidx'])
     30
-    >>> obj.getCorpidx()
+    >>> #obj.getCorpidx()
 
     """
     urls = ['/home/ptmono/works/job/saramin/datas/saramin130701_1.html',
@@ -194,4 +227,5 @@ class SaraminItTest(GetSetModel, CssParsers):
                 result.append("")
             
         return result
+
 

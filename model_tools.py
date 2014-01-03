@@ -49,24 +49,24 @@ class NetTools:
     def save_page(self, url, filename):
         r = requests.get(url)
         data = r.content
-        if r.encoding == "EUC-KR":
-            data = data.decode('euc-kr')
         fd = open(filename, 'w')
         try:
             fd.write(data)
         except TypeError:
             fd = open(filename, 'bw')
             fd.write(data)
+
         fd.close()
 
     @classmethod
     def read(self, path):
         if path[:4] == 'http':
-            data = requests.get(path).content
+            r = requests.get(path)
+            data = r.content
             return data
         try:
             fd = open(path, 'r')
-            return fd.read()            
+            return fd.read()
         except UnicodeDecodeError:
             fd = open(path, 'br')
             return fd.read()

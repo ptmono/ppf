@@ -27,7 +27,7 @@ from dlibs.common import *
 from unittest import TestCase
 
 from dnews.model import GetSetModel
-from dnews.model_tools import CssParsers, NetTools
+from dnews.model_tools import CssParsers, NetTools, TestingMixin
 
 from dnews.smodel.torrentrg import TorrentRgModel
 from dnews.smodel.torrentrg import _dummy_path as _dummy_path_torrentrg
@@ -142,7 +142,7 @@ class DummyModel(TorrentRgModel):
     urls = [_dummy_path_torrentrg]
     
 
-_cur_file_path = os.path.abspath(__file__)
+_cur_file_path = os.path.realpath(__file__)
 _cur_dir_path = os.path.dirname(_cur_file_path)
 _root_path = os.path.dirname(_cur_dir_path)
     

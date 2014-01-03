@@ -134,11 +134,29 @@ class GetMixin(object):
         info = self.get(source)
         return self.infoToList(info)
 
+    def dictlist(self, source):
+        info = self.get(source)
+        return self.infoToDictList(info)
 
     @classmethod
     def infoToList(self, info):
         zipped_cols = zip(*(info[col] for col in info))
         return zipped_cols
+
+    @classmethod
+    def infoToDictList(self, info):
+        result = []
+        keys = info.keys()
+        zipped_cols = self.infoToList(info)
+        for cols in zipped_cols:
+            ele = {}
+            count = 0
+            for key in keys:
+                ele[key] = cols[count]
+                count += 1
+            result.append(ele)
+        return result
+    
 
     def columns(self):
         return list(self._info['columns'])
@@ -179,6 +197,7 @@ class GetSetMixin(GetMixin):
             # To deal easy, convert to unicode
             try:
                 result[col] = [unicode(ele) for ele in parsed_result]
+
             except NameError:
                 result[col] = [str(ele) for ele in parsed_result]
 
@@ -247,5 +266,7 @@ class ModelStructureA(object):
                 
 class GetSetModel(ModelStructureA, GetSetMixin, UrlsMixin):
     pass
+
+
 
 

@@ -62,9 +62,12 @@ class Scraper(object):
 
     """
 
-    def __init__(self, smodel, engine_name, thread=None):
-        class MappedClass(object): pass
-        self.mapped_class = MappedClass
+    def __init__(self, smodel, engine_name, mapped_class=None, thread=None):
+        if mapped_class:
+            self.mapped_class = mapped_class
+        else:
+            class MappedClass(object): pass
+            self.mapped_class = MappedClass
         self.engine_name = engine_name
         #self.model = smodel()
         self.setModel(smodel)
@@ -145,7 +148,7 @@ class Scraper(object):
 
         for element in zipped_cols:
             count = 0
-            # TODO: To use orm is slow method. But easy.
+            # TODO: Using orm is slow method. But easy.
             orm = self.mapped_class()
             for col in cols:
                 setattr(orm, col, element[count])
