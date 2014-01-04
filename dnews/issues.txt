@@ -1,0 +1,4 @@
+-*- mode: muse -*-
+
+* How about to use decorator to specify the type of column
+

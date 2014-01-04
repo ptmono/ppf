@@ -1,0 +1,14 @@
+
+* model
+
+** return of get method
+
+
+
+* architecture
+
+smodel
+
+mapper = ModelMapper(smodel)
+
+
