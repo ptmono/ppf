@@ -3,7 +3,7 @@
 
 from dnews.smodel.common import *
 from dnews.model_tools import CssParsers
-from dnews.model_models import DaumCafe
+from dnews.smodel.daum_cafe import DaumCafe
 
 class DaumCafeBreakjob(DaumCafe):
     urls = ['/home/ptmono/works/job/daum_cafe_job/datas/daum_cafe_breakjob_it18115.html']

@@ -7,7 +7,7 @@ from unittest import TestCase
 from lxml.cssselect import CSSSelector
 from lxml.html import parse, fromstring, tostring
 
-from dnews.test_model import DummyModel2
+from .test_model import DummyModel2
 
 GetSetModel = object
 GetSetSelectorModel = object

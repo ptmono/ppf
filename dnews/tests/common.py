@@ -18,7 +18,7 @@ Using dummy
 import sys
 import pickle
 import os.path
-#sys.path.append("../")
+sys.path.append("../../")
 
 from lxml.cssselect import CSSSelector
 from lxml.html import parse, fromstring, tostring

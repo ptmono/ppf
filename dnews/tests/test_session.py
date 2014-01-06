@@ -7,7 +7,7 @@ from dnews.smodel.torrentrg import _dummy_path as _dummy_path_torrentrg
 
 from dnews.scraper import Scraper, MapperClass
 
-from session import Session
+from dnews.session import Session
 
 _dummy_data = NetTools.read(_dummy_path_torrentrg)
 _dummy_dbname = "sqlite:///__tmp/session_test.sqlite"
