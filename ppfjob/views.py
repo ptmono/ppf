@@ -14,6 +14,7 @@ from django.shortcuts import render_to_response
 from dnews.scraper		import Scraper
 from dScrapper.reporter	import SaraminIt
 from dScrapper.container.saramin import SaraminItModel
+
 from .sentence	import is_spam, is_near
 
 from dlibs.logger import loggero
@@ -35,8 +36,17 @@ def jinja_render_to_response(filename, context={}):#, mimetype=default_mimetype)
     def sanitize_html(text):
         return Markup(scrubber.Scrubber(remove_comments=False).scrub(text))
     env.filters['sanitize_html'] = sanitize_html
-    env.globals['is_spam'] = is_spam
-    env.globals['is_near'] = is_near
+    if ppfconfig.PPFJOB_LOCAL_MODE:
+        from .sentence import is_spam, is_near
+    else:
+        def is_spam(aa): return False
+        def is_near(text):
+            regions = [u('부산'), u('창원'), u('마산'), u('경남'), u('울산')]
+            if word_counter(text, regions, 2, 2):
+                return True
+            return False
+        env.globals['is_spam'] = is_spam
+        env.globals['is_near'] = is_near
 
     template = env.get_template(filename)
     rendered = template.render(**context)

@@ -232,3 +232,8 @@ required_files = \
      [(index_filename(),'{"0000000001" : {"category": "a", "title":"Welcome"}}'),
       (htmls_d + "0000000001" + html_extension, read_welcome())]
      }
+
+
+### === ppfjob
+### ______________________________________________________________
+PPFJOB_LOCAL_MODE = False

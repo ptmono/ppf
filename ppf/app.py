@@ -98,4 +98,5 @@ def handle_PageNotFound(error):
 
 
 if __name__ == '__main__':
+    config.PPFJOB_LOCAL_MODE = True
     app.run(port=3109)
