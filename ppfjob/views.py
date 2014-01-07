@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# coding: utf-8
+
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 
@@ -18,6 +21,7 @@ from dScrapper.container.saramin import SaraminItModel
 from .sentence	import is_spam, is_near
 
 from dlibs.logger import loggero
+from dlibs.common import *
 
 from ppf import config as ppfconfig
 PPF_MEDIA = ppfconfig.medias_d
