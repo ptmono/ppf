@@ -18,8 +18,6 @@ from dnews.scraper		import Scraper
 from dScrapper.reporter	import SaraminIt
 from dScrapper.container.saramin import SaraminItModel
 
-from .sentence	import is_spam, is_near
-
 from dlibs.logger import loggero
 from dlibs.common import *
 
@@ -29,8 +27,6 @@ PPF_MEDIA = ppfconfig.medias_d
 settings.TEMPLATE_DIRS = (
     PPF_MEDIA,
 )
-
-
 
 template_dirs = getattr(settings, 'TEMPLATE_DIRS')
 #default_mimetype = gettattr(settings, 'DEFAULT_CONTENT_TYPE')
@@ -44,11 +40,7 @@ def jinja_render_to_response(filename, context={}):#, mimetype=default_mimetype)
         from .sentence import is_spam, is_near
     else:
         def is_spam(aa): return False
-        def is_near(text):
-            regions = [u('부산'), u('창원'), u('마산'), u('경남'), u('울산')]
-            if word_counter(text, regions, 2, 2):
-                return True
-            return False
+        def is_near(text): return False
         env.globals['is_spam'] = is_spam
         env.globals['is_near'] = is_near
 
@@ -56,13 +48,12 @@ def jinja_render_to_response(filename, context={}):#, mimetype=default_mimetype)
     rendered = template.render(**context)
     return rendered
 
+def getJobs(orms, page):
+    # reporter = SaraminIt()
+    # scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScrapper/dScrapper/dbs/SaraminIt.sqlite")
 
-def getJobs(page):
-    reporter = SaraminIt()
-    scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScrapper/dScrapper/dbs/SaraminIt.sqlite")
-
-    orms = scraper.session.query(scraper.mapped_class).all()
-    orms.reverse()
+    # orms = scraper.session.query(scraper.mapped_class).all()
+    # orms.reverse()
 
     paginator = Paginator(orms, 30)
 
@@ -72,14 +63,18 @@ def getJobs(page):
     page = paginator.page(page)
         
     return page.object_list
+    #return orms[:30]
 
-def job_page(page=None):
+def getJobs_first(orms):
+    return orms[:30]
+    
+def job_page(orms, page=None):
 
-    mm = getJobs(page)
+    mm = getJobs(orms, page)
     return jinja_render_to_response('content_page_request.html', dict(articles=mm))
 
-def jobs_filtered(page=None):
-    mm = getJobs(page)
+def jobs_filtered(orms):
+    mm = getJobs_first(orms)
 
     return jinja_render_to_response('jinja_content_job.html', dict(articles=mm))
 

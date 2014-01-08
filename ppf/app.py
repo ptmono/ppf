@@ -5,8 +5,11 @@ import sys
 import os
 
 from flask import Flask, request
+from flask.ext.cache import Cache
+
 app = Flask(__name__)
 app.debug = True
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 import config
 
@@ -24,14 +27,24 @@ except ImportError:
 from app_exceptions import InitError, PageNotFound
 from werkzeug import SharedDataMiddleware
 
+from dnews.scraper		import Scraper
+from dScrapper.container.saramin import SaraminItModel
+
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/medias':	config.medias_d,
     '/files':	config.files_d
     })
 
+def get_ppfjob_orms():
+    scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScrapper/dScrapper/dbs/SaraminIt.sqlite")    
+    orms = scraper.session.query(scraper.mapped_class).all()
+    orms.reverse()
+    return orms
+
 
 @app.route('/home')
 @app.route('/')
+@cache.memoize(3000)
 def home():
     try:
         home = ViewHome()
@@ -53,6 +66,7 @@ def article_doc(doc_id):
 
 @app.route('/all')
 @app.route('/article/all')
+@cache.memoize(3000)
 def article_all():
     docs = ViewAll()
     return docs.show()
@@ -66,14 +80,20 @@ def write_comment():
 
     return addComment_wsgi(request)
 
+from ppfjob.models import Orms
+
 
 @app.route('/job/page/<page_num>')
+@cache.memoize(3000)
 def ppfjob_page(page_num):
-    return job_page(page_num)
+    orms = Orms()
+    return job_page(orms, page_num)
 
 @app.route('/ppfjobs')
+@cache.memoize(3000)
 def ppfjobs():
-    return jobs_filtered()
+    orms = Orms()
+    return jobs_filtered(orms)
 
 
 def _checkArticleIndex(err_msg):
