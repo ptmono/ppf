@@ -15,8 +15,8 @@ except RuntimeError:
 from django.shortcuts import render_to_response
 
 from dnews.scraper		import Scraper
-from dScrapper.reporter	import SaraminIt
-from dScrapper.container.saramin import SaraminItModel
+from dScraper.reporter	import SaraminIt
+from dScraper.container.saramin import SaraminItModel
 
 from dlibs.logger import loggero
 from dlibs.common import *
@@ -50,7 +50,7 @@ def jinja_render_to_response(filename, context={}):#, mimetype=default_mimetype)
 
 def getJobs(orms, page):
     # reporter = SaraminIt()
-    # scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScrapper/dScrapper/dbs/SaraminIt.sqlite")
+    # scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScraper/dScrapper/dbs/SaraminIt.sqlite")
 
     # orms = scraper.session.query(scraper.mapped_class).all()
     # orms.reverse()

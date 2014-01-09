@@ -28,7 +28,7 @@ from app_exceptions import InitError, PageNotFound
 from werkzeug import SharedDataMiddleware
 
 from dnews.scraper		import Scraper
-from dScrapper.container.saramin import SaraminItModel
+from dScraper.container.saramin import SaraminItModel
 
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/medias':	config.medias_d,
@@ -36,7 +36,7 @@ app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     })
 
 def get_ppfjob_orms():
-    scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScrapper/dScrapper/dbs/SaraminIt.sqlite")    
+    scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScraper/dScrapper/dbs/SaraminIt.sqlite")    
     orms = scraper.session.query(scraper.mapped_class).all()
     orms.reverse()
     return orms
