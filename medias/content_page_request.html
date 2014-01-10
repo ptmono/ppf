@@ -1,5 +1,18 @@
   {% for article in articles %}  
-  {% if not is_spam(article.title) %}
+  {% if article.spam %}
+  <div class="column">
+    <table class="list_table">
+      <tr>
+	<td class="column_idx">{{ article.idx }}</td>
+	<td class="column_num_spam">{{ article.city }}</td>
+	<td class="column_b_n_t"></td>
+	<td class="job_column_title_spam"><a href="http://www.saramin.co.kr/zf_user/recruit/view/idx/{{ article.idx }}" target="_blank">{{ article.title }}</a></td>
+	<td class="column_b_t_c"></td>
+	<td class="job_column_corname_spam">{{ article.corpname|truncate(8, True) }}</td>
+      </tr>
+    </table>
+  </div>
+  {% else %}
   <div class="column">
     <table class="list_table">
       <tr>
@@ -13,19 +26,6 @@
 	<td class="job_column_title"><a href="http://www.saramin.co.kr/zf_user/recruit/view/idx/{{ article.idx }}" target="_blank">{{ article.title }}</a></td>
 	<td class="column_b_t_c"></td>
 	<td class="job_column_corname">{{ article.corpname|truncate(8, True) }}</td>
-      </tr>
-    </table>
-  </div>
-  {% else %}
-  <div class="column">
-    <table class="list_table">
-      <tr>
-	<td class="column_idx">{{ article.idx }}</td>
-	<td class="column_num_spam">{{ article.city }}</td>
-	<td class="column_b_n_t"></td>
-	<td class="job_column_title_spam"><a href="http://www.saramin.co.kr/zf_user/recruit/view/idx/{{ article.idx }}" target="_blank">{{ article.title }}</a></td>
-	<td class="column_b_t_c"></td>
-	<td class="job_column_corname_spam">{{ article.corpname|truncate(8, True) }}</td>
       </tr>
     </table>
   </div>
