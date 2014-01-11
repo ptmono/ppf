@@ -17,11 +17,7 @@
     <table class="list_table">
       <tr>
 	<td class="column_idx">{{ article.idx }}</td>
-	{% if is_near(article.city) %}
-	<td class="column_num"><font color="red">{{ article.city }}</font></td>
-	{% else %}
 	<td class="column_num">{{ article.city }}</td>
-	{% endif %}
 	<td class="column_b_n_t"></td>
 	<td class="job_column_title"><a href="http://www.saramin.co.kr/zf_user/recruit/view/idx/{{ article.idx }}" target="_blank">{{ article.title }}</a></td>
 	<td class="column_b_t_c"></td>

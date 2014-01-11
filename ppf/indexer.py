@@ -1,12 +1,16 @@
 #!/usr/bin/python
 # coding: utf-8
 
+from __future__ import unicode_literals
 import re, os, time
-import config
-import libs
-
 import json
 import shutil
+
+from io import open
+
+from . import config
+from . import libs
+
 
 ERRORP = True
 WARNP = True
@@ -14,11 +18,11 @@ WARNP = True
 #Fixme: Why not confg.ERRORP?
 def ddError(msg):
     if ERRORP:
-        print "ERROR: ", msg
+        print("ERROR: ", msg)
 
 def ddWarnning(msg):
     if WARNP:
-        print "WARNNING: ", msg
+        print("WARNNING: ", msg)
 
 
 #TODO: consider the use of FileLock, lockfile
@@ -31,57 +35,6 @@ class File(object):
     wait for the time correlated with lock_wait_time and
     lock_wait_interval. The time is lock_wait_time * lock_wait_interval.
 
-    >>> import os.path
-
-    >>> aa = File('1109042210', 'a', 'w')
-    >>> aa._backup_filename() #doctest: +ELLIPSIS
-    '/.../#1109042210.html#'
-    >>> aa._checkBackupFile() #doctest: +SKIP
-    >>> aa._checkFile() #doctest: +SKIP
-
-    >>> aa.write('ttuuaa')
-    >>> aa.close()
-
-    >>> aa = File('1109042210', 'a', 'r')
-    >>> content = aa.read()
-    >>> content
-    'ttuuaa'
-    >>> aa._remove()
-
-    >>> config.htmls_d = config.root_abpath + 'htmlstest/'
-    >>> aa = File('1111111112', 'a', 'w')
-    >>> aa.write('fjskdf')
-    >>> path = aa.filename[:aa.filename.rfind('/')]
-    >>> shutil.rmtree(path, ignore_errors=True)
-
-
-    === Test file lock
-    __________________
-    >>> doc_id = 1111111111
-    >>> file_type = 'a'
-    >>> mode = 'w'
-    >>> file1 = File(doc_id, file_type, mode)
-    >>> #print file1
-    >>> file1.write('bbc')
-    >>> #os.path.exists(file1._lock_filename())
-
-    ### === Recently comment
-    ### __________________________________________________________
-    >>> content = "13011103471\\n"
-    >>> file2 = File(None, 'rc', 'a+')
-    >>> file2.write(content)
-    >>> file2.close()
-
-    >>> content = "99011103471\\n"
-    >>> file2 = File(None, 'rc', 'a+')
-    >>> file2.write(content)
-    >>> file2.close()
-
-    >>> file2 = File(None, 'rc', 'r')
-    >>> file2.read()
-    '13011103471\\n99011103471\\n'
-
-    >>> file2._remove()
     """
     def __init__(self, doc_id, file_type, mode):
         self.doc_id = str(doc_id)
@@ -139,7 +92,7 @@ class File(object):
             self._removeBackupForce()
 
         if self.mode == 'r':
-            self.fd = file(self.filename, self.mode)
+            self.fd = open(self.filename, self.mode)
             return self.fd
             
         elif self._checkFile():
@@ -147,11 +100,11 @@ class File(object):
             self._backup()
 
         try:
-            fd = file(self.filename, self.mode)
+            fd = open(self.filename, self.mode)
         except IOError:
             dirname = self.filename[:self.filename.rfind('/')]
             os.makedirs(dirname)
-            fd = file(self.filename, self.mode)
+            fd = open(self.filename, self.mode)
         return fd
 
     def close(self):
@@ -187,12 +140,12 @@ class File(object):
         
 
     def _backup(self):
-        fd = file(self.filename, 'r')
+        fd = open(self.filename, 'r')
         content = fd.read()
         fd.close()
 
         # Fixme: Is need error handling?
-        fd = file(self._backup_filename(), 'w')
+        fd = open(self._backup_filename(), 'w')
         fd.write(content)
         fd.close()
         self.permission_backupfile = True
@@ -206,11 +159,11 @@ class File(object):
 
     def restore(self):
         filename = self._backup_filename()
-        fd = file(filename, 'r')
+        fd = open(filename, 'r')
         content = fd.read()
         fd.close()
 
-        fd = file(filename, 'w')
+        fd = open(filename, 'w')
         fd.write(content)
         fd.close()
         
@@ -225,7 +178,7 @@ class File(object):
     def _lock(self):
         "Lock the file"
         self._waitUnlock()
-        fd = file(self._lock_filename, 'w')
+        fd = open(self._lock_filename, 'w')
         fd.close()
         self.permission_lockfile = True
 
@@ -260,41 +213,15 @@ class Tools(object):
         mode. To prevent a crash.
         """
         
-        return file(filename, mode)
+        return open(filename, mode)
 
     def _close(self, fd):
         return fd.close()
 
 
-
-
 #TODO: 9 consider the use of collections.OrderedDict
 class InfoTemplate(dict):
     """
-    >>> json = {'date': 1108252154, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc'}
-    >>> aa = InfoTemplate()
-    >>> aa.setFromDict(json)
-    >>> aa
-    {'date': 1108252154, 'content': 'cccc', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}
-    >>> aa.name
-    'dalsoo'
-    >>> aa.name = 'Talsu'
-    >>> aa
-    {'date': 1108252154, 'content': 'cccc', 'password': '3232', 'name': 'Talsu', 'email': 'pp@naver.com'}
-
-    >>> aa['content']
-    'cccc'
-
-    >>> aa['content'] = 'dddd'
-    >>> aa.content
-    'dddd'
-
-    >>> aa.updateFromDict({})
-
-    >>> aa.setFromDict({})
-    >>> aa
-    {'date': '', 'content': '', 'password': '', 'name': '', 'email': ''}
-
     """
     info = ['date', 'name', 'password', 'email', 'content']
 
@@ -302,11 +229,17 @@ class InfoTemplate(dict):
         self.init()
 
     def init(self):
+        super(InfoTemplate, self).__init__()
         for key in self.info:
             setattr(self, key, '')
 
     def __repr__(self):
         return repr(self.__dict__)
+
+    def __eq__(self, other):
+        if isinstance(other, dict):
+            return self.__dict__ == other
+        return False
 
     def __getitem__(self, key):
         return self.__dict__[key]
@@ -327,79 +260,6 @@ class InfoTemplate(dict):
 
 class InfosTemplate(object):
     """
-    >>> #from indexer import InfosTemplate, InfoTemplate
-    >>> json = {'1':{'date': 1108252154, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc'}, '2':{'date': 1108252155, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc2'}, '3':{'date': 1108252156, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc3'}}
-    >>> json_bb = {'8': {'date': 1108252159, 'name': 'hosoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc4'}}
-
-    >>> aa_obj, bb_obj = None, None
-    >>> def init_obj():
-    ...  global aa_obj, bb_obj
-    ...  aa_obj = InfosTemplate()
-    ...  aa_obj.setFromDict(json)
-    ...  bb_obj = InfosTemplate()
-    ...  bb_obj.setFromDict(json_bb)
-    ...
-
-    >>> ### test basic methods
-    >>> init_obj()
-    >>> aa_obj.isinstance(bb_obj)
-    True
-    >>> aa_obj.isinstance(int) #doctest: +IGNORE_EXCEPTION_DETAIL 
-    Traceback (most recent call last):
-    TypeError: InfosTemplate type is required
-
-
-    === Test object iteration
-    _________________________
-    >>> aa = InfosTemplate()
-    >>> aa.infoObj = InfoTemplate
-    >>> aa.setFromDict({})
-    >>> aa.setFromDict(json)
-    >>> aa
-    {'1': {'date': 1108252154, 'content': 'cccc', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '3': {'date': 1108252156, 'content': 'cccc3', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '2': {'date': 1108252155, 'content': 'cccc2', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}}
-    >>> aa.indexes
-    ['1', '2', '3']
-    >>> len(aa)
-    3
-    
-    >>> for a in aa:
-    ...  print a.date
-    ...  
-    1108252156
-    1108252155
-    1108252154
-
-    >>> a = aa['1']
-    >>> a
-    {'date': 1108252154, 'content': 'cccc', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}
-    >>> a.date
-    1108252154
-
-
-    === Test object append method
-    _____________________________
-    >>> appended_json = {'4':{'date': 1108252157, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc4'}}
-    >>> aa.update(appended_json)
-    >>> aa['4']
-    {'date': 1108252157, 'content': 'cccc4', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}
-    >>> init_obj()
-    >>> cc_obj = aa_obj + bb_obj
-    >>> cc_obj
-    {'1': {'date': 1108252154, 'content': 'cccc', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '8': {'date': 1108252159, 'content': 'cccc4', 'password': '3232', 'name': 'hosoo', 'email': 'pp@naver.com'}, '3': {'date': 1108252156, 'content': 'cccc3', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '2': {'date': 1108252155, 'content': 'cccc2', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '4': {'date': 1108252157, 'content': 'cccc4', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}}
-
-
-    === Test error handling
-    _______________________
-    >>> aa[1] #doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    KeyError: 1
-
-    >>> aa.indexes
-    ['1', '2', '3', '4']
-
-    >>> vk = {'10': {'date': '', 'content': '', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}}
-    >>> aa.update(vk)
-
     """
     infoObj = InfoTemplate
 
@@ -412,6 +272,13 @@ class InfosTemplate(object):
 
     def set(self):
         pass
+
+    def __eq__(self, other):
+        if isinstance(other, dict):
+            return self.json == other
+        elif isinstance(other, self.__class__):
+            return self.json == other.json
+        return False
 
     def setFromDict(self, value):
         self.json = value
@@ -427,6 +294,9 @@ class InfosTemplate(object):
         info = self.infoObj()
         info.setFromDict(value)
         return info
+
+    def __next__(self):
+        return self.next()
 
     def __iter__(self):
         return self
@@ -495,65 +365,6 @@ class Comments(InfosTemplate):
     doc_id is the id of the article. doc_id is used to determine the
     database filename which contains the data of comments of the article.
 
-
-    >>> json = {'1': {'date': '11/08/31', 'name': 'Talsu', 'password': 'a', 'content': '이건 이런 있을 수 없는 일 잉 있나 오옹오오 그러 나 하지만 업수로 아작'}, '2': {'date': '11/09/31', 'name': 'Tal', 'password': 'a', 'content': '이건 이런 있을 수 없는 일 잉 있나 오옹오오 그러 나 하지만 업수로 아작'}, '3': {'date': '11/09/20', 'name': 'dalsoo', 'password': 'a', 'content': '그러 나 하지만 업수로 아작'}}
-
-
-    >>> comments = Comments()
-    >>> comments.set("1108261752") #doctest: +SKIP
-
-    >>> #comments.set("0706012057")
-    >>> comments.setFromDict(json)
-    >>> print comments['1'].content
-    이건 이런 있을 수 없는 일 잉 있나 오옹오오 그러 나 하지만 업수로 아작
-
-
-    === Test updating. updateFromObj
-    ________________________________
-    >>> comment = Comment()
-    >>> comment.name = "Talsu"
-    >>> comment.content = "This is the content of comment"
-
-    # Comment object requires doc_id
-    >>> comments.updateFromObj(comment) #doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    AttributeError: The object requires attribute doc_id
-    >>> comments.doc_id = '0706012057'
-    >>> comments.updateFromObj(comment)
-    >>> comments['4']
-    {'name': 'Talsu', 'comment_id': '4', 'content': 'This is the content of comment', 'date': '', 'password': '', 'email': ''}
-
-
-    === Test indexing
-    _________________
-    >>> comments.indexes
-    ['4', '3', '2', '1']
-
-    >>> ### Test new comment
-    >>> # There is no exist comment for doc_id
-    >>> #new_comments = Comments('0205241422')
-    >>> #new_comments.json
-    >>> #{}
-    >>> #new_comments.updateFromObj(comment)
-
-    === Test count
-    --------------
-    >>> comments.counts()
-    4
-
-
-    === Test delete/update static method
-    ____________________________________
-    >>> Comments.delete('0706012057', '8')
-    >>> Comments.delete('0706012057', '8') #doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    KeyError: "We has the key '8'"
-
-    >>> Comments.update('0706012057', '8', comment)
-    >>> comments = Comments('0706012057')
-
-
-
     """
     infoObj = Comment
 
@@ -610,7 +421,7 @@ class Comments(InfosTemplate):
 
     def checkDocId(self):
         if not self.doc_id:
-            raise AttributeError, "The object requires attribute doc_id"
+            raise AttributeError("The object requires attribute doc_id")
 
     def refresh(self):
         self.indexes = sorted(self.json, key=lambda a: int(a), reverse=True)
@@ -630,7 +441,7 @@ class Comments(InfosTemplate):
         comments.set(doc_id)
         try:
             comments.json.pop(key)
-        except KeyError, err:
+        except KeyError as err:
             raise KeyError("We has no key %s" % err)
         comments.save()
 
@@ -648,18 +459,6 @@ class Comments(InfosTemplate):
 class Article(InfoTemplate):
     """
     
-    >>> # get new article
-    >>> aObj = Article()
-    >>> aObj.set(1201191546)
-    >>> aObj.setFromId("akkk")
-    WARNNING:  AttributeError("'NoneType' object has no attribute 'group'",)
-    We couldn't fine key and value in the document. doc_id is akkk
-    >>> aObj.setFromId("0705241422") #doctest: +SKIP
-    >>> aObj.__dict__ #doctest: +SKIP
-    {'category': '', 'author': 'this is author', 'unpublished': '', 'title': 'This is sixth title', 'update': '1108170952', 'tag': 'python', 'date': '1108170951', 'doc_id': '0705241422'}
-
-    >>> article = Article()
-    >>> article.setFromId('9999999999') #doctest: +SKIP
     """
     info = config.article_informations
 
@@ -674,7 +473,7 @@ class Article(InfoTemplate):
         #Todo: Is it need error handling for self.doc_id ?
         filename = self._path(self.doc_id)
         try:
-            fd = file(filename, 'r')
+            fd = open(filename, 'r')
             content = fd.read()
         except:
             content = ''
@@ -720,7 +519,7 @@ class Article(InfoTemplate):
                 matchobj = regexobj.match(el)
                 key = matchobj.group(1)
                 value = matchobj.group(2)
-            except AttributeError, err:
+            except AttributeError as err:
                 # There is no key and value in article
                 ddWarnning(repr(err) + "\n" + \
                                "We couldn't fine key and value in the document. doc_id is " + \
@@ -735,7 +534,7 @@ class Article(InfoTemplate):
         end_of_info_regexp = "\n\n"
 
         try:
-            fd = file(filename, 'r')
+            fd = open(filename, 'r')
             content = fd.read()
         except IOError:
             # There is no article
@@ -763,42 +562,6 @@ class Article(InfoTemplate):
 
 class Articles(InfosTemplate):
     """
-
-    >>> json_dict = {'0702052011': {'category': 'emacs planner', 'date': '1108170951', 'author': 'this is author', 'update': '1108170952', 'title': 'Title'}, '0702052099': {'category': 'python', 'date': '1108170951', 'author': 'this is author', 'update': '1108170952', 'title': 'This is title 2'}, '0702052033': {'category': 'python', 'date': '1108170951', 'author': 'this is author', 'update': '1108170952', 'title': 'This is title 3'}}
-
-    >>> articles = Articles()
-    >>> articles.set() #doctest: +SKIP
-    >>> articles.setFromDict(json_dict)
-
-    >>> #articles['0702052011']
-    >>> #returns value for key. not object
-
-    >>> # to returns object
-    >>> article = articles.article('0702052011')
-    >>> article.title
-    'Title'
-
-    >>> print articles.article('111111')
-    None
-
-    >>> article = Article()
-    >>> article.name = "Talsu"
-    >>> article.content = "This is content"
-    >>> articles.updateFromObj(article) #doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    AttributeError: Object requires a attribute doc_id
-    >>> articles.json
-    {'0702052011': {'category': 'emacs planner', 'date': '1108170951', 'title': 'Title', 'update': '1108170952', 'author': 'this is author'}, '0702052033': {'category': 'python', 'date': '1108170951', 'title': 'This is title 3', 'update': '1108170952', 'author': 'this is author'}, '0702052099': {'category': 'python', 'date': '1108170951', 'title': 'This is title 2', 'update': '1108170952', 'author': 'this is author'}}
-
-    >>> len_json = len(articles.json)
-    >>> u_dict = {'0702052011' : {'category': 'emacs planner', 'date': '1108170951', 'title': 'Title', 'update': '1108170952', 'author': 'this is author'}}
-    >>> articles.update(u_dict)
-    >>> assert len(articles.json) == len_json
-
-    >>> u_dict = {'9999999999' : {'category': 'emacs planner', 'date': '1108170951', 'title': 'Title', 'update': '1108170952', 'author': 'this is author'}}
-    >>> articles.update(u_dict)
-    >>> assert len(articles.json) == len_json + 1
-
     """
     infoObj = Article
     db_filename = config.index_filename()
@@ -816,7 +579,7 @@ class Articles(InfosTemplate):
         return comment
 
     def set(self):
-        fd = file(self.db_filename, 'r')
+        fd = open(self.db_filename, 'r')
         content = fd.read()
         try:
             json_load = json.loads(content)
@@ -918,102 +681,4 @@ class CommentBasic(object):
         for name in self.file_info:
             setattr(self, name, '')
 
-
-#Obsolete
-class CommentsL(object):
-    """
-
-    >>> json = [{'1':{'date': 1108252154, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc'}}, {'2':{'date': 1108252155, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc2'}}, {'3':{'date': 1108252156, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc3'}}]
-
-    >>> ### test object iteration
-    >>> aa = CommentsL()
-    >>> aa.setFromJson(json)
-    >>> for a in aa:
-    ...  print a.date
-    ...
-    1108252156
-    1108252155
-    1108252154
-    >>> aa[1].date
-    1108252155
-
-    >>> ### test object set
-    >>> #Fixme: set the object
-    >>> #Todo: We need this behavier?
-    >>> aa[1].date = 1108252160
-    >>> aa[1].date #doctest: +SKIP
-    1108252160
-    >>> ## Set item
-    >>> aa[1] = {'2':{'date': 1108252155, 'name': 'dddd', 'password': '3232', 'email':'pp@naver.com','content':'cccc2'}}
-    >>> aa[1].name
-    'dddd'
-
-    >>> ### test object append method
-    >>> # To update comments for an article we can use InfosTemplate class.
-    >>> appended_json = {'4':{'date': 1108252157, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc4'}}
-    >>> aa.append(appended_json) #doctest: +SKIP
-    """
-    def __init__(self, doc_num=None, mode='r'):
-        self.json = []
-        self.idx = 0
-        self.length = 0
-        
-    def next(self):
-        if self.idx >= self.length:
-            self.refresh()
-            raise StopIteration
-
-        json_dict = self.__getJsonForComment(self.idx)
-        result = InfoTemplate()
-        result.setFromDict(json_dict)
-        self.idx += 1
-        return result
-
-    def __iter__(self):
-        return self
-        
-    def refresh(self):
-        self.idx = 0
-
-    def __getitem__(self, key):
-        json_dict = self.__getJsonForComment(key)
-        obj = InfoTemplate()
-        obj.setFromDict(json_dict)
-        return obj
-
-    def __setitem__(self, key, value):
-        self.json[key] = value
-
-    def append(self, json):
-        # Todo: do?
-        # key = json.keys()[0]
-        # print key
-        # value = json[key]
-        # print value
-        # self.json[key] = value
-        pass
-
-    def __getJsonForComment(self, idx):
-        """
-        index of self.json provides
-        {'1':{'date': 1108252154, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc'}}
-        InfoTemplate class uses only
-        {'date': 1108252154, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc'}
-        """
-        json_dict = self.json[idx]
-        result = json_dict.values()[0]
-        return result
-
-    def set(self, doc_num):
-        ab_filename = config.comments_d + self.doc_num + config.comment_extension
-        fd = file(ab_filename, 'r')
-        # [{'date': 1108252154, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc'}, {'date': 1108252155, 'name2': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','contnet':'cccc2'}]
-        content = fd.read()
-        fd.close()
-        json_load = json.loads(content)
-        self.json = json_load
-
-    def setFromJson(self, json_dict):
-        self.json = sorted(json_dict, reverse=True)
-        self.length = len(self.json)
 

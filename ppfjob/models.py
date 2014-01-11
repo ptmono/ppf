@@ -1,5 +1,5 @@
 from dnews.scraper		import Scraper
-from dScraper.reporter	import SaraminIt
+from dnews.smodel.saramin	import SaraminIt
 from dScraper.container.saramin import SaraminItModel
 
 class Orms(object):

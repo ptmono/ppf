@@ -15,7 +15,7 @@ except RuntimeError:
 from django.shortcuts import render_to_response
 
 from dnews.scraper		import Scraper
-from dScraper.reporter	import SaraminIt
+from dnews.smodel.saramin	import SaraminIt
 from dScraper.container.saramin import SaraminItModel
 
 from dlibs.logger import loggero
@@ -36,25 +36,11 @@ def jinja_render_to_response(filename, context={}):#, mimetype=default_mimetype)
     def sanitize_html(text):
         return Markup(scrubber.Scrubber(remove_comments=False).scrub(text))
     env.filters['sanitize_html'] = sanitize_html
-    if ppfconfig.PPFJOB_LOCAL_MODE:
-        from .sentence import is_spam, is_near
-    else:
-        def is_spam(aa): return False
-        def is_near(text): return False
-        env.globals['is_spam'] = is_spam
-        env.globals['is_near'] = is_near
-
     template = env.get_template(filename)
     rendered = template.render(**context)
     return rendered
 
 def getJobs(orms, page):
-    # reporter = SaraminIt()
-    # scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScraper/dScrapper/dbs/SaraminIt.sqlite")
-
-    # orms = scraper.session.query(scraper.mapped_class).all()
-    # orms.reverse()
-
     paginator = Paginator(orms, 30)
 
     if not page:
@@ -63,7 +49,6 @@ def getJobs(orms, page):
     page = paginator.page(page)
         
     return page.object_list
-    #return orms[:30]
 
 def getJobs_first(orms):
     return orms[:30]
@@ -75,6 +60,5 @@ def job_page(orms, page=None):
 
 def jobs_filtered(orms):
     mm = getJobs_first(orms)
-
     return jinja_render_to_response('jinja_content_job.html', dict(articles=mm))
 

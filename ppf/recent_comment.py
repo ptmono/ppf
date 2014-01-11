@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from indexer import Comment, File
-import config
+from .indexer import Comment, File
+from . import config
 
 import struct
 import random

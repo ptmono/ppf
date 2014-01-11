@@ -2,14 +2,16 @@
 # coding: utf-8
 
 import sys
-import config
 
 import cgi
 import cgitb
 cgitb.enable()
 
-import libs
-from viewer import View
+from .viewer import View
+from . import libs
+from . import config
+
+
 
 def main():
     libs.waitUnlock()

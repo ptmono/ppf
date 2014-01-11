@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # coding: utf-8
 
-import config
+from . import config
+from io import open
 
 required_dirs = config.required_dirs
 required_sys_files = config.required_sys_files

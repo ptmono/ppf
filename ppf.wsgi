@@ -8,7 +8,8 @@ if not cur_path in sys.path:
     sys.path.insert(0, cur_path)
     sys.path.insert(0, os.path.join(cur_path, 'modules'))
     sys.path.insert(0, "/home/ptmono/works/0git/dnews")
-    sys.path.insert(0, "/home/ptmono/works/0git/dScrapper")
+    sys.path.insert(0, "/home/ptmono/works/0git/dScraper")
     sys.path.insert(0, "/home/ptmono/works/0git/dlibs")
+    sys.path.insert(0, "/home/ptmono/works/0git/dfilter")
 
-from ppf.app import app as application
+from app import app as application

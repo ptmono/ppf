@@ -9,26 +9,24 @@ from flask.ext.cache import Cache
 
 app = Flask(__name__)
 app.debug = True
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+cache = Cache(app, config={'CACHE_TYPE': 'null'})
 
-import config
 
-from viewer import ViewHome, ViewId, ViewAll
-from poster import addComment_wsgi
-import api
+from ppf import config
+from ppf import api
+from ppf.viewer import ViewHome, ViewId, ViewAll
+from ppf.poster import addComment_wsgi
+from ppf.app_exceptions import InitError, PageNotFound
 
-try:
-    from ppfjob.views import jobs_filitered, job_page
-except ImportError:
-    root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-    sys.path.insert(0, root_path)
-    from ppfjob.views import jobs_filtered, job_page
+from ppfjob.views import jobs_filtered, job_page
+from ppfjob.models import Orms
 
-from app_exceptions import InitError, PageNotFound
 from werkzeug import SharedDataMiddleware
 
 from dnews.scraper		import Scraper
 from dScraper.container.saramin import SaraminItModel
+
+print(config.htmls_d)
 
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/medias':	config.medias_d,
@@ -80,8 +78,6 @@ def write_comment():
 
     return addComment_wsgi(request)
 
-from ppfjob.models import Orms
-
 
 @app.route('/job/page/<page_num>')
 @cache.memoize(3000)
@@ -104,7 +100,7 @@ def _checkArticleIndex(err_msg):
 
 @app.errorhandler(InitError)
 def handle_init_error(error):
-    import install
+    from ppf import install
     return install.main()
 
 @app.errorhandler(PageNotFound)
@@ -113,8 +109,6 @@ def handle_PageNotFound(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
-
-
 
 
 if __name__ == '__main__':

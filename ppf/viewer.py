@@ -2,15 +2,16 @@
 # coding: utf-8
 
 import os
-import config
-import indexer
-import install
-
 from jinja2 import Environment, FileSystemLoader, Markup
 import scrubber
+from io import open
 
-from app_exceptions import PageNotFound
+from . import config
+from . import indexer
+from . import install
+from .app_exceptions import PageNotFound
 
+from dlibs.logger import loggero
 
 class Var:
     http_header = "Content-type: text/html; charset=utf-8\n\n"
@@ -26,31 +27,31 @@ class View(object):
         #GET method
         # if form.keys() == []:
         #     view_categoryobj = ViewCategory()
-        #     print view_categoryobj.show()
+        #     print(view_categoryobj.show())
 
         if form.keys() == []:
             try:
                 view_home = ViewHome()
-            except IOError, err:
+            except IOError as err:
                 if self._checkArticleIndex(err):
                     # There is no index file
                     self._initArticleIndex()
                     return
                 else:
-                    print "Content-type: text/html; charset=utf-8\n\n"
-                    print err
+                    print("Content-type: text/html; charset=utf-8\n\n")
+                    print(err)
                     return
 
-            print view_home.show()
+            print(view_home.show())
 
         elif form.has_key('id'):
             doc_id = form.getfirst('id')
             if doc_id == 'all':
                 view_all = ViewAll()
-                print view_all.show()
+                print(view_all.show())
             else:
                 viewobj = ViewId(doc_id)
-                print viewobj.show()
+                print(viewobj.show())
 
     def _checkArticleIndex(self, err_msg):
         msg = str(err_msg)
@@ -82,9 +83,9 @@ class ViewAbstract(object):
         self.content = self.getContent()
 
     def show(self):
-        result = ''
+        #result = ''
         #result += Var.http_header
-        result += self.content
+        result = self.content
         return result
 
     def getContent(self):
@@ -92,13 +93,13 @@ class ViewAbstract(object):
 
     def getHeader(self):
         result = ''
-        fd = file(config.html_header, 'r')
+        fd = open(config.html_header, 'r')
         result = fd.read()
         return result
 
     def getFooter(self):
         result = ''
-        fd = file(config.html_footer, 'r')
+        fd = open(config.html_footer, 'r')
         result = fd.read()
         return result
 
@@ -118,7 +119,7 @@ class ViewAbstract(object):
         # except:
         #     return '0000000000'
 
-        for article in articles:
+        for article in list(articles):
             if article.unpublished:
                 continue
             return article.doc_id
@@ -127,11 +128,16 @@ class ViewAbstract(object):
 
     def fileContentWithUnicode(self, filename, char_set=config.char_set):
         "Jinja requires unicode content. So have to read the file as unicode."
-        fd = file(filename, 'r')
+        fd = open(filename, 'r')
         content = fd.read()
         fd.close()
         # Jinja require unicode
-        return content.decode(char_set)
+        try:
+            return content.decode(char_set)
+        except:
+            return content
+
+
 
 
 class ViewAll(ViewAbstract):
@@ -248,8 +254,8 @@ class ViewHome(ViewId):
         html_f = os.path.join(config.htmls_d, str(self.doc_id) + ".html")
         try:
             temp_context = self.fileContentWithUnicode(html_f)
-        except:
-            #raise
+        except Exception as err:
+            print(err)
             return self._showPageNotFoundError()
 
         comments = self.getComments()

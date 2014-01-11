@@ -1,0 +1,57 @@
+    >>> from common			import *
+    >>> from ppf.indexer		import InfoTemplate, InfosTemplate, Article, Articles
+
+* Article
+
+    >>> # get new article
+    >>> aObj = Article()
+    >>> aObj.set(1201191546)
+    >>> aObj.setFromId("akkk")
+    WARNNING:  AttributeError("'NoneType' object has no attribute 'group'",)
+    We couldn't fine key and value in the document. doc_id is akkk
+    >>> aObj.setFromId("0705241422") #doctest: +SKIP
+    >>> aObj.__dict__ #doctest: +SKIP
+    {'category': '', 'author': 'this is author', 'unpublished': '', 'title': 'This is sixth title', 'update': '1108170952', 'tag': 'python', 'date': '1108170951', 'doc_id': '0705241422'}
+
+    >>> article = Article()
+    >>> article.setFromId('9999999999') #doctest: +SKIP
+
+
+* Articles
+
+
+    >>> json_dict = {'0702052011': {'category': 'emacs planner', 'date': '1108170951', 'author': 'this is author', 'update': '1108170952', 'title': 'Title'}, '0702052099': {'category': 'python', 'date': '1108170951', 'author': 'this is author', 'update': '1108170952', 'title': 'This is title 2'}, '0702052033': {'category': 'python', 'date': '1108170951', 'author': 'this is author', 'update': '1108170952', 'title': 'This is title 3'}}
+
+    >>> articles = Articles()
+    >>> articles.set() #doctest: +SKIP
+    >>> articles.setFromDict(json_dict)
+
+    >>> #articles['0702052011']
+    >>> #returns value for key. not object
+
+    >>> # to returns object
+    >>> article = articles.article('0702052011')
+    >>> article.title
+    'Title'
+
+    >>> print(articles.article('111111'))
+    None
+
+    >>> article = Article()
+    >>> article.name = "Talsu"
+    >>> article.content = "This is content"
+    >>> articles.updateFromObj(article) #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    AttributeError: Object requires a attribute doc_id
+    >>> articles.json ==  {'0702052011': {'category': 'emacs planner', 'date': '1108170951', 'title': 'Title', 'update': '1108170952', 'author': 'this is author'}, '0702052033': {'category': 'python', 'date': '1108170951', 'title': 'This is title 3', 'update': '1108170952', 'author': 'this is author'}, '0702052099': {'category': 'python', 'date': '1108170951', 'title': 'This is title 2', 'update': '1108170952', 'author': 'this is author'}}
+    True
+
+    >>> len_json = len(articles.json)
+    >>> u_dict = {'0702052011' : {'category': 'emacs planner', 'date': '1108170951', 'title': 'Title', 'update': '1108170952', 'author': 'this is author'}}
+    >>> articles.update(u_dict)
+    >>> assert len(articles.json) == len_json
+
+    >>> u_dict = {'9999999999' : {'category': 'emacs planner', 'date': '1108170951', 'title': 'Title', 'update': '1108170952', 'author': 'this is author'}}
+    >>> articles.update(u_dict)
+    >>> assert len(articles.json) == len_json + 1
+

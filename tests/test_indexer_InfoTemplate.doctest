@@ -1,0 +1,115 @@
+    >>> from common			import *
+    >>> from ppf.indexer		import InfoTemplate, InfosTemplate
+
+
+* InfoTemplate
+
+    >>> json = {'date': 1108252154, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc'}
+    >>> aa = InfoTemplate()
+    >>> dummy = InfoTemplate()
+    >>> aa.setFromDict(json)
+
+    >>> aa == {'date': 1108252154, 'password': '3232', 'email': 'pp@naver.com', 'content': 'cccc', 'name': 'dalsoo'}
+    True
+    >>> aa == {'content': 'cccc', 'email': 'pp@naver.com', 'password': '3232', 'date': 1108252154, 'name': 'dalsoo'}
+    True
+    >>> aa.name
+    'dalsoo'
+    >>> aa.name = 'Talsu'
+
+    >>> aa == {'date': 1108252154, 'content': 'cccc', 'password': '3232', 'name': 'Talsu', 'email': 'pp@naver.com'}
+    True
+
+    >>> aa['content']
+    'cccc'
+    >>> aa['content'] = 'dddd'
+    >>> aa.content
+    'dddd'
+
+    >>> aa.updateFromDict({})
+    >>> aa.setFromDict({})
+    >>> aa == {'date': '', 'content': '', 'password': '', 'name': '', 'email': ''}
+    True
+
+    >>> aa.name = 'Talsoo'
+
+
+* InfosTemplate
+
+    >>> #from indexer import InfosTemplate, InfoTemplate
+    >>> json = {'1':{'date': 1108252154, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc'}, '2':{'date': 1108252155, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc2'}, '3':{'date': 1108252156, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc3'}}
+    >>> json_bb = {'8': {'date': 1108252159, 'name': 'hosoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc4'}}
+
+    >>> aa_obj, bb_obj = None, None
+    >>> def init_obj():
+    ...  global aa_obj, bb_obj
+    ...  aa_obj = InfosTemplate()
+    ...  aa_obj.setFromDict(json)
+    ...  bb_obj = InfosTemplate()
+    ...  bb_obj.setFromDict(json_bb)
+    ...
+
+    >>> ### test basic methods
+    >>> init_obj()
+    >>> aa_obj.isinstance(bb_obj)
+    True
+    >>> aa_obj.isinstance(int) #doctest: +IGNORE_EXCEPTION_DETAIL 
+    Traceback (most recent call last):
+    TypeError: InfosTemplate type is required
+
+
+    === Test object iteration
+    _________________________
+    >>> aa = InfosTemplate()
+    >>> bb = InfosTemplate()
+    >>> aa.infoObj = InfoTemplate
+    >>> aa.setFromDict({})
+    >>> aa.setFromDict(json)
+    >>> bb.setFromDict(json)
+    >>> aa == {'1': {'date': 1108252154, 'content': 'cccc', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '3': {'date': 1108252156, 'content': 'cccc3', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '2': {'date': 1108252155, 'content': 'cccc2', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}}
+    True
+    >>> aa == bb
+    True
+    
+    >>> aa.indexes
+    ['1', '2', '3']
+    >>> len(aa)
+    3
+
+    >>> for a in aa:
+    ...     print(a.date)
+    ...  
+    1108252156
+    1108252155
+    1108252154
+
+    >>> aa['1'] #doctest: +SKIP
+    {'date': 1108252154, 'content': 'cccc', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}
+    >>> a.date
+    1108252154
+
+
+    === Test object append method
+    _____________________________
+    >>> appended_json = {'4':{'date': 1108252157, 'name': 'dalsoo', 'password': '3232', 'email':'pp@naver.com','content':'cccc4'}}
+    >>> aa.update(appended_json)
+    >>> aa['4'] #doctest: +SKIP
+    {'date': 1108252157, 'content': 'cccc4', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}
+    >>> init_obj()
+    >>> cc_obj = aa_obj + bb_obj
+    >>> cc_obj #doctest: +SKIP
+    {'1': {'date': 1108252154, 'content': 'cccc', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '8': {'date': 1108252159, 'content': 'cccc4', 'password': '3232', 'name': 'hosoo', 'email': 'pp@naver.com'}, '3': {'date': 1108252156, 'content': 'cccc3', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '2': {'date': 1108252155, 'content': 'cccc2', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}, '4': {'date': 1108252157, 'content': 'cccc4', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}}
+
+
+    === Test error handling
+    _______________________
+    >>> aa[1] #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    KeyError: 1
+
+    >>> aa.indexes
+    ['1', '2', '3', '4']
+
+    >>> vk = {'10': {'date': '', 'content': '', 'password': '3232', 'name': 'dalsoo', 'email': 'pp@naver.com'}}
+    >>> aa.update(vk)
+

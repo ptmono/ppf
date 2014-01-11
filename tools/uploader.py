@@ -89,7 +89,7 @@ class UFTP(FTP):
     >>> ftp.upload(server_path, client_filename)
     >>> # Check server side file
     >>> fd = open(server_filename)
-    >>> print fd.read()
+    >>> print(fd.read())
     aaa
     >>> fd.close()
     >>> os.remove(client_filename)
@@ -105,7 +105,7 @@ class UFTP(FTP):
         '''
         try:
             return self.cwd(dirname)
-        except error_perm, msg:
+        except error_perm as msg:
             if msg.args[0][:3] == '550':
                 self.d_mkds(dirname)
                 self.cwd(dirname)
@@ -114,7 +114,7 @@ class UFTP(FTP):
         "Create directory with subdirectories."
         try:
             return self.mkd(dirname)
-        except error_perm, msg:
+        except error_perm as msg:
             if msg.args[0][:3] == '550':
                 self._d_mkds(dirname)
 
@@ -179,7 +179,7 @@ class UFTP(FTP):
         permission_chmod = oct(permission.st_mode)[3:]
         try:
             fd = open(ab_filename, 'rb')
-        except IOError, err:
+        except IOError as err:
             # Is a directory error
             # Just create directory
             if err[0] == 21:
@@ -189,7 +189,7 @@ class UFTP(FTP):
         try:
             self.storbinary('STOR %s' % filename, fd)
 
-        except error_perm, msg:
+        except error_perm as msg:
             if msg[0][:3] == '553':
                 dirname = filename[:filename.rfind('/')]
                 self.d_mkds(dirname)
@@ -246,7 +246,7 @@ class UFTP(FTP):
             permission_chmod = oct(permission.st_mode)[3:]
             try:
                 fd = open(ab_filename, 'rb')
-            except IOError, err:
+            except IOError as err:
                 # Is a directory error
                 # Just create directory
                 if err[0] == 21:
@@ -255,7 +255,7 @@ class UFTP(FTP):
                     continue
             try:
                 self.storbinary('STOR %s' % f, fd)
-            except error_perm, msg:
+            except error_perm as msg:
                 if msg[0][:3] == '553':
                     dirname = f[:f.rfind('/')]
                     self.d_mkds(dirname)
@@ -469,7 +469,7 @@ class Uploader:
         try:
             self.upload_info = upload_info_obj()
             self.upload_info.get()
-        except AttributeError, err:
+        except AttributeError as err:
             if isinstance(upload_info_obj, UploadInfoCommon):
                 self.upload_info = upload_info_obj
                 self.upload_info.get()
@@ -522,7 +522,7 @@ def main():
             uploader = Uploader(UploadInfoDb)
             uploader.upload()
         else:
-            print usage % ("uploader.py")
+            print(usage % ("uploader.py"))
             
     except IndexError:
         uploader = Uploader(UploadInfoFromInput)

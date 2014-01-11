@@ -8,8 +8,8 @@ import re
 import logging
 import fnmatch
 
-import config
-import html_messages as hm
+from . import config
+from . import html_messages as hm
 
 
 
@@ -45,7 +45,7 @@ def log(msg):
     t = time.strftime("%Y-%m-%d %H:%M:%S")
     msg = "LOG[" + t + "]: " + msg + "\n"
     if config.ERRORP:
-        print msg
+        print(msg)
     else:
         fd = file(config.log_file, 'a')
         fd.write(msg)
@@ -55,7 +55,7 @@ def logError(msg):
     t = time.strftime("%Y-%m-%d %H:%M:%S")
     msg = "ERROR[" + t + "]: " + msg + "\n"
     if config.ERRORP:
-        print msg
+        print(msg)
     else:
         fd = file(config.log_file, 'a')
         fd.write(msg)
@@ -127,7 +127,7 @@ def waitUnlock():
             filep = False
             break
         if filep:
-            print hm.redirect_wait_updating
+            print(hm.redirect_wait_updating)
             sys.exit(1)
 
 

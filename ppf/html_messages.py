@@ -70,9 +70,9 @@ def redirect_doc(title, wait_time, doc_id, body):
 %s
 </BODY>
 </HTML>""" % (title, wait_time, doc_id, body)
-    print "Content-type: text/html\n"
-    print result
+    print("Content-type: text/html\n")
+    print(result)
 
 def print_msg(msg):
-    print "Content-type: text/html\n"
-    print msg
+    print("Content-type: text/html\n")
+    print(msg)

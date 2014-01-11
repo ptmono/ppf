@@ -67,8 +67,6 @@ data._jsonbase64_dict = s
 data.urlencode()
 
 """
-
-
 import sys
 import os
 import time
@@ -79,19 +77,24 @@ import json
 import hmac
 import inspect
 
-import config
+from . import config
+from . import libs
+from .indexer import Article, Articles, Comments, Comment
+from . import html_messages as hm
+
 #if config.LOCAL_TEST:
 import cgitb
 cgitb.enable()
 
 from flask import request, abort
 
-import libs
 
-from urllib import urlencode
 
-from indexer import Article, Articles, Comments, Comment
-import html_messages as hm
+try:
+    from urllib import urlencode
+except:
+    from urllib.parse import urlencode
+
 
 class Key(object):
 
@@ -305,21 +308,21 @@ def updateIndex(doc_id, _jsonBase64_dict):
     articles.updateFromObj(article)
     articles.save()
 
-    print "Content-type: text/html\n\n"
-    print "OK"
+    print("Content-type: text/html\n\n")
+    print("OK")
 
 def updateFile(filename, _base64_content):
     abpath = config.files_d + filename
     if os.path.exists(abpath):
-        print "Content-type: text/html\n\n"
-        print "False"
+        print("Content-type: text/html\n\n")
+        print("False")
         return
     fd = file(abpath, 'w')
     fd.write(_base64_content)
     fd.close()
 
-    print "Content-type: text/html\n\n"
-    print "OK"
+    print("Content-type: text/html\n\n")
+    print("OK")
 
 
 def updateServerFile(filename, _base64_content):
@@ -385,8 +388,8 @@ def main():
         apply(cmd, values)
         #except:
         #    sys.exit(1)
-    # print "Content-type: text/html\n"
-    # print "test"
+    # print("Content-type: text/html\n")
+    # print("test")
     return
 
 

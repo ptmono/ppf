@@ -21,10 +21,9 @@ cgitb.enable()
 
 from flask import request
 
-import libs
-from indexer import Comments, Comment, Articles, File
-
-import html_messages as hm
+from . import libs
+from .indexer import Comments, Comment, Articles
+from . import html_messages as hm
 
 def addComment(doc_id, form):
     comments = Comments()
@@ -32,8 +31,8 @@ def addComment(doc_id, form):
     # We has the limit of the count of comment. The default is
     # config.max_comments.
     if not canComments(doc_id, comments):
-        print "Content-type: text/html\n"
-        print hm.redirect_error_limit_comments % doc_id
+        print("Content-type: text/html\n")
+        print(hm.redirect_error_limit_comments % doc_id)
         return
 
     # Save comment
@@ -56,7 +55,7 @@ def addComment(doc_id, form):
         fd = File(None, 'rc', 'a')
         fd.write(comment_id)
         fd.close()
-    except Exception, err:
+    except Exception as err:
         config.logger.error(err)
 
 
@@ -68,8 +67,8 @@ def addComment(doc_id, form):
         msg = "Falied to send mail, comment_id %s" % comment_id
         config.logger.error(msg)
         
-    print "Content-type: text/html\n"
-    print hm.redirect % (doc_id + "#" + comment.comment_id)
+    print("Content-type: text/html\n")
+    print(hm.redirect % (doc_id + "#" + comment.comment_id))
 
 def addComment_wsgi(request):
     # Form is werkzeug's ImmutableMultiDict
@@ -98,7 +97,7 @@ def addComment_wsgi(request):
         fd = File(None, 'rc', 'a')
         fd.write(comment_id)
         fd.close()
-    except Exception, err:
+    except Exception as err:
         config.logger.error(err)
 
     # Send notification mail
@@ -287,11 +286,11 @@ def main():
         try:
             doc_id = form['doc_id'].value
         except:
-            print "Content-type: text/html\n"
-            print hm.redirect_error
+            print("Content-type: text/html\n")
+            print(hm.redirect_error)
             exit(0)
-        print "Content-type: text/html\n"
-        print hm.redirect_requirement % doc_id
+        print("Content-type: text/html\n")
+        print(hm.redirect_requirement % doc_id)
 
 if __name__ == "__main__":
     main()

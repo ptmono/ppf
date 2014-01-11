@@ -1,0 +1,59 @@
+    >>> from common			import *
+    >>> from ppf.indexer		import InfoTemplate, InfosTemplate, Comment, Comments
+
+    >>> json = {'1': {'date': '11/08/31', 'name': 'Talsu', 'password': 'a', 'content': '이건 이런 있을 수 없는 일 잉 있나 오옹오오 그러 나 하지만 업수로 아작'}, '2': {'date': '11/09/31', 'name': 'Tal', 'password': 'a', 'content': '이건 이런 있을 수 없는 일 잉 있나 오옹오오 그러 나 하지만 업수로 아작'}, '3': {'date': '11/09/20', 'name': 'dalsoo', 'password': 'a', 'content': '그러 나 하지만 업수로 아작'}}
+
+
+    >>> comments = Comments()
+    >>> comments.set("1108261752") #doctest: +SKIP
+
+    >>> #comments.set("0706012057")
+    >>> comments.setFromDict(json)
+    >>> print(comments['1'].content)
+    이건 이런 있을 수 없는 일 잉 있나 오옹오오 그러 나 하지만 업수로 아작
+
+
+    === Test updating. updateFromObj
+    ________________________________
+    >>> comment = Comment()
+    >>> comment.name = "Talsu"
+    >>> comment.content = "This is the content of comment"
+
+    # Comment object requires doc_id
+    >>> comments.updateFromObj(comment) #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    AttributeError: The object requires attribute doc_id
+    >>> comments.doc_id = '0706012057'
+    >>> comments.updateFromObj(comment)
+    >>> comments['4'] == {'name': 'Talsu', 'email': '', 'date': '', 'comment_id': '4', 'content': 'This is the content of comment', 'password': ''}
+    True
+
+
+    === Test indexing
+    _________________
+    >>> comments.indexes
+    ['4', '3', '2', '1']
+
+    >>> ### Test new comment
+    >>> # There is no exist comment for doc_id
+    >>> #new_comments = Comments('0205241422')
+    >>> #new_comments.json
+    >>> #{}
+    >>> #new_comments.updateFromObj(comment)
+
+    === Test count
+    --------------
+    >>> comments.counts()
+    4
+
+
+    === Test delete/update static method
+    ____________________________________
+    >>> Comments.delete('0706012057', '8')
+    >>> Comments.delete('0706012057', '8') #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    KeyError: "We has the key '8'"
+
+    >>> Comments.update('0706012057', '8', comment)
+    >>> comments = Comments('0706012057')
+

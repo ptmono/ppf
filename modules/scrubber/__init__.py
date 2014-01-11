@@ -12,9 +12,14 @@ __license__ = "BSD"
 __all__ = ['Scrubber', 'SelectiveScriptScrubber', 'ScrubberWarning', 'UnapprovedJavascript', 'urlize']
 
 import re, string
-from urlparse import urljoin
+try:
+    from urlparse import urljoin
+    from BeautifulSoup import Comment
+except:
+    from urllib.parse import urljoin
+    from bs4 import BeautifulSoup, Comment
 from itertools import chain
-from BeautifulSoup import BeautifulSoup, Comment
+
 
 def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     """Converts any URLs in text into clickable links.
