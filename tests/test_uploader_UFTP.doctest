@@ -1,0 +1,88 @@
+
+
+    >>> from common import *
+    >>> from ppf.tools.uploader import UFTP, UploadInfoCommon
+    >>> from io import open
+    >>> from ppf import config
+
+
+    # TODO: Error control. FTP has no exception for bad address
+    >>> #ftp_fails = UFTP("aa", "bb", "bb")
+
+    >>> host = config.server_host
+    >>> user = config.server_user_id
+    >>> passwd = config.server_passwd
+    >>> print("%s,%s,%s" % (host, user, passwd)) #doctest: +ELLIPSIS
+    d...*
+
+    >>> ftp = UFTP(host, user, passwd)
+    >>> path = "/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu/ync/tny/kkc"
+
+    >>> ftp.mkd('/home')			#doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    error_perm: 550 Create directory operation failed.
+    
+    >>> # exists
+    >>> ########
+    >>> ftp.exists("/abs")
+    False
+
+    >>> # _directoryInfo
+    >>> ################
+    >>> d_info = ftp._directoryInfo(path)
+    >>> d_info
+    [46, 42, 38, 34, 27, 20, 12, 5, 0]
+
+    >>> # _exists_level
+    >>> ###############
+    >>> d_level = ftp._exists_level(path, d_info)
+    >>> d_level
+    6
+    >>> path[:d_info[d_level]]
+    '/home/ptmono'
+
+    >>> path2 = '/aaa/bbb/ccc/ddd'
+    >>> d_info2 = ftp._directoryInfo(path2)
+    >>> ftp._exists_level(path2, d_info2)
+    3
+
+    >>> ftp.dirs_not_exists(path) == [u'/home/ptmono/aaaauuu', u'/home/ptmono/aaaauuu/bbbccc', u'/home/ptmono/aaaauuu/bbbccc/nnnyyy', u'/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu', u'/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu/ync', u'/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu/ync/tny', u'/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu/ync/tny/kkc']
+    True
+    >>> ftp.dirs_not_exists('/home/ptmono/')
+    []
+    >>> ftp.dirs_not_exists('/home/ptmono')
+    []
+    >>> ftp.dirs_not_exists('/home/')
+    []
+    >>> ftp.dirs_not_exists('/home/ptmono/abc') == [u'/home/ptmono/abc']
+    True
+    >>> ftp.dirs_not_exists('/home/ptmono/abc', is_dir=False)
+    []
+
+    >>> ftp._d_mkds(path)
+    >>> os.removedirs(path)
+
+    === Upload
+    __________________________________________________________
+    # This facility is obsoleted because we use wsgi.
+
+    # >>> server_path = "/home/ptmono/anan/ccd"
+    # >>> ftp.upload(server_path, UploadInfoCommon._getFileListFromListFile(config.list_of_files_to_be_installed))
+
+    # >>> client_filename = ROOT_PATH + "/teest.bbcsyn"
+    # >>> server_filename = server_path + "/teest.bbcsyn"
+    # >>> fd = open(client_filename, 'w')
+    # >>> _ = fd.write(u"aaa")
+    # >>> fd.close()
+
+    # >>> ftp.upload(server_path, client_filename)
+    # >>> # Check server side file
+    # >>> fd = open(server_filename)
+    # >>> print(fd.read())
+    # aaa
+    # >>> fd.close()
+    # >>> os.remove(client_filename)
+
+    >>> dummy = '/home/ptmono/Desktop/Documents/works/0cvs/trunk/ppf/files/dummy_upload.file'
+    >>> shutil.rmtree(path[:path.rfind("/")], ignore_errors=True)
+

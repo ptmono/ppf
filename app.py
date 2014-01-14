@@ -26,19 +26,10 @@ from werkzeug import SharedDataMiddleware
 from dnews.scraper		import Scraper
 from dScraper.container.saramin import SaraminItModel
 
-print(config.htmls_d)
-
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/medias':	config.medias_d,
     '/files':	config.files_d
     })
-
-def get_ppfjob_orms():
-    scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScraper/dScrapper/dbs/SaraminIt.sqlite")    
-    orms = scraper.session.query(scraper.mapped_class).all()
-    orms.reverse()
-    return orms
-
 
 @app.route('/home')
 @app.route('/')

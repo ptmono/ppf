@@ -1,0 +1,109 @@
+
+    >>> from dlibs.common import *
+    >>> from common import *
+    >>> from ppf.api import DataBasic, Data
+
+
+* DataBasic
+
+    >>> data = DataBasic()
+    >>> data.doc_id = '123'
+    >>> data.comment_id = '5555'
+    >>> data.urlencode() #doctest: +SKIP
+    'comment_id=5555&doc_id=123'
+    >>> data == {'comment_id': '5555', 'doc_id': '123'}
+    True
+
+
+    >>> # Remove item
+    >>> data.pop('doc_id')
+    >>> data == {'comment_id': '5555'}
+    True
+
+    >>> data['comment_id']
+    '5555'
+
+* Data
+
+    >>> data = Data()
+    >>> data.doc_id = '123'
+    >>> data.content = '555ab가나'
+    >>> data == {'content': '555ab가나', 'doc_id': '123'}
+    True
+
+@ encode_64base, decode_64base
+    
+    >>> unicode_dummy = u'aa가나다'
+    >>> encoded_byte = data.encode_base64(unicode_dummy)
+    >>> encoded_byte in ['YWHDqsKwwoDDq8KCwpjDq8KLwqQ=', b'YWHqsIDrgpjri6Q=']
+    True
+
+    >>> if PY3:
+    ...     repr(type(encoded_byte)) == "<class 'bytes'>"
+    ... else:
+    ...     repr(type(encoded_byte)) == "<type 'str'>"
+    True
+
+    >>> decoded_byte = data.decode_base64(encoded_byte)
+    >>> decoded_byte == unicode_dummy
+    True
+
+    >>> if PY3:
+    ...     repr(type(decoded_byte)) == "<class 'str'>"
+    ... else:
+    ...     repr(type(decoded_byte)) == "<type 'unicode'>"
+    True
+
+@ encode_jsonBase64 decode_jsonBase64
+
+    >>> unicode_dummy = {u'aaa': u'aa가나', u'bbb': u'bb가나'}
+    >>> encoded_byte = data.encode_jsonBase64(unicode_dummy)
+
+    >>> #This is not match. Why????????
+    >>> #hul~ there is two result for 3.x
+    >>> encoded_byte in ['eyJhYWEiOiAiYWFcdTAwZWFcdTAwYjBcdTAwODBcdTAwZWJcdTAwODJcdTAwOTgiLCAiYmJiIjogImJiXHUwMGVhXHUwMGIwXHUwMDgwXHUwMGViXHUwMDgyXHUwMDk4In0=', b'eyJhYWEiOiAiYWFcdWFjMDBcdWIwOTgiLCAiYmJiIjogImJiXHVhYzAwXHViMDk4In0=', b'eyJiYmIiOiAiYmJcdWFjMDBcdWIwOTgiLCAiYWFhIjogImFhXHVhYzAwXHViMDk4In0=']
+    True
+
+    >>> if PY3:
+    ...     repr(type(encoded_byte)) == "<class 'bytes'>"
+    ... else:
+    ...     repr(type(encoded_byte)) == "<type 'str'>"
+    True
+
+    >>> decoded_byte = data.decode_jsonBase64(encoded_byte)
+    >>> decoded_byte in [{u'aaa': u'aa\xea\xb0\x80\xeb\x82\x98', u'bbb': u'bb\xea\xb0\x80\xeb\x82\x98'}, {'aaa': 'aa가나', 'bbb': 'bb가나'}]
+    True
+    >>> isinstance(decoded_byte, dict)
+    True
+
+** Data.encoded_dict
+
+    >>> data = Data()
+    >>> if PY3:
+    ...     data._base64_ak = bytes(u'bbbccceee가나', 'utf-8')
+    ... else:
+    ...     data._base64_ak = 'bbbccceee가나'
+    >>> data._prefix('_base64_akakak')
+    'base64'
+    >>> uri = data.urlencode() #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    Exception: The data value must be unicode not bytes.
+
+    >>> data = Data()
+    >>> data._jsonBase64_ak = {'3':'4','5':'6'}
+    >>> string_query = data.urlencode()
+    >>> string_query in ['_jsonBase64_ak=eyIzIjogIjQiLCAiNSI6ICI2In0%3D', '_jsonBase64_ak=eyI1IjogIjYiLCAiMyI6ICI0In0%3D']
+    True
+
+    >>> data.hasPrefix("_jsonBase64_ak")
+    True
+    >>> data.hasPrefix("_jsonBase64ak")
+    False
+    >>> data.hasPrefix("_jsonBase64ak_")
+    False
+
+    >>> key = "_jsonBase64_ak"
+    >>> encode_value = 'ImV5SXpJam9nSWpRaUxDQWlOU0k2SUNJMkluMD0i'
+    >>> data.decode_value(key, encode_value) == 'eyIzIjogIjQiLCAiNSI6ICI2In0='
+    True
+

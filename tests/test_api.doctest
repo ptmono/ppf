@@ -3,7 +3,7 @@
     >>> import os
     >>> import ppf
     >>> from ppf import api
-    >>> from ppf.app import app
+    >>> from app import app
 
     >>> tapp = app.test_client()
 
@@ -40,67 +40,68 @@
     >>> if filep: os.remove(dummy_fullpath)
 
 
-* Comment
+# * Comment
 
-** setup
+# ** setup
 
-    >>> rv = tapp.post('api', data=data) #doctest: +ELLIPSIS
-    >>> rv.status_code
-    200
+#     >>> #Write dummy html
+#     >>> rv = tapp.post('api', data=data) #doctest: +ELLIPSIS
+#     >>> rv.status_code
+#     200
 
-** writeComment
+# ** writeComment
 
-We have to write all arg names
+# We have to write all arg names
 
-    >>> comment_content = api.Data.encode_base64('comment_content')
-    >>> comment_name = api.Data.encode_base64('ptmono')
-    >>> data = {'cmd': 'writeComment',
-    ...         'doc_id': '9999999999',
-    ...         '_base64_content': comment_content,
-    ...         'secure_key': ppf.config.SECURE_KEY,
-    ...         '_base64_name': comment_name,
-    ...         'password': ''}
+#     >>> comment_content = api.Data.encode_base64(u'comment_content'.encode('utf-8'))
+#     >>> comment_name = api.Data.encode_base64(u'ptmono'.encode('utf-8'))
+#     >>> data = {'cmd': 'writeComment',
+#     ...         'doc_id': '9999999999',
+#     ...         '_base64_content': comment_content,
+#     ...         'secure_key': ppf.config.SECURE_KEY,
+#     ...         '_base64_name': comment_name,
+#     ...         'password': ''}
 
-    >>> rv = tapp.post('api', data=data)
-    >>> rv.status_code is 200
-    True
+#     >>> rv = tapp.post('api', data=data)
+#     >>> rv.status_code
 
-    >>> dummy_comment_path = os.path.join(ppf.config.comments_d, '9999999999' + ppf.config.comment_extension)
-    >>> dummy_comment_path
-    '/home/ptmono/Desktop/Documents/ppf/htmls/9999999999.txt'
-    >>> filep = os.path.exists(dummy_comment_path)
-    >>> filep
-    True
+#     >>> dummy_comment_path = os.path.join(ppf.config.comments_d, '9999999999' + ppf.config.comment_extension)
+#     >>> dummy_comment_path
+#     '/home/ptmono/Desktop/Documents/ppf/htmls/9999999999.txt'
+#     >>> filep = os.path.exists(dummy_comment_path)
+#     >>> filep
+#     True
 
-*** getComments
+# *** getComments
 
-    >>> data_getComments = {'cmd': 'getComments',
-    ...                     'doc_id': '9999999999',
-    ...                     'secure_key': ppf.config.SECURE_KEY}
-    >>> rv = tapp.post('api', data=data_getComments)
-    >>> rv.status_code is 200
-    True
+#     >>> data_getComments = {'cmd': 'getComments',
+#     ...                     'doc_id': '9999999999',
+#     ...                     'secure_key': ppf.config.SECURE_KEY}
+#     >>> rv = tapp.post('api', data=data_getComments)
+#     >>> rv.status_code is 200
+#     True
 
-    >>> rv.data #doctest: +ELLIPSIS
-    "{u'1': {u'name': u'ptmono', u'comment_id': u'1', u'content': u'comment_content', u'date': u'...', u'password': u'', u'email': u''}}"
+#     >>> rv.data #doctest: +ELLIPSIS
+#     "{u'1': {u'name': u'ptmono', u'comment_id': u'1', u'content': u'comment_content', u'date': u'...', u'password': u'', u'email': u''}}"
 
-*** deleteComments
-    >>> data_deleteComments = {'cmd': 'deleteComment',
-    ...                        'doc_id': '9999999999',
-    ...                        'comment_id': '1',
-    ...                        'secure_key': ppf.config.SECURE_KEY}
+# *** deleteComments
+#     >>> data_deleteComments = {'cmd': 'deleteComment',
+#     ...                        'doc_id': '9999999999',
+#     ...                        'comment_id': '1',
+#     ...                        'secure_key': ppf.config.SECURE_KEY}
 
-    >>> rv = tapp.post('api', data=data_deleteComments)
-    >>> rv.status_code is 200
-    True
+#     >>> rv = tapp.post('api', data=data_deleteComments)
+#     >>> rv.status_code is 200
+#     True
 
-    >>> rv = tapp.post('api', data=data_getComments)
-    >>> rv.data
-    '{}'
+#     >>> rv = tapp.post('api', data=data_getComments)
+#     >>> rv.data
+#     '{}'
 
-    >>> if filep: os.remove(dummy_comment_path)
+#     >>> if filep: os.remove(dummy_comment_path)
 
 
 ** teardown
 
-    >>> os.remove(dummy_fullpath)
+    >>> dummy_lock_filename = dummy_fullpath
+    >>> if os.path.exists(dummy_fullpath): os.remove(dummy_fullpath)

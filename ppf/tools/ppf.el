@@ -14,9 +14,9 @@
 
 
 ;; Dosen't work with "~"
-(defcustom ppf/root-dir "/home/ptmono/Desktop/Documents/ppf/" "")
+(defcustom ppf/root-dir "/home/ptmono/Desktop/Documents/ppf/ppf/" "")
 (defcustom ppf/post-dir (concat ppf/root-dir "tools/") "")
-(defcustom ppf/publish-dir (concat ppf/root-dir "dbs/") "")
+(defcustom ppf/publish-dir "/home/ptmono/Desktop/Documents/ppf/dbs/" "")
 (defcustom ppf/publish-mode "d-html-derive" "muse-mode publishing style.")
 (defcustom ppf/post-program (concat ppf/post-dir "post.py") "")
 (defcustom ppf/cmd (concat ppf/post-dir "ppf_cmd.py") "")

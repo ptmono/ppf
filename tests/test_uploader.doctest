@@ -1,17 +1,20 @@
 
 
     >>> from common import *
-    >>> from tools.uploader import uploadFile
+    >>> from ppf.tools.uploader import uploadFile
+    >>> from ppf import config
+    >>> from io import open
 
     >>> test_filename = os.path.join(ROOT_PATH, "testttt.testttt")
     >>> test_filename #doctest: +SKIP
     '/home/ptmono/Desktop/Documents/ppf/testttt.testttt'
 
     >>> fd = open(test_filename, 'w')
-    >>> fd.write("aaa")
+    >>> _ = fd.write(u"aaa")
+
     >>> fd.close()
 
-    >>> fd = open(test_filename, 'rb')
+    >>> fd = open(test_filename, 'r')
     >>> print(fd.read())
     aaa
     >>> fd.close()
@@ -25,4 +28,5 @@
     >>> os.path.exists(server_filename)
     True
     >>> os.remove(test_filename)
+
     >>> os.remove(server_filename)

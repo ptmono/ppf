@@ -5,7 +5,7 @@ from dlibs.libs import add_sys_path
 ROOT_PATH = add_sys_path(__file__, subpath=True)
 
 from unittest import TestCase
-from tools.uploader import Uploader, UploadInfoFromConfig
+from ppf.tools.uploader import Uploader, UploadInfoFromConfig
 
 import ppf.config
 from ppf.install import init_db

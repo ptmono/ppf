@@ -8,8 +8,16 @@ import shutil
 
 from io import open
 
+from dlibs.d_os import File
+from dlibs.logger import loggero
+
 from . import config
 from . import libs
+
+try:
+    unicode
+except:
+    unicode = str
 
 
 ERRORP = True
@@ -25,186 +33,27 @@ def ddWarnning(msg):
         print("WARNNING: ", msg)
 
 
-#TODO: consider the use of FileLock, lockfile
+#TODO: Consider use use of FileLock, lockfile
 #Fixme: We need more fast way to read file.
-#TODO: I don't like class File. I need more simple way. Change entirely.
-class File(object):
-    """
-    The class is used to open a file safely. There is two process AA and
-    BB. AA couldn't read the file during BB is writting the _file. AA will
-    wait for the time correlated with lock_wait_time and
-    lock_wait_interval. The time is lock_wait_time * lock_wait_interval.
-
-    """
-    def __init__(self, doc_id, file_type, mode):
-        self.doc_id = str(doc_id)
-        self.file_type = file_type
-        self.mode = mode
-        self.filename = self._setFilename(self.doc_id, self.file_type)
-        self._lock_filename = self._lock_filename()
-        self.lock_wait_count = 0
-        self.lock_wait_time = 5
-        self.lock_wait_interval = 1
-        # We couldn't remove the lock and backup that is created by other
-        # object.
-        self.permission_lockfile = False
-        self.permission_backupfile = False
-        self.fd = None
+#TODO: I don't like This class. I need more simple way. Change entirely.
+class File(File):
+    def __init__(self, doc_id, file_type, mode, lock_interval=1):
+        filename = self._setFilename(str(doc_id), file_type)
+        super(File, self).__init__(filename, mode, lock_interval)
         
-
     def _setFilename(self, doc_id, file_type):
-        if file_type == 'a':
+        if file_type in ['a', 'article']:
             self.filename = config.article_filename(doc_id)
-        elif file_type == 'c':
-            self.filename = config.comment_filename(doc_id)
-        elif file_type == 'i':
+        elif file_type in ['c', 'comment']:
+            self.filename =config.comment_filename(doc_id)
+        elif file_type in ['i', 'index']:
             self.filename = config.index_filename()
-        elif file_type == 'rc':
+        elif file_type in ['rc', 'recent_comment']:
             self.filename = config.recent_comment_filename()
         else:
             raise AttributeError("We require correct mode.")
         return self.filename
-
-    def __call__(self):
-        if self.mode == 'w':
-            return self.write()
-        return self.read()
-
-    def read(self):
-        if not self.fd:
-            self.fd = self._file()
-        return self.fd.read()
-
-    def write(self, content):
-        if not self.fd:
-            self.fd = self._file()
-        self.fd.write(content)
-        
-    def _file(self):
-        try:
-            self._waitUnlock()
-        except IOError:
-            # The server couldn't unlock the file. We can expect there is
-            # an accident with file I/O. We restore the file.
-            # TODO: Log that. Think more about vulnerability.
-            self.restore()
-            self._unlockForce()
-            self._removeBackupForce()
-
-        if self.mode == 'r':
-            self.fd = open(self.filename, self.mode)
-            return self.fd
-            
-        elif self._checkFile():
-            self._lock()
-            self._backup()
-
-        try:
-            fd = open(self.filename, self.mode)
-        except IOError:
-            dirname = self.filename[:self.filename.rfind('/')]
-            os.makedirs(dirname)
-            fd = open(self.filename, self.mode)
-        return fd
-
-    def close(self):
-        # If no self.fd, there is lock file. It means other File object do
-        # not complete IO for the document by accident such as blackout.
-        # It means we will resore the backup file at later. To prevent the
-        # files we use self.permission_lockfile and
-        # self.permission_backupfile.
-        if (self.mode in ['w', 'w+', 'r+', 'a', 'a+']) and self.permission_lockfile and self.permission_backupfile:
-            self._unlockForce()
-            self._removeBackupForce()
-        self.fd.close()
-
-    def _remove(self):
-        "It is not used. Just for test."
-        self.close()
-        os.remove(self.filename)
-
-    def _checkFile(self):
-        return os.path.exists(self.filename)
-
-    def _checkBackupFile(self):
-        filep = os.path.exists(self._backup_filename())
-        if filep:
-            True
-        else:
-            False
-
-    def _backup_filename(self):
-        dirname = os.path.dirname(self.filename)
-        filename = os.path.basename(self.filename)
-        return dirname + "/#" + filename + "#"
-        
-
-    def _backup(self):
-        fd = open(self.filename, 'r')
-        content = fd.read()
-        fd.close()
-
-        # Fixme: Is need error handling?
-        fd = open(self._backup_filename(), 'w')
-        fd.write(content)
-        fd.close()
-        self.permission_backupfile = True
-
-    def _removeBackupForce(self):
-        try:
-            os.remove(self._backup_filename())
-        except OSError:
-            # No such file or directory
-            pass
-
-    def restore(self):
-        filename = self._backup_filename()
-        fd = open(filename, 'r')
-        content = fd.read()
-        fd.close()
-
-        fd = open(filename, 'w')
-        fd.write(content)
-        fd.close()
-        
-    def _lock_filename(self):
-        
-        result = self.filename + ".lock"
-        return result
-
-    def _checkLockp(self):
-        return os.path.exists(self._lock_filename)
-
-    def _lock(self):
-        "Lock the file"
-        self._waitUnlock()
-        fd = open(self._lock_filename, 'w')
-        fd.close()
-        self.permission_lockfile = True
-
-    def _unlockForce(self):
-        try:
-            os.remove(self._lock_filename)
-        except OSError:
-            # No such file or directory
-            pass
-
-    def _waitUnlock(self):
-        """
-        Couldn't unlock the function returns IOError.
-        """
-        if self._checkLockp():
-            while (self.lock_wait_count < self.lock_wait_time):
-                time.sleep(self.lock_wait_interval)
-                if not self._checkLockp():
-                    return True
-                self.lock_wait_count += 1
-            raise IOError("Already exists lock file %s" % self._lock_filename)
-
-
-
-
-
+    
 
 class Tools(object):
 
@@ -486,9 +335,11 @@ class Article(InfoTemplate):
             fd = File(str(doc_id), 'a', 'w')
             fd.write(content)
             fd.close()
-        except:
+        except Exception as err:
             msg = "We couldn't write %s" % doc_id
-            libs.logError(msg)
+            loggero().error(msg)
+            loggero().error(err)
+            raise Exception(err)
 
     def set(self, doc_id):
         "The object have to contains the id of document to be used with Articles."
@@ -579,11 +430,11 @@ class Articles(InfosTemplate):
         return comment
 
     def set(self):
-        fd = open(self.db_filename, 'r')
-        content = fd.read()
         try:
+            fd = open(self.db_filename, 'r')
+            content = fd.read()
             json_load = json.loads(content)
-        except ValueError:
+        except (ValueError, IOError, OSError):
             json_load = {}
 
         self.setFromDict(json_load)
