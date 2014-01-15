@@ -11,7 +11,6 @@ app = Flask(__name__)
 app.debug = True
 cache = Cache(app, config={'CACHE_TYPE': 'null'})
 
-
 from ppf import config
 from ppf import api
 from ppf.viewer import ViewHome, ViewId, ViewAll
@@ -25,8 +24,6 @@ from werkzeug import SharedDataMiddleware
 
 from dnews.scraper		import Scraper
 from dScraper.container.saramin import SaraminItModel
-
-print(config.htmls_d)
 
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/medias':	config.medias_d,

@@ -1,0 +1,10 @@
+flask
+Flask-Cache==0.12
+beautifulsoup4
+django
+sqlalchemy
+requests
+lxml
+cssselect
+markupsafe
+jinja2
