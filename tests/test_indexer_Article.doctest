@@ -6,7 +6,7 @@
     >>> # get new article
     >>> aObj = Article()
     >>> aObj.set(1201191546)
-    >>> aObj.setFromId("akkk")
+    >>> aObj.setFromId("akkk") #doctest: +SKIP
     WARNNING:  AttributeError("'NoneType' object has no attribute 'group'",)
     We couldn't fine key and value in the document. doc_id is akkk
     >>> aObj.setFromId("0705241422") #doctest: +SKIP

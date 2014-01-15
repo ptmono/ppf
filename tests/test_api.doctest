@@ -13,8 +13,8 @@
     >>> rv = tapp.post('api', data=data)
     >>> rv.status_code is 200
     True
-    >>> rv.data
-    'denied'
+    >>> rv.data in ['denied1', b'denied1']
+    True
 
 
 * writeArticle
@@ -31,6 +31,9 @@
     >>> rv = tapp.post('api', data=data) #doctest: +ELLIPSIS
     >>> rv.status_code is 200
     True
+    >>> rv.data in ['ok', b'ok']
+    True
+
     >>> dummy_fullpath = ppf.config.article_filename('9999999999')
     >>> dummy_fullpath #doctest: +SKIP
     '/home/ptmono/Desktop/Documents/ppf/htmls/9999999999.html'
@@ -40,37 +43,62 @@
     >>> if filep: os.remove(dummy_fullpath)
 
 
-# * Comment
+* Comment
 
-# ** setup
+** setup
 
-#     >>> #Write dummy html
-#     >>> rv = tapp.post('api', data=data) #doctest: +ELLIPSIS
-#     >>> rv.status_code
-#     200
+    >>> #Write dummy html
+    >>> rv = tapp.post('api', data=data) #doctest: +ELLIPSIS
+    >>> rv.status_code
+    200
 
-# ** writeComment
+** writeComment
 
-# We have to write all arg names
+We have to write all arg names
 
-#     >>> comment_content = api.Data.encode_base64(u'comment_content'.encode('utf-8'))
-#     >>> comment_name = api.Data.encode_base64(u'ptmono'.encode('utf-8'))
-#     >>> data = {'cmd': 'writeComment',
-#     ...         'doc_id': '9999999999',
-#     ...         '_base64_content': comment_content,
-#     ...         'secure_key': ppf.config.SECURE_KEY,
-#     ...         '_base64_name': comment_name,
-#     ...         'password': ''}
 
-#     >>> rv = tapp.post('api', data=data)
-#     >>> rv.status_code
+*** no article
 
-#     >>> dummy_comment_path = os.path.join(ppf.config.comments_d, '9999999999' + ppf.config.comment_extension)
-#     >>> dummy_comment_path
-#     '/home/ptmono/Desktop/Documents/ppf/htmls/9999999999.txt'
-#     >>> filep = os.path.exists(dummy_comment_path)
-#     >>> filep
-#     True
+    >>> dummy_doc_id = '9999999999'
+
+    >>> comment_content = api.Data.encode_base64(u'comment_content')
+    >>> comment_name = api.Data.encode_base64(u'ptmono')
+    >>> data = {'cmd': 'writeComment',
+    ...         'doc_id': dummy_doc_id,
+    ...         '_base64_content': comment_content,
+    ...         'secure_key': ppf.config.SECURE_KEY,
+    ...         '_base64_name': comment_name,
+    ...         'password': ''}
+
+    >>> #There is no the article that has dummy_doc_id. This will return 500
+    >>> rv = tapp.post('api', data=data)
+    >>> rv.status_code
+    500
+
+    >>> dummy_comment_path = os.path.join(ppf.config.comments_d, '9999999999' + ppf.config.comment_extension)
+    >>> dummy_comment_path ==  u'/home/ptmono/Desktop/Documents/ppf/htmls/9999999999.txt'
+    True
+    >>> filep = os.path.exists(dummy_comment_path)
+    >>> filep
+    False
+
+To write comment, we need article
+
+    >>> base64_content = api.Data.encode_base64('content')
+
+    >>> data = {'cmd': 'writeArticle',
+    ...         'doc_id': dummy_doc_id,
+    ...         'secure_key': ppf.config.SECURE_KEY,
+    ...         '_base64_content': base64_content}
+
+    >>> rv = tapp.post('api', data=data) #doctest: +ELLIPSIS
+    >>> dummy_fullpath = ppf.config.article_filename(dummy_doc_id)
+    >>> dummy_fullpath #doctest: +SKIP
+    '/home/ptmono/Desktop/Documents/ppf/htmls/9999999999.html'
+    >>> filep = os.path.exists(dummy_fullpath)
+    >>> filep
+    True
+
 
 # *** getComments
 
@@ -103,5 +131,12 @@
 
 ** teardown
 
-    >>> dummy_lock_filename = dummy_fullpath
-    >>> if os.path.exists(dummy_fullpath): os.remove(dummy_fullpath)
+    >>> try:
+    ...     if os.path.exists(dummy_fullpath): os.remove(dummy_fullpath)
+    ...     dummy_lock_filename = dummy_fullpath + '.lock'
+    ...     if os.path.exists(dummy_lock_filename):
+    ...         print('Dectected lockfile')
+    ...         os.remove(dummy_lock_filename)
+    ... except:
+    ...     pass
+

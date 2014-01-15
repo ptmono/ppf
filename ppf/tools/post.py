@@ -254,8 +254,8 @@ def updateArticle(doc_id):
     articles.save()
 
     # Server side need both index and html.
-    writeArticle(doc_id, html)
     updateIndex(doc_id, index)
+    writeArticle(doc_id, html)
     if files:
         updateFiles(files)
     

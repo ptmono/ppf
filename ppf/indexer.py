@@ -372,9 +372,8 @@ class Article(InfoTemplate):
                 value = matchobj.group(2)
             except AttributeError as err:
                 # There is no key and value in article
-                ddWarnning(repr(err) + "\n" + \
-                               "We couldn't fine key and value in the document. doc_id is " + \
-                               doc_id)
+                msg = repr(err) + "\nWe couldn't fine key and value in the document. doc_id is " + doc_id
+                loggero().warning(msg)
                 continue
             result[key] = value
 
@@ -461,6 +460,9 @@ class Articles(InfosTemplate):
         result.doc_id = doc_num
         result.setFromDict(json_dict)
         return result
+
+    def is_article(self, doc_num):
+        return self.article(doc_num)
 
     def updateFromObj(self, obj):
         if not obj.doc_id:

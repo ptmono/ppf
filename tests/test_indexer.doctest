@@ -4,11 +4,11 @@
     >>> import ppf
 
     >>> from werkzeug.datastructures import ImmutableMultiDict
-    >>> imdict = ImmutableMultiDict([('content', 'aaa'), ('doc_id', '0000000001'), ('name', 'bb')])
+    >>> imdict = ImmutableMultiDict([('content', u'aaa'), ('doc_id', u'0000000001'), ('name', u'bb')])
     >>> comment = Comment()
     >>> comment.setFromDict(imdict)
-    >>> comment
-    {'name': 'bb', 'comment_id': '', 'content': 'aaa', 'date': '', 'password': '', 'email': ''}
+    >>> comment == {'name': u'bb', 'comment_id': '', 'content': u'aaa', 'date': '', 'password': '', 'email': ''}
+    True
 
 
 * Article
@@ -28,7 +28,7 @@
 
     >>> dummy_name = '9999999999.html'
     >>> dummy_full_path = os.path.join(ppf.config.htmls_d, dummy_name)
-    >>> article.writeHtml('9999999999', 'aaa')
+    >>> article.writeHtml('9999999999', u'aaa')
     >>> isfile = os.path.exists(dummy_full_path)
     >>> isfile
     True
@@ -37,4 +37,3 @@
     ...     os.remove(dummy_full_path)
     >>> os.path.exists(dummy_full_path)
     False
-

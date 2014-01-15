@@ -76,3 +76,21 @@ def destroy():
 
     # Init index.json
     #init_db()
+
+class FileConvenientMixIn(object):
+
+    def getFiles(self, file):
+        return [file.filename, file.lock_filename, file.backup_filename]
+
+    def fileExistsp(self, file):
+        for f in self.getFiles(file):
+            self.assertTrue(ope(f))
+
+    def fileNotExistsp(self, file):
+        for f in self.getFiles(file):
+            self.assertFalse(ope(f))
+
+    def removeFiles(self, file):
+        for f in self.getFiles(file):
+            if os.path.exists(f):
+                os.remove(f)

@@ -64,6 +64,7 @@ def article_all():
 def use_api():
     return api.main_wsgi(request)
 
+
 @app.route('/writecomment', methods=["POST"])
 def write_comment():
 

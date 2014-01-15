@@ -84,6 +84,7 @@ from .indexer import Article, Articles, Comments, Comment
 from . import html_messages as hm
 
 from dlibs.structures.dict import DictTypeAMixIn
+from dlibs.logger import loggero
 
 #if config.LOCAL_TEST:
 import cgitb
@@ -259,12 +260,18 @@ def deleteComment(doc_id, comment_id):
     "Delete comment for an article."
     try:
         Comments.delete(doc_id, comment_id)
-        return 'ok'
+        return u'ok'
     except:
         abort(500)
 
 def writeComment(doc_id, _base64_content, _base64_name='', password=''):
 
+    articles = Articles()
+    if not articles.is_article(doc_id):
+        loggero().info(doc_id)
+        
+        abort(500)
+    
     try:    
         comment = Comment()
         comment.date = time.strftime("%m/%d|%y", time.localtime())
@@ -275,7 +282,7 @@ def writeComment(doc_id, _base64_content, _base64_name='', password=''):
         comments = Comments(doc_id)
         comments.updateFromObj(comment)
         comments.save()
-        return 'ok'
+        return u'ok'
     except:
         abort(500)
 
@@ -285,7 +292,7 @@ def writeArticle(doc_id, _base64_content):
     article = Article()
     article.writeHtml(doc_id, _base64_content)
 
-    return 'ok'
+    return u'ok'
 
 def updateIndex(doc_id, _jsonBase64_dict):
     "Used to add/modify the table of articles."
@@ -297,6 +304,8 @@ def updateIndex(doc_id, _jsonBase64_dict):
     articles.set()
     articles.updateFromObj(article)
     articles.save()
+
+    loggero().info('aaaac')
 
     print("Content-type: text/html\n\n")
     print("OK")
@@ -356,8 +365,8 @@ def main():
 
     form = cgi.FieldStorage()
     try: secure_key = form['secure_key'].value
-    except: return "denied"
-    if not checkSecureKey(secure_key): return "denied"
+    except: return u"denied"
+    if not checkSecureKey(secure_key): return u"denied"
 
     if form.has_key('cmd'):
         data = Data()
@@ -388,39 +397,43 @@ class _Executor(object):
     def __init__(self, request):
         self.form = request.form
 
-    def is_validate(self, request):
-        try: secure_key = self.form['secure_key']
+    def is_validate(self, form):
+        try: secure_key = form['secure_key']
         except: return False
 
         if not checkSecureKey(secure_key):
             return False
 
         try:
-            self.cmd = self.form['cmd']
+            self.cmd = form['cmd']
             self.cmd = eval(self.cmd)
         except:
             return False
+        return True
 
     def execute(self):
-        if not self.is_validate(self.request):
-            return
+        if not self.is_validate(self.form):
+            return u'denied1'
 
         # Get the arguments of function
-        spec = inspect.getargspec(cmd)
+        spec = inspect.getargspec(self.cmd)
+        data = Data()
+        values = []
 
         for arg in spec.args:
             try:
-                value = form[arg]
-            except: return
+                value = self.form[arg]
+            except: return u'denied2'
 
             if data.hasPrefix(arg): value = data.decode_value(arg, value)
             values.append(value)
 
-            try:
-                result = apply(cmd, values)
-            except IOError as err:
-                config.logger.error(str(err))
-                return
+        try:
+            result = self.cmd(*values)
+        except IOError as err:
+            config.logger.error(str(err))
+            return u'denied3'
+
         return result
             
         
