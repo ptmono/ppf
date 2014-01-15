@@ -1,18 +1,20 @@
 #!/usr/bin/python
 # coding: utf-8
 
+from __future__ import unicode_literals
 from ftplib import FTP, error_perm
 import os
 import re
 import getpass
 import sys
 import shutil
+from io import open
 
 __current_abpath = os.path.realpath(os.path.dirname(__file__)) + "/"
 ROOT_PATH = os.path.dirname(os.path.dirname(__current_abpath))
 
-if ROOT_PATH not in sys.path:
-    sys.path.insert(0, ROOT_PATH)
+# if ROOT_PATH not in sys.path:
+#     sys.path.insert(0, ROOT_PATH)
 
 from ppf import config
 from ppf.install		import init_db
@@ -22,81 +24,6 @@ from dlibs.d_os		import recursive_glob2
 # Consider: How about to use ftptool?
 class UFTP(FTP):
     '''
-    # TODO: Error control. FTP has no exception for bad address
-    >>> #ftp_fails = UFTP("aa", "bb", "bb")
-
-    >>> host = config.server_host
-    >>> user = config.server_user_id
-    >>> passwd = config.server_passwd
-    >>> ftp = UFTP(host, user, passwd)
-    >>> path = "/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu/ync/tny/kkc"
-
-    >>> ftp.mkd('/home')			#doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    error_perm: 550 Create directory operation failed.
-    
-    >>> # exists
-    >>> ########
-    >>> ftp.exists("/abs")
-    False
-
-    >>> # _directoryInfo
-    >>> ################
-    >>> d_info = ftp._directoryInfo(path)
-    >>> d_info
-    [46, 42, 38, 34, 27, 20, 12, 5, 0]
-
-    >>> # _exists_level
-    >>> ###############
-    >>> d_level = ftp._exists_level(path, d_info)
-    >>> d_level
-    6
-    >>> path[:d_info[d_level]]
-    '/home/ptmono'
-
-    >>> path2 = '/aaa/bbb/ccc/ddd'
-    >>> d_info2 = ftp._directoryInfo(path2)
-    >>> ftp._exists_level(path2, d_info2)
-    3
-
-    >>> ftp.dirs_not_exists(path)
-    ['/home/ptmono/aaaauuu', '/home/ptmono/aaaauuu/bbbccc', '/home/ptmono/aaaauuu/bbbccc/nnnyyy', '/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu', '/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu/ync', '/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu/ync/tny', '/home/ptmono/aaaauuu/bbbccc/nnnyyy/icu/ync/tny/kkc']
-    >>> ftp.dirs_not_exists('/home/ptmono/')
-    []
-    >>> ftp.dirs_not_exists('/home/ptmono')
-    []
-    >>> ftp.dirs_not_exists('/home/')
-    []
-    >>> ftp.dirs_not_exists('/home/ptmono/abc')
-    ['/home/ptmono/abc']
-    >>> ftp.dirs_not_exists('/home/ptmono/abc', is_dir=False)
-    []
-
-    >>> ftp._d_mkds(path)
-    >>> os.removedirs(path)
-
-    ### === Upload
-    ### __________________________________________________________
-    >>> server_path = "/home/ptmono/anan/ccd"
-    >>> ftp.upload(server_path, UploadInfoCommon._getFileListFromListFile('installer_file_list'))
-
-    >>> client_filename = ROOT_PATH + "/teest.bbcsyn"
-    >>> server_filename = server_path + "/teest.bbcsyn"
-    >>> fd = open(client_filename, 'w')
-    >>> fd.write("aaa")
-    >>> fd.close()
-
-    >>> ftp.upload(server_path, client_filename)
-    >>> # Check server side file
-    >>> fd = open(server_filename)
-    >>> print(fd.read())
-    aaa
-    >>> fd.close()
-    >>> os.remove(client_filename)
-
-    >>> dummy = '/home/ptmono/Desktop/Documents/works/0cvs/trunk/ppf/files/dummy_upload.file'
-    >>> shutil.rmtree(path[:path.rfind("/")], ignore_errors=True)
-
     '''
 
     def d_cwd(self, dirname):
@@ -178,7 +105,7 @@ class UFTP(FTP):
         permission = os.stat(ab_filename)
         permission_chmod = oct(permission.st_mode)[3:]
         try:
-            fd = open(ab_filename, 'rb')
+            fd = open(ab_filename, 'r')
         except IOError as err:
             # Is a directory error
             # Just create directory
@@ -245,7 +172,7 @@ class UFTP(FTP):
             permission = os.stat(ab_filename)
             permission_chmod = oct(permission.st_mode)[3:]
             try:
-                fd = open(ab_filename, 'rb')
+                fd = open(ab_filename, 'r')
             except IOError as err:
                 # Is a directory error
                 # Just create directory

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
+from __future__ import unicode_literals
 import os.path
 from os.path import dirname, abspath, realpath
 import sys
@@ -188,15 +189,15 @@ gmail_password = ''
 
 
 try:
-    import config_priv
+    from . import config_priv
     usr_root		= config_priv.url_root
-    url_api			= config_priv.url_api
+    url_api		= config_priv.url_api
     server_host 	= config_priv.server_host
     server_user_id	= config_priv.server_user_id
     server_passwd	= config_priv.server_passwd
     server_root_directory = config_priv.server_root_directory
     
-except:
+except Exception as err:
     usr_root		= ''
     url_api			= ''
     server_host 	= ''
@@ -214,7 +215,7 @@ original_images_directory = '~/.emacs.d/imgs/'
 original_files_directory = '/home/ptmono/files/'
 
 
-list_of_files_to_be_installed = root_abpath + 'tools/' + 'installer_file_list'
+list_of_files_to_be_installed = os.path.join(root_abpath, 'ppf/tools', 'installer_file_list')
 
 
 ### for install

@@ -1,0 +1,31 @@
+    >>> from common import *
+    >>> from ppf.tools.post import root_abpath, API
+    >>> from ppf.api import Data
+    >>> from ppf import config
+
+    >>> root_abpath == u'/home/ptmono/Desktop/Documents/ppf'
+    True
+
+
+
+* class API
+
+    >>> data = Data()
+    >>> data.doc_id = '111'
+    >>> api = API(data) #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    AttributeError:
+
+    >>> data.cmd = 'deleteComment'
+    >>> api = API(data) #doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    AttributeError: 'Data' object has no attribute 'comment_id'
+
+    >>> data.cmd = "deleteComment"
+    >>> data.comment_id = '3'
+    >>> data.etccccc = 'uuuqqq'
+    >>> api = API(data)
+    >>> api.required_data #doctest: +SKIP
+    {'comment_id': '3', 'cmd': 'deleteComment', 'doc_id': '111'}
+    >>> api.required_data.urlencode() #doctest: +SKIP
+    'comment_id=3&cmd=deleteComment&doc_id=111'

@@ -1,0 +1,9 @@
+
+    >>> from common import *
+    >>> from ppf import config
+
+    >>> config.root_abpath == u'/home/ptmono/Desktop/Documents/ppf'
+    True
+
+
+

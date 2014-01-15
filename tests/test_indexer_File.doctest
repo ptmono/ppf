@@ -3,51 +3,54 @@
     >>> from ppf import config
 
     >>> aa = File('1109042210', 'a', 'w')
-    >>> aa._backup_filename() #doctest: +SKIP
-    '/.../#1109042210.html#'
-    >>> aa._checkBackupFile() #doctest: +SKIP
-    >>> aa._checkFile() #doctest: +SKIP
+    >>> aa._backup_filename() #doctest: +ELLIPSIS
+    u'/.../#1109042210.html#'
+    >>> aa._checkBackupFile()
+    >>> aa._checkFile()
+    True
 
     >>> aa.write(u'ttuuaa')
     >>> aa.close()
 
-    >>> aa = File('1109042210', 'a', 'r')
-    >>> content = aa.read()
-    >>> content == 'ttuuaa'
-    True
-    >>> aa._remove()
-
-    >>> config.htmls_d = config.root_abpath + 'htmlstest/'
-    >>> aa = File('1111111112', 'a', 'w')
-    >>> aa.write(u'fjskdf')
-    >>> path = aa.filename[:aa.filename.rfind('/')]
-    >>> shutil.rmtree(path, ignore_errors=True)
+    # >>> aa = File('1109042210', 'a', 'r')
+    # >>> content = aa.read()
+    # >>> content == u'ttuuaa'
+    # True
+    # >>> aa._remove()
 
 
-    === Test file lock
-    __________________
-    >>> doc_id = 1111111111
-    >>> file_type = 'a'
-    >>> mode = 'w'
-    >>> file1 = File(doc_id, file_type, mode)
-    >>> #print(file1)
-    >>> file1.write(u'bbc')
-    >>> #os.path.exists(file1._lock_filename())
+    # >>> config.htmls_d = config.root_abpath + 'htmlstest/'
+    # >>> aa = File('1111111112', 'a', 'w')
+    # >>> aa.write(u'fjskdf')
+    # >>> path = aa.filename[:aa.filename.rfind('/')]
+    # >>> print(path)
+    # >>> #shutil.rmtree(path, ignore_errors=True)
 
-    ### === Recently comment
-    ### __________________________________________________________
-    >>> content = u"13011103471\\n"
-    >>> file2 = File(None, 'rc', 'a+')
-    >>> file2.write(content)
-    >>> file2.close()
 
-    >>> content = u"99011103471\\n"
-    >>> file2 = File(None, 'rc', 'a+')
-    >>> file2.write(content)
-    >>> file2.close()
+    # === Test file lock
+    # __________________
+    # >>> doc_id = 1111111111
+    # >>> file_type = 'a'
+    # >>> mode = 'w'
+    # >>> file1 = File(doc_id, file_type, mode)
+    # >>> #print(file1)
+    # >>> file1.write(u'bbc')
+    # >>> #os.path.exists(file1._lock_filename())
 
-    >>> file2 = File(None, 'rc', 'r')
-    >>> file2.read() == '13011103471\\n99011103471\\n'
-    True
+    # ### === Recently comment
+    # ### __________________________________________________________
+    # >>> content = u"13011103471\\n"
+    # >>> file2 = File(None, 'rc', 'a+')
+    # >>> file2.write(content)
+    # >>> file2.close()
 
-    >>> file2._remove()
+    # >>> content = u"99011103471\\n"
+    # >>> file2 = File(None, 'rc', 'a+')
+    # >>> file2.write(content)
+    # >>> file2.close()
+
+    # >>> file2 = File(None, 'rc', 'r')
+    # >>> file2.read() == '13011103471\\n99011103471\\n'
+    # True
+
+    # >>> file2._remove()

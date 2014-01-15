@@ -30,13 +30,6 @@ app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/files':	config.files_d
     })
 
-def get_ppfjob_orms():
-    scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScraper/dScrapper/dbs/SaraminIt.sqlite")    
-    orms = scraper.session.query(scraper.mapped_class).all()
-    orms.reverse()
-    return orms
-
-
 @app.route('/home')
 @app.route('/')
 @cache.memoize(3000)
@@ -69,6 +62,7 @@ def article_all():
 @app.route('/api', methods=["POST"])
 def use_api():
     return api.main_wsgi(request)
+
 
 @app.route('/writecomment', methods=["POST"])
 def write_comment():

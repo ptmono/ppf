@@ -67,6 +67,7 @@ data._jsonbase64_dict = s
 data.urlencode()
 
 """
+from __future__ import unicode_literals
 import sys
 import os
 import time
@@ -81,6 +82,9 @@ from . import config
 from . import libs
 from .indexer import Article, Articles, Comments, Comment
 from . import html_messages as hm
+
+from dlibs.structures.dict import DictTypeAMixIn
+from dlibs.logger import loggero
 
 #if config.LOCAL_TEST:
 import cgitb
@@ -115,30 +119,16 @@ class Key(object):
     def _ourMsg(self, msg):
         return msg[:100]
 
-
-
-
-class DataBasic(object):
+    
+class DataBasic(DictTypeAMixIn):
     """
     The class creates the query string. The field and value is assigned.
 
-    The class is related with api module. The api module has the
+    The class is related to the api module. The api module has the
     functions. Each function has arguments. If the argument has "base64_"
     _prefix, then self.encode function will encode the data with the
     base64 encoder.
 
-    >>> data = DataBasic()
-    >>> data.doc_id = '123'
-    >>> data.comment_id = '5555'
-    >>> data.urlencode()
-    'comment_id=5555&doc_id=123'
-    >>> data
-    {'comment_id': '5555', 'doc_id': '123'}
-
-    >>> # Remove item
-    >>> data.pop('doc_id')
-    >>> data
-    {'comment_id': '5555'}
     """
     prefix_list = []
     function_prefix_of_encode = ''
@@ -153,12 +143,12 @@ class DataBasic(object):
     def urlencode(self):
         "Return the encoded string query."
         origin = self.__dict__
-        self.encode()
+        data = self.__encode(self.__dict__)
         result = urlencode(self.__dict__)
         self.__dict__ = origin
         return result
 
-    def encode(self):
+    def __encode(self, data):
         for key in self.__dict__:
             prefix = self._prefix(key)
             if prefix in self.prefix_list:
@@ -166,7 +156,7 @@ class DataBasic(object):
                 value = self.__dict__[key]
                 self.__dict__[key] = encoder(value)
 
-    def decode(self):
+    def __decode(self):
         for key in self.__dict__:
             prefix = self._prefix(key)
             if prefix in self.prefix_list:
@@ -174,6 +164,7 @@ class DataBasic(object):
                 value = self.__dict__[key]
                 self.__dict__[key] = decoder(value)
 
+    @classmethod
     def _prefix(self, key):
         """
         Find the prefix of the key. The prefix start underbar and end
@@ -185,6 +176,7 @@ class DataBasic(object):
         end_point = key.find('_', start_point)
         return key[start_point:end_point]
 
+    @classmethod
     def hasPrefix(self, key):
         check_prefix = key.find('_')
         if not check_prefix == 0:
@@ -195,62 +187,62 @@ class DataBasic(object):
             return False
         return True
 
+    @classmethod
+    def toByte(self, value):
 
+        try:
+            return value.encode('utf-8')
+        except(UnicodeDecodeError, AttributeError):
+            raise Exception("The data value must be unicode not bytes.")
+
+    @classmethod
+    def toUnicode(self, value):
+        return value.decode('utf-8')
+            
+
+# We use only the text(unicode) string. base64 uses the byte string. json
+# uses text(unicode) string.
 class Data(DataBasic):
-    """
-
-    >>> data = Data()
-    >>> data._base64_ak = 'bbbccceee가나'
-    >>> data._prefix('_base64_akakak')
-    'base64'
-    >>> data.urlencode()
-    '_base64_ak=YmJiY2NjZWVl6rCA64KY'
-
-    >>> data = Data()
-    >>> data._jsonBase64_ak = {'3':'4','5':'6'}
-    >>> string_query = data.urlencode()
-    >>> string_query
-    '_jsonBase64_ak=eyIzIjogIjQiLCAiNSI6ICI2In0%3D'
-    >>> data
-    {'_jsonBase64_ak': 'eyIzIjogIjQiLCAiNSI6ICI2In0='}
-    >>> data.encode()
-    >>> data.__dict__
-    {'_jsonBase64_ak': 'ImV5SXpJam9nSWpRaUxDQWlOU0k2SUNJMkluMD0i'}
-    >>> data.decode()
-    >>> data.__dict__
-    {'_jsonBase64_ak': u'eyIzIjogIjQiLCAiNSI6ICI2In0='}
-
-    >>> data.hasPrefix("_jsonBase64_ak")
-    True
-    >>> data.hasPrefix("_jsonBase64ak")
-    False
-    >>> data.hasPrefix("_jsonBase64ak_")
-    False
-
-    >>> key = "_jsonBase64_ak"
-    >>> encode_value = 'ImV5SXpJam9nSWpRaUxDQWlOU0k2SUNJMkluMD0i'
-    >>> data.decode_value(key, encode_value)
-    u'eyIzIjogIjQiLCAiNSI6ICI2In0='
-    """
     prefix_list = ['base64', 'jsonBase64']
     function_prefix_of_encode = "encode_"
     function_prefix_of_decode = "decode_"
 
     @classmethod
     def encode_base64(self, s):
+        """ s will be always unicode.
+        Return byte.
+        """
+        s = self.toByte(s)
         return base64.b64encode(s)
 
     @classmethod
     def decode_base64(self, s):
-        return base64.b64decode(s)
+        """ s always pass encode_base64. So the type of s is byte.
+        Return text(unicode).
+        """
+        result = base64.b64decode(s)
+        result = self.toUnicode(result)
+        return result
 
     @classmethod
     def encode_jsonBase64(self, s):
-        return base64.b64encode(json.dumps(s))
+        """ s will be always unicode.
+        Return byte.
+        """
+        s = json.dumps(s)
+        s = self.toByte(s)
+        return base64.b64encode(s)
 
     @classmethod
     def decode_jsonBase64(self, s):
-        return json.loads(base64.b64decode(s))
+        """ s always pass encode_jsonBase64. So the type of s is byte.
+        Return text(unicode).
+        """
+        result = base64.b64decode(s) # byte
+        # json requires unicode
+        result = self.toUnicode(result)
+        result = json.loads(result)
+        return result
 
     def decode_value(self, key, value):
         result = None
@@ -260,7 +252,6 @@ class Data(DataBasic):
             result = decoder(value)
         return result
 
-
 def getComments(doc_id):
     comments = Comments(doc_id)
     return str(comments)
@@ -269,12 +260,18 @@ def deleteComment(doc_id, comment_id):
     "Delete comment for an article."
     try:
         Comments.delete(doc_id, comment_id)
-        return 'ok'
+        return u'ok'
     except:
         abort(500)
 
 def writeComment(doc_id, _base64_content, _base64_name='', password=''):
 
+    articles = Articles()
+    if not articles.is_article(doc_id):
+        loggero().info(doc_id)
+        
+        abort(500)
+    
     try:    
         comment = Comment()
         comment.date = time.strftime("%m/%d|%y", time.localtime())
@@ -285,7 +282,7 @@ def writeComment(doc_id, _base64_content, _base64_name='', password=''):
         comments = Comments(doc_id)
         comments.updateFromObj(comment)
         comments.save()
-        return 'ok'
+        return u'ok'
     except:
         abort(500)
 
@@ -295,7 +292,7 @@ def writeArticle(doc_id, _base64_content):
     article = Article()
     article.writeHtml(doc_id, _base64_content)
 
-    return 'ok'
+    return u'ok'
 
 def updateIndex(doc_id, _jsonBase64_dict):
     "Used to add/modify the table of articles."
@@ -307,6 +304,8 @@ def updateIndex(doc_id, _jsonBase64_dict):
     articles.set()
     articles.updateFromObj(article)
     articles.save()
+
+    loggero().info('aaaac')
 
     print("Content-type: text/html\n\n")
     print("OK")
@@ -366,8 +365,8 @@ def main():
 
     form = cgi.FieldStorage()
     try: secure_key = form['secure_key'].value
-    except: return "denied"
-    if not checkSecureKey(secure_key): return "denied"
+    except: return u"denied"
+    if not checkSecureKey(secure_key): return u"denied"
 
     if form.has_key('cmd'):
         data = Data()
@@ -393,41 +392,58 @@ def main():
     return
 
 
-def main_wsgi(request):
+class _Executor(object):
 
-    config.logger.debug('aaa')
-    
+    def __init__(self, request):
+        self.form = request.form
 
-    form = request.form
-    try: secure_key = form['secure_key']
-    except: return "denied"
+    def is_validate(self, form):
+        try: secure_key = form['secure_key']
+        except: return False
 
-    if not checkSecureKey(secure_key): return "denied"
+        if not checkSecureKey(secure_key):
+            return False
 
-    if form.has_key('cmd'):
-        data = Data()
-        values = []
-        scmd = form['cmd']
-        # Get comment object
-        try: cmd = eval(scmd)
-        except: return
+        try:
+            self.cmd = form['cmd']
+            self.cmd = eval(self.cmd)
+        except:
+            return False
+        return True
+
+    def execute(self):
+        if not self.is_validate(self.form):
+            return u'denied1'
 
         # Get the arguments of function
-        spec = inspect.getargspec(cmd)
-        #try:
+        spec = inspect.getargspec(self.cmd)
+        data = Data()
+        values = []
+
         for arg in spec.args:
-            value = form[arg]
-            # Encode
+            try:
+                value = self.form[arg]
+            except: return u'denied2'
+
             if data.hasPrefix(arg): value = data.decode_value(arg, value)
             values.append(value)
 
         try:
-            msg = apply(cmd, values)
+            result = self.cmd(*values)
         except IOError as err:
             config.logger.error(str(err))
-            return "false"
-            
-    return msg
+            return u'denied3'
 
+        return result
+            
+        
+        
+        
+
+def main_wsgi(request):
+
+    manager = _Executor(request)
+    return manager.execute()
+    
 if __name__ == "__main__":
     main()

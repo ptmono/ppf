@@ -1,34 +1,39 @@
 #!/usr/bin/python
 # coding: utf-8
 
-
+from __future__ import unicode_literals
 import os, sys
 import re
-from urllib2 import urlopen, Request
+
+try:
+    from urllib2 import urlopen, Request
+except:
+    from urllib.request import urlopen, Request
+    unicode = str
 import hmac
 import inspect
 import json
+from io import open
 
 __current_abpath = os.path.realpath(os.path.dirname(__file__)) + "/"
-root_abpath = os.path.dirname(os.path.dirname(__current_abpath))
+root_abpath = os.path.dirname(os.path.dirname(os.path.dirname(__current_abpath)))
 
 if root_abpath not in sys.path:
     sys.path.insert(0, root_abpath)
-    
+
 from ppf import api
 from ppf import config
 from ppf.api import Data
 from ppf import libs
 from ppf.indexer import Index, Article, Articles
-from tools.uploader import uploadFile
-
+from ppf.tools.uploader import uploadFile
 
 class MuseArticle(object):
     def __init__(self, doc_id):
         self.doc_id = doc_id
         self.filename = config.muses_d + str(doc_id) + config.muse_extension
         self.filename_html = config.muses_d + str(doc_id) + config.html_extension
-        fd = file(self.filename, 'r')
+        fd = open(self.filename, 'r')
         self.content = self.__replace_home(fd.read()) # The default is absolute path
         fd.close()
 
@@ -61,7 +66,7 @@ class MuseArticle(object):
 
     @classmethod
     def getHtmlBody(self, filename):
-        fd = file(filename, 'r')
+        fd = open(filename, 'r')
         content = fd.read()
         fd.close()
 
@@ -80,7 +85,7 @@ class MuseArticle(object):
     @staticmethod
     def getFullHtml(doc_id):
         filename = config.muses_d + str(doc_id) + config.html_extension
-        fd = file(filename, 'r')
+        fd = open(filename, 'r')
         content = fd.read()
         fd.close()
         try:
@@ -182,25 +187,6 @@ class API(object):
     create the arguments we use the class Data. The returned result is the
     returned result of urllib2.urlopen.
 
-    >>> data = Data()
-    >>> data.doc_id = '111'
-    >>> api = API(data) #doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    AttributeError:
-
-    >>> data.cmd = 'deleteComment'
-    >>> api = API(data) #doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    AttributeError: 'Data' object has no attribute 'comment_id'
-
-    >>> data.cmd = "deleteComment"
-    >>> data.comment_id = '3'
-    >>> data.etccccc = 'uuuqqq'
-    >>> api = API(data)
-    >>> api.required_data #doctest: +SKIP
-    {'comment_id': '3', 'cmd': 'deleteComment', 'doc_id': '111'}
-    >>> api.required_data.urlencode() #doctest: +SKIP
-    'comment_id=3&cmd=deleteComment&doc_id=111'
     """
     url = config.url_api
 
@@ -268,9 +254,8 @@ def updateArticle(doc_id):
     articles.save()
 
     # Server side need both index and html.
-    print 'hhhhh' + html
-    writeArticle(doc_id, html)
     updateIndex(doc_id, index)
+    writeArticle(doc_id, html)
     if files:
         updateFiles(files)
     
@@ -382,7 +367,7 @@ def updateFile(filename, _base64_content):
 def updateFiles(files):
     'Update files from the list of file.'
     for f in files:
-        fd = file(f, 'r')
+        fd = open(f, 'r')
         content = fd.read()
         fd.close()
 
