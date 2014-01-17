@@ -11,7 +11,6 @@ app = Flask(__name__)
 app.debug = True
 cache = Cache(app, config={'CACHE_TYPE': 'null'})
 
-
 from ppf import config
 from ppf import api
 from ppf.viewer import ViewHome, ViewId, ViewAll
