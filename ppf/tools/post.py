@@ -13,7 +13,7 @@ except:
 import hmac
 import inspect
 import json
-from io import open
+from io import open as ioopen
 
 __current_abpath = os.path.realpath(os.path.dirname(__file__)) + "/"
 root_abpath = os.path.dirname(os.path.dirname(os.path.dirname(__current_abpath)))
@@ -21,6 +21,9 @@ root_abpath = os.path.dirname(os.path.dirname(os.path.dirname(__current_abpath))
 if root_abpath not in sys.path:
     sys.path.insert(0, root_abpath)
 
+
+from dlibs.logger import loggero
+    
 from ppf import api
 from ppf import config
 from ppf.api import Data
@@ -33,7 +36,7 @@ class MuseArticle(object):
         self.doc_id = doc_id
         self.filename = config.muses_d + str(doc_id) + config.muse_extension
         self.filename_html = config.muses_d + str(doc_id) + config.html_extension
-        fd = open(self.filename, 'r')
+        fd = ioopen(self.filename, 'r')
         self.content = self.__replace_home(fd.read()) # The default is absolute path
         fd.close()
 
@@ -66,7 +69,7 @@ class MuseArticle(object):
 
     @classmethod
     def getHtmlBody(self, filename):
-        fd = open(filename, 'r')
+        fd = ioopen(filename, 'r')
         content = fd.read()
         fd.close()
 
@@ -85,7 +88,7 @@ class MuseArticle(object):
     @staticmethod
     def getFullHtml(doc_id):
         filename = config.muses_d + str(doc_id) + config.html_extension
-        fd = open(filename, 'r')
+        fd = ioopen(filename, 'r')
         content = fd.read()
         fd.close()
         try:
@@ -215,12 +218,11 @@ class API(object):
             setattr(self.required_data, arg, value)
 
     def send(self):
-
         data = self.required_data.urlencode()
         req = Request(self.url, data)
         #libs.log(req)
         return urlopen(req)
-
+            
 ### apis
 # TODO: We can create more simple apis.
 
@@ -367,9 +369,15 @@ def updateFile(filename, _base64_content):
 def updateFiles(files):
     'Update files from the list of file.'
     for f in files:
-        fd = open(f, 'r')
-        content = fd.read()
-        fd.close()
+        try:
+            fd = ioopen(f, 'r')
+            content = fd.read()
+            fd.close()
+        except UnicodeDecodeError:
+            # The type of png file is byte. Read as byte
+            fd = ioopen(f, 'rb')
+            content = fd.read()
+            fd.close()
 
         # Get only filename. non-directory
         filename = MuseArticle.getFilename(f)

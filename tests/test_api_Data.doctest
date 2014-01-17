@@ -1,7 +1,9 @@
 
     >>> from dlibs.common import *
+    >>> from dlibs.compatible import is_byte, is_unicode
     >>> from common import *
     >>> from ppf.api import DataBasic, Data
+
 
 
 * DataBasic
@@ -14,6 +16,8 @@
     >>> data == {'comment_id': '5555', 'doc_id': '123'}
     True
 
+    >>> is_byte(data.urlencode())
+    True
 
     >>> # Remove item
     >>> data.pop('doc_id')
@@ -37,21 +41,14 @@
     >>> encoded_byte = data.encode_base64(unicode_dummy)
     >>> encoded_byte in ['YWHDqsKwwoDDq8KCwpjDq8KLwqQ=', b'YWHqsIDrgpjri6Q=']
     True
-
-    >>> if PY3:
-    ...     repr(type(encoded_byte)) == "<class 'bytes'>"
-    ... else:
-    ...     repr(type(encoded_byte)) == "<type 'str'>"
+    >>> is_byte(encoded_byte)
     True
-
+    
     >>> decoded_byte = data.decode_base64(encoded_byte)
     >>> decoded_byte == unicode_dummy
     True
 
-    >>> if PY3:
-    ...     repr(type(decoded_byte)) == "<class 'str'>"
-    ... else:
-    ...     repr(type(decoded_byte)) == "<type 'unicode'>"
+    >>> is_unicode(decoded_byte)
     True
 
 @ encode_jsonBase64 decode_jsonBase64
@@ -64,10 +61,7 @@
     >>> encoded_byte in ['eyJhYWEiOiAiYWFcdTAwZWFcdTAwYjBcdTAwODBcdTAwZWJcdTAwODJcdTAwOTgiLCAiYmJiIjogImJiXHUwMGVhXHUwMGIwXHUwMDgwXHUwMGViXHUwMDgyXHUwMDk4In0=', b'eyJhYWEiOiAiYWFcdWFjMDBcdWIwOTgiLCAiYmJiIjogImJiXHVhYzAwXHViMDk4In0=', b'eyJiYmIiOiAiYmJcdWFjMDBcdWIwOTgiLCAiYWFhIjogImFhXHVhYzAwXHViMDk4In0=']
     True
 
-    >>> if PY3:
-    ...     repr(type(encoded_byte)) == "<class 'bytes'>"
-    ... else:
-    ...     repr(type(encoded_byte)) == "<type 'str'>"
+    >>> is_byte(encoded_byte)
     True
 
     >>> decoded_byte = data.decode_jsonBase64(encoded_byte)
@@ -85,14 +79,14 @@
     ...     data._base64_ak = 'bbbccceee가나'
     >>> data._prefix('_base64_akakak')
     'base64'
-    >>> uri = data.urlencode() #doctest: +IGNORE_EXCEPTION_DETAIL
-    Traceback (most recent call last):
-    Exception: The data value must be unicode not bytes.
+
+value can be both type byte and unicode.
+    >>> uri = data.urlencode()
 
     >>> data = Data()
     >>> data._jsonBase64_ak = {'3':'4','5':'6'}
     >>> string_query = data.urlencode()
-    >>> string_query in ['_jsonBase64_ak=eyIzIjogIjQiLCAiNSI6ICI2In0%3D', '_jsonBase64_ak=eyI1IjogIjYiLCAiMyI6ICI0In0%3D']
+    >>> string_query in ['_jsonBase64_ak=eyIzIjogIjQiLCAiNSI6ICI2In0%3D', '_jsonBase64_ak=eyI1IjogIjYiLCAiMyI6ICI0In0%3D', b'_jsonBase64_ak=eyI1IjogIjYiLCAiMyI6ICI0In0%3D', b'_jsonBase64_ak=eyIzIjogIjQiLCAiNSI6ICI2In0%3D']
     True
 
     >>> data.hasPrefix("_jsonBase64_ak")

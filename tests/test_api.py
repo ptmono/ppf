@@ -57,8 +57,8 @@ class Test_API(TestCase, FileConvenientMixIn):
         if filep: os.remove(dummy_path)
 
     def updateIndex(self):
-        mu = MuseArticle(self.dummy_article_doc_id)
-        _jsonBase64_dict = mu.json
+        _jsonBase64_dict = {'title': u'this is title',
+                            'author': u'dalsoo'
         data = {'cmd': 'updateIndex',
                 'doc_id': self.dummy_article_doc_id,
                 '_jsonBase64_dict': _jsonBase64_dict}

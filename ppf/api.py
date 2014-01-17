@@ -85,6 +85,8 @@ from . import html_messages as hm
 
 from dlibs.structures.dict import DictTypeAMixIn
 from dlibs.logger import loggero
+from dlibs.common import PY3
+from dlibs.compatible import is_byte, is_unicode
 
 #if config.LOCAL_TEST:
 import cgitb
@@ -141,12 +143,17 @@ class DataBasic(DictTypeAMixIn):
         self.__dict__.pop(key)
 
     def urlencode(self):
-        "Return the encoded string query."
+        "Return the encoded string query. Return bytestring."
         origin = self.__dict__
         data = self.__encode(self.__dict__)
         result = urlencode(self.__dict__)
         self.__dict__ = origin
-        return result
+        if PY3:
+            result = result.encode('utf-8')
+            return result            
+        else:
+            result
+            return result            
 
     def __encode(self, data):
         for key in self.__dict__:
@@ -189,6 +196,7 @@ class DataBasic(DictTypeAMixIn):
 
     @classmethod
     def toByte(self, value):
+        if is_byte(value): return value
 
         try:
             return value.encode('utf-8')
@@ -304,13 +312,7 @@ def updateIndex(doc_id, _jsonBase64_dict):
     articles.set()
     articles.updateFromObj(article)
     articles.save()
-
-    loggero().info('aaaac')
-
     return u'ok'
-
-    print("Content-type: text/html\n\n")
-    print("OK")
 
 def updateFile(filename, _base64_content):
     abpath = config.files_d + filename
