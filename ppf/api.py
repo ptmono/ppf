@@ -307,6 +307,8 @@ def updateIndex(doc_id, _jsonBase64_dict):
 
     loggero().info('aaaac')
 
+    return u'ok'
+
     print("Content-type: text/html\n\n")
     print("OK")
 
@@ -320,6 +322,7 @@ def updateFile(filename, _base64_content):
     fd.write(_base64_content)
     fd.close()
 
+    return u'ok'
     print("Content-type: text/html\n\n")
     print("OK")
 
