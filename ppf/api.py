@@ -229,7 +229,11 @@ class Data(DataBasic):
         Return text(unicode).
         """
         result = base64.b64decode(s)
-        result = self.toUnicode(result)
+        try:
+            result = self.toUnicode(result)
+        except UnicodeDecodeError:
+            # It is the byte file like image.
+            pass
         return result
 
     @classmethod
@@ -300,7 +304,7 @@ def writeArticle(doc_id, _base64_content):
     article = Article()
     article.writeHtml(doc_id, _base64_content)
 
-    return u'ok'
+    return 'ok'
 
 def updateIndex(doc_id, _jsonBase64_dict):
     "Used to add/modify the table of articles."
@@ -312,23 +316,17 @@ def updateIndex(doc_id, _jsonBase64_dict):
     articles.set()
     articles.updateFromObj(article)
     articles.save()
-
-    print("Content-type: text/html\n\n")
-    print("OK")
+    return 'ok'
 
 def updateFile(filename, _base64_content):
     abpath = config.files_d + filename
     if os.path.exists(abpath):
-        print("Content-type: text/html\n\n")
-        print("False")
-        return
+        return 'exits file'
     fd = file(abpath, 'w')
     fd.write(_base64_content)
     fd.close()
 
-    print("Content-type: text/html\n\n")
-    print("OK")
-
+    return 'ok'
 
 def updateServerFile(filename, _base64_content):
     "Update the server file."
