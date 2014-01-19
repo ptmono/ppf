@@ -4,7 +4,6 @@
 import os
 from jinja2 import Environment, FileSystemLoader, Markup
 import scrubber
-from io import open
 
 from . import config
 from . import indexer
@@ -93,13 +92,13 @@ class ViewAbstract(object):
 
     def getHeader(self):
         result = ''
-        fd = open(config.html_header, 'r')
+        fd = open(config.html_header, 'br')
         result = fd.read()
         return result
 
     def getFooter(self):
         result = ''
-        fd = open(config.html_footer, 'r')
+        fd = open(config.html_footer, 'br')
         result = fd.read()
         return result
 
@@ -128,10 +127,12 @@ class ViewAbstract(object):
 
     def fileContentWithUnicode(self, filename, char_set=config.char_set):
         "Jinja requires unicode content. So have to read the file as unicode."
-        fd = open(filename, 'r')
+        loggero().info('-=======> ')
+        fd = open(filename, 'br')
         content = fd.read()
         fd.close()
         # Jinja require unicode
+        loggero().info('-=======> ' + repr(type(content)))
         try:
             return content.decode(char_set)
         except:
@@ -255,7 +256,7 @@ class ViewHome(ViewId):
         try:
             temp_context = self.fileContentWithUnicode(html_f)
         except Exception as err:
-            print(err)
+            loggero().error(err)
             return self._showPageNotFoundError()
 
         comments = self.getComments()
