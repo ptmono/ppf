@@ -337,7 +337,9 @@ class Article(InfoTemplate):
             fd.close()
         except Exception as err:
             msg = "We couldn't write %s" % doc_id
-            loggero().error(msg)
+            loggero().error('Article.write %s' % msg)
+            loggero().error('Article.write %s' % repr(type(content)))
+            loggero().error('Article.write %s' % repr(content[9035:9072]))
             loggero().error(err)
             raise Exception(err)
 
