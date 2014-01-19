@@ -158,12 +158,28 @@ update the html of article."
   	 ;; Get html. We translate the html of article not muse.
   	 (html-file-name (ppf/article-publish)))
     ;; We require html
-    (ppf/article-publish)
+    ;(ppf/article-publish)
     (ppf/pymacs-init)
     (ppf-updateArticle doc-id)
     (message "OK")
     ))
 
+(defun ppf/_article-update (buffer-file-name)
+  (interactive)
+  (let* ((html-file-name (ppf/_article-publish buffer-file-name))
+	 (doc-id (file-name-sans-extension (file-name-nondirectory html-file-name))))
+    (ppf/pymacs-init)
+    (ppf-updateArticle doc-id)
+    ))
+
+(defun ppf/_article-update-testing (buffer-file-name)
+  (interactive)
+  (let* ((doc-id (file-name-sans-extension (file-name-nondirectory buffer-file-name))))
+    (ppf/pymacs-init)
+    (ppf-updateArticle doc-id)
+    ))
+
+    
 
 (defun ppf/article-check-html ()
   (let* ((buffer-file-name (buffer-file-name))
