@@ -2,7 +2,6 @@
 # coding: utf-8
 
 from . import config
-from io import open
 
 required_dirs = config.required_dirs
 required_sys_files = config.required_sys_files
@@ -78,7 +77,7 @@ def create_file(ab_filename, content):
     dirname = ab_filename[:ab_filename.rfind('/')]
     if not os.path.exists(dirname):
         os.makedirs(dirname)
-    fd = open(ab_filename, 'w')
+    fd = open(ab_filename, 'bw')
     fd.write(content)
     fd.close()
 
@@ -93,7 +92,7 @@ def main():
     check_sys_files()
     check_files()
 
-    fd = open(config.installed_checkp, 'w')
+    fd = open(config.installed_checkp, 'bw')
     fd.close()
 
     return msg

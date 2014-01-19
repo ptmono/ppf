@@ -67,7 +67,6 @@ data._jsonbase64_dict = s
 data.urlencode()
 
 """
-from __future__ import unicode_literals
 import sys
 import os
 import time
@@ -148,12 +147,7 @@ class DataBasic(DictTypeAMixIn):
         data = self.__encode(self.__dict__)
         result = urlencode(self.__dict__)
         self.__dict__ = origin
-        if PY3:
-            result = result.encode('utf-8')
-            return result            
-        else:
-            result
-            return result            
+        return result
 
     def __encode(self, data):
         for key in self.__dict__:
@@ -322,7 +316,7 @@ def updateFile(filename, _base64_content):
     abpath = config.files_d + filename
     if os.path.exists(abpath):
         return 'exits file'
-    fd = open(abpath, 'w')
+    fd = open(abpath, 'bw')
     fd.write(_base64_content)
     fd.close()
 
@@ -332,7 +326,7 @@ def updateServerFile(filename, _base64_content):
     "Update the server file."
     libs.lock()
     abpath = config.root_abpath + filename
-    fd = open(abpath, 'w')
+    fd = open(abpath, 'bw')
     fd.write(_base64_content)
     fd.close()
     libs.unlock()

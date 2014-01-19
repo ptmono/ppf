@@ -1,12 +1,9 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from __future__ import unicode_literals
 import re, os, time
 import json
 import shutil
-
-from io import open
 
 from dlibs.d_os import File
 from dlibs.logger import loggero
@@ -18,7 +15,6 @@ try:
     unicode
 except:
     unicode = str
-
 
 ERRORP = True
 WARNP = True
@@ -322,7 +318,7 @@ class Article(InfoTemplate):
         #Todo: Is it need error handling for self.doc_id ?
         filename = self._path(self.doc_id)
         try:
-            fd = open(filename, 'r')
+            fd = open(filename, 'br')
             content = fd.read()
         except:
             content = ''
@@ -331,17 +327,18 @@ class Article(InfoTemplate):
     @classmethod
     def writeHtml(self, doc_id, content):
         "Set the content of article. The file is html."
+
         try:
             fd = File(str(doc_id), 'a', 'w')
             fd.write(content)
             fd.close()
+        
         except Exception as err:
             msg = "We couldn't write %s" % doc_id
             loggero().error('Article.write %s' % msg)
             loggero().error('Article.write %s' % repr(type(content)))
-            loggero().error('Article.write %s' % repr(content[9035:9072]))
-            loggero().error(err)
-            raise Exception(err)
+            loggero().error('Article.write %s' % repr(content))
+            loggero().error(repr(err))
 
     def set(self, doc_id):
         "The object have to contains the id of document to be used with Articles."
@@ -386,7 +383,7 @@ class Article(InfoTemplate):
         end_of_info_regexp = "\n\n"
 
         try:
-            fd = open(filename, 'r')
+            fd = open(filename, 'br')
             content = fd.read()
         except IOError:
             # There is no article
@@ -432,7 +429,7 @@ class Articles(InfosTemplate):
 
     def set(self):
         try:
-            fd = open(self.db_filename, 'r')
+            fd = open(self.db_filename, 'br')
             content = fd.read()
             json_load = json.loads(content)
         except (ValueError, IOError, OSError):

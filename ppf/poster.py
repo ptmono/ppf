@@ -261,7 +261,7 @@ def sendMailUsingSendmail(obj):
         'doc_date: '+ obj.date +\
         '\n\n'+\
         obj.content
-    p = os.popen('%s -t' % mailer, 'w')
+    p = os.popen('%s -t' % mailer, 'bw')
     p.write(msg)
     p.close()
 

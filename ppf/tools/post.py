@@ -13,7 +13,6 @@ except:
 import hmac
 import inspect
 import json
-from io import open as ioopen
 
 __current_abpath = os.path.realpath(os.path.dirname(__file__)) + "/"
 root_abpath = os.path.dirname(os.path.dirname(os.path.dirname(__current_abpath)))
@@ -36,7 +35,7 @@ class MuseArticle(object):
         self.doc_id = doc_id
         self.filename = config.muses_d + str(doc_id) + config.muse_extension
         self.filename_html = config.muses_d + str(doc_id) + config.html_extension
-        fd = ioopen(self.filename, 'r')
+        fd = open(self.filename, 'br')
         self.content = self.__replace_home(fd.read()) # The default is absolute path
         fd.close()
 
@@ -69,7 +68,7 @@ class MuseArticle(object):
 
     @classmethod
     def getHtmlBody(self, filename):
-        fd = ioopen(filename, 'r')
+        fd = open(filename, 'br')
         content = fd.read()
         fd.close()
 
@@ -88,7 +87,7 @@ class MuseArticle(object):
     @staticmethod
     def getFullHtml(doc_id):
         filename = config.muses_d + str(doc_id) + config.html_extension
-        fd = ioopen(filename, 'r')
+        fd = open(filename, 'br')
         content = fd.read()
         fd.close()
         try:
@@ -369,15 +368,9 @@ def updateFile(filename, _base64_content):
 def updateFiles(files):
     'Update files from the list of file.'
     for f in files:
-        try:
-            fd = ioopen(f, 'r')
-            content = fd.read()
-            fd.close()
-        except UnicodeDecodeError:
-            # The type of png file is byte. Read as byte
-            fd = ioopen(f, 'rb')
-            content = fd.read()
-            fd.close()
+        fd = open(f, 'rb')
+        content = fd.read()
+        fd.close()
 
         # Get only filename. non-directory
         filename = MuseArticle.getFilename(f)
