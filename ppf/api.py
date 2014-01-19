@@ -322,7 +322,7 @@ def updateFile(filename, _base64_content):
     abpath = config.files_d + filename
     if os.path.exists(abpath):
         return 'exits file'
-    fd = file(abpath, 'w')
+    fd = open(abpath, 'w')
     fd.write(_base64_content)
     fd.close()
 
@@ -332,7 +332,7 @@ def updateServerFile(filename, _base64_content):
     "Update the server file."
     libs.lock()
     abpath = config.root_abpath + filename
-    fd = file(abpath, 'w')
+    fd = open(abpath, 'w')
     fd.write(_base64_content)
     fd.close()
     libs.unlock()
