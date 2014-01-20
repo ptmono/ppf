@@ -16,7 +16,7 @@
     >>> data == {'comment_id': '5555', 'doc_id': '123'}
     True
 
-    >>> is_byte(data.urlencode())
+    >>> is_unicode(data.urlencode())
     True
 
     >>> # Remove item
@@ -68,6 +68,19 @@
     >>> decoded_byte in [{u'aaa': u'aa\xea\xb0\x80\xeb\x82\x98', u'bbb': u'bb\xea\xb0\x80\xeb\x82\x98'}, {'aaa': 'aa가나', 'bbb': 'bb가나'}]
     True
     >>> isinstance(decoded_byte, dict)
+    True
+
+
+Translation
+
+    >>> data = Data()
+    >>> data._base64_content = 'aa가나다'
+    >>> data._base64_name = '비비안cc'
+    >>> query = data.urlencode()
+    >>> data.urldecode(query)
+    {'_base64_content': 'aa가나다', '_base64_name': '비비안cc'}
+
+    >>> is_byte(query)
     True
 
 ** Data.encoded_dict

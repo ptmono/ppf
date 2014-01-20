@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from __future__ import unicode_literals
 import os, sys
 import re
 
@@ -35,7 +34,7 @@ class MuseArticle(object):
         self.doc_id = doc_id
         self.filename = config.muses_d + str(doc_id) + config.muse_extension
         self.filename_html = config.muses_d + str(doc_id) + config.html_extension
-        fd = open(self.filename, 'br')
+        fd = open(self.filename, 'r')
         self.content = self.__replace_home(fd.read()) # The default is absolute path
         fd.close()
 
@@ -68,7 +67,7 @@ class MuseArticle(object):
 
     @classmethod
     def getHtmlBody(self, filename):
-        fd = open(filename, 'br')
+        fd = open(filename, 'r')
         content = fd.read()
         fd.close()
 
@@ -87,7 +86,7 @@ class MuseArticle(object):
     @staticmethod
     def getFullHtml(doc_id):
         filename = config.muses_d + str(doc_id) + config.html_extension
-        fd = open(filename, 'br')
+        fd = open(filename, 'r')
         content = fd.read()
         fd.close()
         try:

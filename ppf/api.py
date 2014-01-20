@@ -96,11 +96,12 @@ from flask import request, abort
 
 
 try:
-    from urllib import urlencode
+    from urllib import urlencode, unquote
 except:
-    from urllib.parse import urlencode
+    from urllib.parse import urlencode, unquote
 
-
+import copy
+    
 class Key(object):
 
     def __init__(self, msg):
@@ -119,6 +120,9 @@ class Key(object):
 
     def _ourMsg(self, msg):
         return msg[:100]
+
+    
+
 
     
 class DataBasic(DictTypeAMixIn):
@@ -143,10 +147,23 @@ class DataBasic(DictTypeAMixIn):
 
     def urlencode(self):
         "Return the encoded string query. Return bytestring."
-        origin = self.__dict__
+        origin = copy.deepcopy(self.__dict__)
         data = self.__encode(self.__dict__)
+        # urlencode returns quote string
         result = urlencode(self.__dict__)
         self.__dict__ = origin
+
+        if is_unicode(result):
+            result = result.encode('utf-8')
+        return result
+
+    def urldecode(self, value):
+        result = {}
+        aa = value.split('&')
+        for a in aa:
+            key, value = a.split('=')
+            result[key] = self._decode_value(key, value)
+
         return result
 
     def __encode(self, data):
@@ -164,6 +181,17 @@ class DataBasic(DictTypeAMixIn):
                 decoder = getattr(self, self.function_prefix_of_decode + prefix)
                 value = self.__dict__[key]
                 self.__dict__[key] = decoder(value)
+
+    def _decode_value(self, key, value):
+        result = None
+        prefix = self._prefix(key)
+        if prefix:
+            loggero().debug('aaaaaaaaaaaaa')
+            loggero().debug(value)
+            decoder = getattr(self, self.function_prefix_of_decode + prefix)
+            result = decoder(unquote(value))
+            loggero().debug(result)            
+        return result
 
     @classmethod
     def _prefix(self, key):
@@ -214,7 +242,8 @@ class Data(DataBasic):
         """ s will be always unicode.
         Return byte.
         """
-        s = self.toByte(s)
+        if is_unicode(s):
+            s = self.toByte(s)
         return base64.b64encode(s)
 
     @classmethod
@@ -257,6 +286,7 @@ class Data(DataBasic):
             decoder = getattr(self, self.function_prefix_of_decode + prefix)
             result = decoder(value)
         return result
+
 
 def getComments(doc_id):
     comments = Comments(doc_id)

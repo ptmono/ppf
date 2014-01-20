@@ -318,7 +318,7 @@ class Article(InfoTemplate):
         #Todo: Is it need error handling for self.doc_id ?
         filename = self._path(self.doc_id)
         try:
-            fd = open(filename, 'br')
+            fd = open(filename, 'r')
             content = fd.read()
         except:
             content = ''
@@ -383,8 +383,9 @@ class Article(InfoTemplate):
         end_of_info_regexp = "\n\n"
 
         try:
-            fd = open(filename, 'br')
+            fd = open(filename, 'r')
             content = fd.read()
+
         except IOError:
             # There is no article
             content = ''
@@ -429,7 +430,7 @@ class Articles(InfosTemplate):
 
     def set(self):
         try:
-            fd = open(self.db_filename, 'br')
+            fd = open(self.db_filename, 'r')
             content = fd.read()
             json_load = json.loads(content)
         except (ValueError, IOError, OSError):
