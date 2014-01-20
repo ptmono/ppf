@@ -7,6 +7,7 @@ import shutil
 
 from dlibs.d_os import File
 from dlibs.logger import loggero
+from dlibs.compatible import is_byte
 
 from . import config
 from . import libs
@@ -327,17 +328,15 @@ class Article(InfoTemplate):
     @classmethod
     def writeHtml(self, doc_id, content):
         "Set the content of article. The file is html."
-
         try:
-            fd = File(str(doc_id), 'a', 'w')
+            #Fixme: I couldn't convert content to unicode.
+            fd = File(str(doc_id), 'a', 'wb')
             fd.write(content)
             fd.close()
         
         except Exception as err:
             msg = "We couldn't write %s" % doc_id
             loggero().error('Article.write %s' % msg)
-            loggero().error('Article.write %s' % repr(type(content)))
-            loggero().error('Article.write %s' % repr(content))
             loggero().error(repr(err))
 
     def set(self, doc_id):

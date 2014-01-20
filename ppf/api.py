@@ -186,11 +186,8 @@ class DataBasic(DictTypeAMixIn):
         result = None
         prefix = self._prefix(key)
         if prefix:
-            loggero().debug('aaaaaaaaaaaaa')
-            loggero().debug(value)
             decoder = getattr(self, self.function_prefix_of_decode + prefix)
             result = decoder(unquote(value))
-            loggero().debug(result)            
         return result
 
     @classmethod
@@ -252,11 +249,6 @@ class Data(DataBasic):
         Return text(unicode).
         """
         result = base64.b64decode(s)
-        try:
-            result = self.toUnicode(result)
-        except UnicodeDecodeError:
-            # It is the byte file like image.
-            pass
         return result
 
     @classmethod
@@ -280,12 +272,7 @@ class Data(DataBasic):
         return result
 
     def decode_value(self, key, value):
-        result = None
-        prefix = self._prefix(key)
-        if prefix:
-            decoder = getattr(self, self.function_prefix_of_decode + prefix)
-            result = decoder(value)
-        return result
+        return self._decode_value(key, value)
 
 
 def getComments(doc_id):
@@ -304,7 +291,7 @@ def writeComment(doc_id, _base64_content, _base64_name='', password=''):
 
     articles = Articles()
     if not articles.is_article(doc_id):
-        loggero().info(doc_id)
+        loggero().info('writeComment 500: %s' % doc_id)
         
         abort(500)
     
