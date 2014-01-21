@@ -1,0 +1,42 @@
+
+    >>> from common import *
+    >>> from ppf.api import Data
+    >>> import base64
+
+    >>> data = Data()
+    >>> data._base64_content = u'aa가나다'
+    >>> data._base64_name = u'비비안cc'
+    >>> query = data.urlencode()
+    >>> type(query)
+    <class 'str'>
+
+    >>> query_as_dict = data.tools_toDict(query)
+
+    >>> data.urldecode(query)
+
+    >>> #base64.b64decode(b'67mE67mE7JWIY2M%3D')
+
+* How to use base64
+    >>> type(data._base64_content)
+    <class 'str'>
+    >>> ak = base64.b64encode(data._base64_content.encode('utf-8'))
+    >>> ak
+    b'YWHqsIDrgpjri6Q='
+    >>> ay = base64.b64decode(ak)
+    >>> ay
+    b'aa\xea\xb0\x80\xeb\x82\x98\xeb\x8b\xa4'
+    >>> ay.decode('utf-8')
+    'aa가나다'
+
+    >>> ak = base64.b64encode('aa가나다'.encode('utf-8'))
+    >>> ak
+    b'YWHqsIDrgpjri6Q='
+    >>> aj = ak.decode('utf-8')
+    >>> aj
+    'YWHqsIDrgpjri6Q='
+
+    >>> ay = base64.b64decode(aj)
+    >>> ay
+    b'aa\xea\xb0\x80\xeb\x82\x98\xeb\x8b\xa4'
+    >>> ay.decode('utf-8')
+    'aa가나다'
