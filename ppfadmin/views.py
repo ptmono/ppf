@@ -18,6 +18,7 @@ def ppfadmin_login(request):
     form = LoginForm(request.form)
     next_uri = request.args.get("next")
     form.next = next_uri
+    print(form.next, next_uri)
 
     if form.validate():
         user = form.get_user()        
@@ -30,7 +31,8 @@ def ppfadmin_login(request):
 def ppfadmin_join(request):
     form = RegistrationForm(request.form)
     next_uri = request.args.get("next")
-    form.next = next_uri    
+    form.next = next_uri
+    print(next_uri, form.next)
     
     if form.validate():
         user = User()

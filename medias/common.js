@@ -129,8 +129,8 @@ function scrollOnce() {
 function ddlogin() {
     var curl = $(location).attr('href');
     var surl = "/login?next=" + curl;
-    var email = $('#email').val()
-    var password = $('#password').val()
+    var email = $('#email').val();
+    var password = $('#password').val();
     $.ajax({
 	url: surl,
 	type: "POST",
@@ -151,11 +151,12 @@ function ddlogin() {
 function ddsignup() {
     var curl = $(location).attr('href');
     var surl = "/join?next=" + curl;
-    var email = $('#email').val()
-    var password = $('#password').val()
-    var confirm = $('#confirm').val()
+    var email = $('#email').val();
+    var password = $('#password').val();
+    var confirm = $('#confirm').val();
+    console.log(curl);
     $.ajax({
-	url: "/join",
+	url: surl,
 	type: "POST",
 	data: {email: email, password: password, confirm: confirm},
 	success: function(html){
