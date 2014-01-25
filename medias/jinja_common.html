@@ -12,7 +12,6 @@
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> -->
 
   </head>
-
   <body leftmargin="0" topmargin="0">
     <div class="body">
       <!-- Menu Start -->
@@ -71,6 +70,14 @@
       </div>
       <!-- End menu -->
 
+      <!-- User Info -->
+      <div class="user_info">
+	{% block login %}
+	{% include 'admin/status.html' %}
+	{% endblock %}
+      </div>
+      <!-- End User Info -->
+
       <!-- Content Start -->
       <div class="content">
 	<table cellpadding="0px" cellspacing="0">
@@ -103,8 +110,13 @@
 
       </div> <!-- End content -->
     </div>
+    
+    <div id="admin_popup"></div>
+    <a href="#close"></a>
+
     <script src="/medias/jquery-1.10.1.min.js"></script>
     <script src="/medias/underscore-min.js"></script>
+    <script src="/medias/jquery.bpopup.min.js"></script>
     <script src="/medias/json2.js"></script>
     <script src="/medias/jstorage.js"></script>
     <script src="/medias/common.js"></script>

@@ -4,6 +4,8 @@
 import os
 from jinja2 import Environment, FileSystemLoader, Markup
 import scrubber
+from flask import g, url_for, get_flashed_messages
+from flask.ext.login import current_user
 
 from . import config
 from . import indexer
@@ -16,53 +18,16 @@ class Var:
     http_header = "Content-type: text/html; charset=utf-8\n\n"
     page_not_found_msg = "We has no page %s"
 
-#Obsolete
-class View(object):
-    '''
-    >>> ve = View()
-    >>> err_msg = "[Errno 2] No such file or directory: '/home/ptmono/public_html/0ttd/0ppf2/ppf/dbs/index.json' "
-    '''
-    def show(self, form):
-        #GET method
-        # if form.keys() == []:
-        #     view_categoryobj = ViewCategory()
-        #     print(view_categoryobj.show())
+class JinjaEnvironment(Environment):
+    def __init__(self):
+        super(JinjaEnvironment, self).__init__(loader=FileSystemLoader(config.medias_d))
+        def sanitize_html(text):
+            return Markup(scrubber.Scrubber(remove_comments=False).scrub(text))
+        self.filters['sanitize_html'] = sanitize_html
+        self.globals['url_for'] = url_for
+        self.globals['current_user'] = current_user
+        self.globals['get_flashed_messages'] = get_flashed_messages
 
-        if form.keys() == []:
-            try:
-                view_home = ViewHome()
-            except IOError as err:
-                if self._checkArticleIndex(err):
-                    # There is no index file
-                    self._initArticleIndex()
-                    return
-                else:
-                    print("Content-type: text/html; charset=utf-8\n\n")
-                    print(err)
-                    return
-
-            print(view_home.show())
-
-        elif form.has_key('id'):
-            doc_id = form.getfirst('id')
-            if doc_id == 'all':
-                view_all = ViewAll()
-                print(view_all.show())
-            else:
-                viewobj = ViewId(doc_id)
-                print(viewobj.show())
-
-    def _checkArticleIndex(self, err_msg):
-        msg = str(err_msg)
-        if msg.find(config.index_file) == -1:
-            return False
-        return True
-
-    def _initArticleIndex(self):
-        # fd = file(config.index_filename(), 'w')
-        # fd.write('{}')
-        # fd.close()
-        install.main()
 
 class ViewAbstract(object):
 
@@ -73,12 +38,7 @@ class ViewAbstract(object):
     >>> aa.json #doctest: +SKIP
     """
     def __init__(self):
-        self.jinja_env = Environment(loader=FileSystemLoader(config.medias_d))
-        def sanitize_html(text):
-            return Markup(scrubber.Scrubber(remove_comments=False).scrub(text))
-
-        self.jinja_env.filters['sanitize_html'] = sanitize_html
-
+        self.jinja_env = JinjaEnvironment()
         self.content = self.getContent()
 
     def show(self):
@@ -156,7 +116,7 @@ class ViewAll(ViewAbstract):
 
         # Render
         temp = self.jinja_env.get_template('jinja_list.html')
-        result = temp.render(temp_context)
+        result = temp.render(temp_context, current_user=current_user)
 
         # The result is unicode
         result = result.encode(config.char_set)
@@ -207,10 +167,12 @@ class ViewId(ViewAbstract):
 
         temp = self.jinja_env.get_template('jinja_content.html')
         if comments:
-            result = temp.render(content=temp_context, doc_id=self.doc_id, comments=comments)
+            result = temp.render(content=temp_context, doc_id=self.doc_id, comments=comments,
+                                 current_user=current_user)
         else:
             # There is no comment
-            result = temp.render(content=temp_context, doc_id=self.doc_id)
+            result = temp.render(content=temp_context, doc_id=self.doc_id,
+                                 current_user=current_user)
         # Jinja requires unicode strings
         result = result.encode(config.char_set)
         return result
@@ -269,12 +231,64 @@ class ViewHome(ViewId):
         #TODO: I want to allow <font>, <b> <i> tag for escaping
         temp = self.jinja_env.get_template('jinja_door.html')
         if comments_info_l:
-            result = temp.render(content=temp_context, doc_id=self.doc_id, comments=comments_info_l)
+            result = temp.render(content=temp_context, doc_id=self.doc_id,
+                                 comments=comments_info_l,
+                                 current_user=current_user)
         else:
             # There is no comment
-            result = temp.render(content=temp_context, doc_id=self.doc_id)
+            result = temp.render(content=temp_context, doc_id=self.doc_id,
+                                 current_user=current_user)
         # Jinja requires unicode strings
         result = result.encode(config.char_set)
         return result
+
+
+#Obsolete
+class View(object):
+    '''
+    >>> ve = View()
+    >>> err_msg = "[Errno 2] No such file or directory: '/home/ptmono/public_html/0ttd/0ppf2/ppf/dbs/index.json' "
+    '''
+    def show(self, form):
+        #GET method
+        # if form.keys() == []:
+        #     view_categoryobj = ViewCategory()
+        #     print(view_categoryobj.show())
+
+        if form.keys() == []:
+            try:
+                view_home = ViewHome()
+            except IOError as err:
+                if self._checkArticleIndex(err):
+                    # There is no index file
+                    self._initArticleIndex()
+                    return
+                else:
+                    print("Content-type: text/html; charset=utf-8\n\n")
+                    print(err)
+                    return
+
+            print(view_home.show())
+
+        elif form.has_key('id'):
+            doc_id = form.getfirst('id')
+            if doc_id == 'all':
+                view_all = ViewAll()
+                print(view_all.show())
+            else:
+                viewobj = ViewId(doc_id)
+                print(viewobj.show())
+
+    def _checkArticleIndex(self, err_msg):
+        msg = str(err_msg)
+        if msg.find(config.index_file) == -1:
+            return False
+        return True
+
+    def _initArticleIndex(self):
+        # fd = file(config.index_filename(), 'w')
+        # fd.write('{}')
+        # fd.close()
+        install.main()
 
 

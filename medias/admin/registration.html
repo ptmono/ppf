@@ -1,0 +1,35 @@
+<div id="signup">
+  <div id="signup-ct">
+    <div id="signup-header">
+      <h2>Create a new account</h2>
+      <a class="modal_close" href={{ form.next }}></a>
+    </div>
+    
+    <form method="POST" action="/join">
+
+      <div class="txt-fld">
+	{{ form.email.label }}
+	{{ form.email(class="good_input") }}
+	{{ form.email.errors[0] }}
+      </div>
+
+      <div class="txt-fld">
+	{{ form.password.label }}
+	{{ form.password(class="error_input") }}
+	{{ form.password.errors[0] }}
+
+      </div>
+
+      <div class="txt-fld">
+	{{ form.confirm.label }}
+	{{ form.confirm(class="error_input") }}
+	{{ form.confirm.errors[0] }}
+      </div>
+      {{ get_flashed_messages()[0] }}
+
+      <div class="btn-fld">
+	<button id="sign_submit"type="button">Sign up &raquo;</button>
+      </div>
+    </form>
+  </div>
+</div>

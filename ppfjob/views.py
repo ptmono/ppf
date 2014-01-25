@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 
 from django.conf import settings
 
-from jinja2 import FileSystemLoader, Environment, Markup
+from ppf.viewer import JinjaEnvironment
 
 try:
     settings.configure()
@@ -28,18 +28,6 @@ settings.TEMPLATE_DIRS = (
     PPF_MEDIA,
 )
 
-template_dirs = getattr(settings, 'TEMPLATE_DIRS')
-#default_mimetype = gettattr(settings, 'DEFAULT_CONTENT_TYPE')
-env = Environment(loader=FileSystemLoader(template_dirs))
-
-def jinja_render_to_response(filename, context={}):#, mimetype=default_mimetype):
-    def sanitize_html(text):
-        return Markup(scrubber.Scrubber(remove_comments=False).scrub(text))
-    env.filters['sanitize_html'] = sanitize_html
-    template = env.get_template(filename)
-    rendered = template.render(**context)
-    return rendered
-
 def getJobs(orms, page):
     paginator = Paginator(orms, 30)
 
@@ -56,9 +44,9 @@ def getJobs_first(orms):
 def job_page(orms, page=None):
 
     mm = getJobs(orms, page)
-    return jinja_render_to_response('content_page_request.html', dict(articles=mm))
+    return JinjaEnvironment().get_template('content_page_request.html').render(dict(articles=mm))
 
 def jobs_filtered(orms):
     mm = getJobs_first(orms)
-    return jinja_render_to_response('jinja_content_job.html', dict(articles=mm))
+    return JinjaEnvironment().get_template('jinja_content_job.html').render(dict(articles=mm))
 
