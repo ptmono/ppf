@@ -27,3 +27,4 @@ designs
 dScrapper
 .svn/*
 
+/sample_db.sqlite
