@@ -1,0 +1,7 @@
+{% if current_user and current_user.is_authenticated() %}
+{{ current_user.email }}
+<a href={{ url_for("logout") }}>logout</a>
+
+{% else %}
+<input id="login_button" type="button" value="login" />
+{% endif %}

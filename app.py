@@ -4,31 +4,73 @@
 import sys
 import os
 
-from flask import Flask, request
+from flask import Flask, request, render_template, flash, redirect, url_for, g, session
 from flask.ext.cache import Cache
-
-app = Flask(__name__)
-app.debug = True
-cache = Cache(app, config={'CACHE_TYPE': 'null'})
+from flask.ext.login import login_required, current_user, logout_user
 
 from ppf import config
 from ppf import api
 from ppf.viewer import ViewHome, ViewId, ViewAll
+from ppf.viewer import JinjaEnvironment
 from ppf.poster import addComment_wsgi
 from ppf.app_exceptions import InitError, PageNotFound
 
 from ppfjob.views import jobs_filtered, job_page
 from ppfjob.models import Orms
 
+from ppfadmin.views import ppfadmin_login, ppfadmin_join
+from ppfadmin.models import init_login, db, LoginForm
+
 from werkzeug import SharedDataMiddleware
 
 from dnews.scraper		import Scraper
 from dScraper.container.saramin import SaraminItModel
 
+import logging
+
+app = Flask(__name__)
+app.logger.setLevel(logging.DEBUG)
+app.debug = True
+
+cache = Cache(app, config={'CACHE_TYPE': 'null'})
+
+app.config['SECRET_KEY'] = '0000000000'
+app.config['DATABASE_FILE'] = 'sample_db.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + app.config['DATABASE_FILE']
+app.config['SQLALCHEMY_ECHO'] = True
+
+
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/medias':	config.medias_d,
     '/files':	config.files_d
     })
+
+
+
+db.init_app(app)
+db.create_all(app=app)
+init_login(app)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    return ppfadmin_login(request)
+
+@app.route("/join", methods=["GET", "POST"])
+def join():
+    return ppfadmin_join(request)
+
+@app.route("/settings")
+@login_required
+def settings():
+    pass
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(request.args.get("next") or url_for('home'))
+
 
 @app.route('/home')
 @app.route('/')
@@ -100,7 +142,6 @@ def handle_PageNotFound(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
-
 
 if __name__ == '__main__':
     config.PPFJOB_LOCAL_MODE = True

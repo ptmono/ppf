@@ -1,0 +1,28 @@
+<div id="signup">
+  <div id="signup-ct">
+    <div id="signup-header">
+      <h2>Login</h2>
+      <a class="modal_close" href={{ form.next }}></a>
+    </div>
+    
+    <form method="POST" action="/login">
+
+      <div id="form_email" class="txt-fld">
+	{{ form.email.label }}
+	{{ form.email(class="good_input") }}
+      </div>
+
+      <div id="form_passwd" class="txt-fld">
+	{{ form.password.label }}
+	{{ form.password(class="error_input") }}
+      </div>
+      <div id="login_next">
+	{{ next_uri }}
+
+	<div class="btn-fld">
+	  <button id="login_sign_submit"type="button">Sign up &raquo;</button>
+	  <button id="login_submit"type="button">Login &raquo;</button>
+	</div>
+    </form>
+  </div>
+</div>
