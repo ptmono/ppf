@@ -1,7 +1,7 @@
 
     >>> from common import *
     >>> from dnews.scraper import Scraper
-    >>> from dScrapper.container.saramin import SaraminItModel
+    >>> from dScraper.container.saramin import SaraminItModel
 
     >>> smodel = SaraminItModel()
     >>> scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScrapper/dScrapper/dbs/SaraminIt.sqlite")

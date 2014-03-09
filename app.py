@@ -16,7 +16,7 @@ from ppf.poster import addComment_wsgi
 from ppf.app_exceptions import InitError, PageNotFound
 
 from ppfjob.views import jobs_filtered, job_page
-from ppfjob.models import Orms
+from ppfjob.models import Jobs, Jobsearches
 
 from ppfadmin.views import ppfadmin_login, ppfadmin_join
 from ppfadmin.models import init_login, db, LoginForm
@@ -96,7 +96,7 @@ def article_doc(doc_id):
 
 @app.route('/all')
 @app.route('/article/all')
-@cache.memoize(3000)
+@cache.memoize(300)
 def article_all():
     docs = ViewAll()
     return docs.show()
@@ -113,15 +113,25 @@ def write_comment():
 
 
 @app.route('/job/page/<page_num>')
-@cache.memoize(3000)
+@cache.memoize(300)
 def ppfjob_page(page_num):
-    orms = Orms()
+    orms = Jobs()
     return job_page(orms, page_num)
 
+@app.route('/jobsearch/page/<page_num>')
+@cache.memoize(300)
+def ppfjobsearch_page():
+    orms = Jobsearches()
+    pass
+
+@app.route('ppfjobsearches')
+def ppfjobsearchs():
+    pass
+
 @app.route('/ppfjobs')
-@cache.memoize(3000)
+@cache.memoize(300)
 def ppfjobs():
-    orms = Orms()
+    orms = Jobs()
     return jobs_filtered(orms)
 
 

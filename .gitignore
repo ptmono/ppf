@@ -28,3 +28,5 @@ dScrapper
 .svn/*
 
 /sample_db.sqlite
+/tests_ppfjob/aa.py
+/tests_ppfjob/ak

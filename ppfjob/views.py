@@ -50,3 +50,18 @@ def jobs_filtered(orms):
     mm = getJobs_first(orms)
     return JinjaEnvironment().get_template('jinja_content_job.html').render(dict(articles=mm))
 
+def jobsearch(orms):
+    paginator = Paginator(orms, 30)
+
+    if not page:
+        page = 1
+
+    page = paginator.page(page)
+    return page.object_list
+
+def jobsearch_first(orms):
+    return roms[:30]
+
+def jobsearch_page(orms, page=None):
+    mm = getJobs_first(orms)
+    return JinjaEnvironment().get_template('content_page_request_job_search.html').render(dict(articles=mm))

@@ -1,0 +1,25 @@
+
+    >>> from common import *
+    >>> import pickle
+    >>> from dnews.scraper import Scraper
+    >>> from dScraper.container.saramin import SaraminItModel
+    >>> from dScraper.saramin_search import new_recruits
+
+* the idx of ppfjobsearch is in the database of ppfjob ?
+
+    >>> scraper = Scraper(SaraminItModel, "sqlite:////home/ptmono/myscript/0services/dScraper/dScraper/dbs/SaraminIt.sqlite")
+
+    >>> #infos = new_recruits(['python'], save_new=False)
+    >>> #pickle.dump(infos, open('__tmp/jobsearch_keywordinfos_sample.pickle', 'bw'))
+    >>> infos = pickle.load(open('__tmp/jobsearch_keywordinfos_sample.pickle', 'br'))
+
+    >>> for info in infos:
+    ...     idx = info['idx']
+    ...     orms = scraper.session.query(scraper.mapped_class).filter_by(idx=idx)
+    ...     try:
+    ...         if orms[0].title: pass
+    ...     except:
+    ...         print(info)
+
+
+
